@@ -261,10 +261,26 @@
         <p class="copyright mb-0 font-size-12 text-center mt-3">جميع الحقوق محفوظة لـ شبكة اكوام © 2025</p>
     </footer>
 
+    <!-- jQuery وجميع المكتبات الأساسية -->
     <script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/js/plugins/typed.min.js"></script>
+    <script type="text/javascript" src="/js/plugins/select2.full.min.js"></script>
+    <script type="text/javascript" src="/js/plugins/ar.js"></script>
+    <script type="text/javascript" src="/js/plugins/jquery.lazy.min.js"></script>
+    <script type="text/javascript" src="/js/plugins/sweetalert.min.js"></script>
+    <script type="text/javascript" src="/js/plugins/infinite-scroll.pkgd.min.js"></script>
+    <script type="text/javascript" src="/js/plugins/jquery.fancybox.min.js"></script>
+    <script type="text/javascript" src="/js/plugins/pace.min.js"></script>
+    <script type="text/javascript" src="/js/plugins/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/js/plugins/idTabs.js"></script>
+    <script type="text/javascript" src="/js/plugins/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/js/plugins/messages_ar.min.js"></script>
+    <script type="text/javascript" src="/js/akwam.js"></script>
+    
     <script type="text/javascript">
         $(document).ready(function(){
+            console.log("jQuery loaded successfully:", typeof $);
+            
             function e(){
                 $(".main-header").length&&($(window).scrollTop()<=50?$("body").removeClass("header-bg"):$("body").addClass("header-bg"),$(".main-categories-list-end").length&&($(window).scrollTop()<=$(".main-categories-list-end").offset().top?$("body").removeClass("header-menu"):$("body").addClass("header-menu")))
             }
@@ -295,6 +311,20 @@
             $(".search-toggle").on("click",function(){
                 $("body").removeClass("main-menu-active").toggleClass("search-active"),setTimeout(function(){$(".search-box form input").focus()},200)
             });
+            
+            // إضافة تأثيرات التفاعل للأزرار
+            $(".home-site-btn").on("mouseenter", function() {
+                $(this).css("background-position", "100% 0");
+            }).on("mouseleave", function() {
+                $(this).css("background-position", "0% 0");
+            });
+            
+            // تفعيل Lazy Loading للصور
+            if(typeof $.fn.lazy !== 'undefined') {
+                $('img').lazy();
+            }
+            
+            console.log("جميع التأثيرات تم تحميلها بنجاح");
         });
     </script>
 </body>
