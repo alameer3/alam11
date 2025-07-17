@@ -23,6 +23,19 @@ app.use(validateInput);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: false, limit: '10mb' }));
 
+// Serve static files from client/public with proper MIME types
+app.use(express.static('client/public', {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    } else if (path.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    } else if (path.endsWith('.svg')) {
+      res.setHeader('Content-Type', 'image/svg+xml');
+    }
+  }
+}));
+
 // Serve static files from serverdata/images or serverdb/images
 const serverDataImagesPath = 'serverdata/images';
 const serverDbImagesPath = 'serverdb/images';
