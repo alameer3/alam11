@@ -34,7 +34,7 @@ export function Header() {
   ]
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="header-sticky w-full">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -42,7 +42,7 @@ export function Header() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
               <Film className="h-5 w-5" />
             </div>
-            <span className="text-xl font-bold">StreamHub</span>
+            <span className="text-xl font-bold">AK Stream</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -141,7 +141,7 @@ export function Header() {
                     <span>الملف الشخصي</span>
                   </Link>
                   
-                  {session.user.role === 'ADMIN' && (
+                  {session.user?.email === 'admin@example.com' && (
                     <Link
                       href="/admin"
                       className="flex items-center space-x-3 space-x-reverse text-sm font-medium hover:text-primary"

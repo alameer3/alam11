@@ -5,47 +5,47 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 94.1%;
   }
 }
 
@@ -55,86 +55,219 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
+/* Custom styles for AK.SV clone */
+@layer components {
+  .genre-badge {
+    @apply px-2 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full;
+  }
+
+  .quality-badge {
+    @apply px-2 py-1 text-xs font-bold rounded uppercase tracking-wide;
+  }
+
+  .quality-hd {
+    @apply bg-blue-600 text-white;
+  }
+
+  .quality-fhd {
+    @apply bg-green-600 text-white;
+  }
+
+  .quality-4k {
+    @apply bg-purple-600 text-white;
+  }
+
+  .loading-spinner {
+    @apply w-8 h-8 border-4 border-t-transparent border-primary rounded-full animate-spin;
+  }
+
+  /* Arabic RTL Support */
+  [dir="rtl"] {
+    text-align: right;
+  }
+
+  [dir="rtl"] .space-x-reverse > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 1;
+  }
+
+  /* Movie/Series Card Hover Effects */
+  .movie-card {
+    @apply relative overflow-hidden rounded-lg bg-card border transition-all duration-300 hover:scale-105 hover:shadow-xl;
+  }
+
+  .movie-card .overlay {
+    @apply absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300;
+  }
+
+  .movie-card .content {
+    @apply absolute bottom-0 left-0 right-0 p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300;
+  }
+
+
+
+  /* Search Results Dropdown */
+  .search-dropdown {
+    @apply absolute top-full left-0 right-0 mt-2 bg-card border rounded-lg shadow-lg max-h-96 overflow-y-auto z-50;
+  }
+
+  /* Header Sticky */
+  .header-sticky {
+    @apply sticky top-0 z-40 backdrop-blur-md bg-background/80 border-b;
+  }
+
+  /* Hero Section Gradient */
+  .hero-gradient {
+    @apply bg-gradient-to-br from-primary/20 via-background to-background;
+  }
+
+
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-foreground;
+  }
+
+  /* Focus States */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2;
+  }
+
+  /* Animation Classes */
+  .fade-in {
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  .slide-up {
+    animation: slideUp 0.6s ease-out;
+  }
+
+  .slide-in-right {
+    animation: slideInRight 0.6s ease-out;
+  }
+
+  /* Background Patterns */
+  .bg-pattern {
+    background-image: radial-gradient(circle at 25px 25px, rgba(255,255,255,0.1) 2%, transparent 0%), 
+                      radial-gradient(circle at 75px 75px, rgba(255,255,255,0.1) 2%, transparent 0%);
+    background-size: 100px 100px;
+  }
+
+  /* Glass Effect */
+  .glass-effect {
+    @apply backdrop-blur-sm bg-white/10 border border-white/20;
+  }
+
+  /* Dark Mode Enhancements */
+  .dark .glass-effect {
+    @apply backdrop-blur-sm bg-black/10 border border-white/10;
+  }
 }
 
-::-webkit-scrollbar-track {
-  background: hsl(var(--muted));
+/* Keyframe Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--border));
-  border-radius: 3px;
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--accent-foreground));
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-/* Custom styles for media player */
-.video-player {
-  @apply w-full aspect-video bg-black rounded-lg overflow-hidden;
+/* Media Queries for Better Responsiveness */
+@media (max-width: 640px) {
+  .container {
+    @apply px-4;
+  }
+  
+  .movie-card {
+    @apply hover:scale-100;
+  }
 }
 
-.video-player video {
-  @apply w-full h-full object-cover;
+/* Print Styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
 }
 
-/* Hero section background */
-.hero-gradient {
-  background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%);
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .genre-badge {
+    @apply border border-current;
+  }
+  
+  .quality-badge {
+    @apply border-2 border-white;
+  }
 }
 
-/* Card hover effects */
-.movie-card {
-  @apply transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl;
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .movie-card {
+    @apply hover:scale-100;
+  }
 }
 
-.movie-card:hover .movie-overlay {
-  @apply opacity-100;
+/* Color Scheme Enhancements */
+.dark {
+  color-scheme: dark;
 }
 
-.movie-overlay {
-  @apply absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity duration-300 flex items-center justify-center;
+.light {
+  color-scheme: light;
 }
 
-/* Loading animation */
-.loading-spinner {
-  @apply animate-spin rounded-full h-8 w-8 border-b-2 border-primary;
+/* Selection Styling */
+::selection {
+  @apply bg-primary/30 text-primary-foreground;
 }
 
-/* Rating stars */
-.star-filled {
-  @apply text-yellow-400;
-}
-
-.star-empty {
-  @apply text-gray-300;
-}
-
-/* Genre badges */
-.genre-badge {
-  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary;
-}
-
-/* Quality badges */
-.quality-badge {
-  @apply inline-flex items-center px-2 py-1 rounded text-xs font-bold text-white;
-}
-
-.quality-hd {
-  @apply bg-blue-600;
-}
-
-.quality-fhd {
-  @apply bg-green-600;
-}
-
-.quality-4k {
-  @apply bg-purple-600;
+/* Placeholder Styling */
+::placeholder {
+  @apply text-muted-foreground opacity-70;
 }

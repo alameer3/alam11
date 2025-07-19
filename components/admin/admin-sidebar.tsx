@@ -12,7 +12,8 @@ import {
   Settings,
   BarChart3,
   Plus,
-  List
+  List,
+  Server
 } from 'lucide-react'
 
 const sidebarItems = [
@@ -49,6 +50,11 @@ const sidebarItems = [
     title: 'المستخدمين',
     href: '/admin/users',
     icon: Users
+  },
+  {
+    title: 'السيرفرات',
+    href: '/admin/servers',
+    icon: Server
   },
   {
     title: 'الإحصائيات',

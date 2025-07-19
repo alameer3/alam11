@@ -37,7 +37,7 @@ export function UserMenu() {
     }
   ]
 
-  if (session.user.role === 'ADMIN') {
+  if (session.user?.email === 'admin@example.com') { // مؤقت - في التطبيق الحقيقي استخدم role
     menuItems.push({
       label: 'لوحة التحكم',
       href: '/admin',

@@ -39,7 +39,7 @@ export function SearchBar() {
       {
         id: '1',
         title: 'فيلم البحث التجريبي',
-        type: 'movie',
+        type: 'movie' as const,
         poster: 'https://via.placeholder.com/100x150/1e293b/ffffff?text=Movie',
         year: 2024,
         slug: 'search-test-movie'
@@ -47,7 +47,7 @@ export function SearchBar() {
       {
         id: '2',
         title: 'مسلسل البحث التجريبي',
-        type: 'series',
+        type: 'series' as const,
         poster: 'https://via.placeholder.com/100x150/374151/ffffff?text=Series',
         year: 2024,
         slug: 'search-test-series'
