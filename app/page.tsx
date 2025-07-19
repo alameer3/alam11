@@ -51,18 +51,70 @@ export default function HomePage() {
                 <span className="logo">
                   <AkwamLogo />
                 </span>
-                <span className="text">شمس المواقع</span>
+                <span className="text font-size-20 font-weight-medium text-white">الصفحة الرئيسية</span>
               </div>
             </div>
             
-            {/* النص الترحيبي */}
-            <div className="text-center mt-4">
-              <h2 className="text-white text-2xl font-bold mb-3">
-                اكوام | موقع التحميل و المشاهدة العربي الاول
-              </h2>
-              <p className="text-gray-300 text-lg">
-                شمس المواقع، الموقع العربي الاول لتحميل و مشاهدة الافلام, المسلسلات, البرامج و التطبيقات
-              </p>
+            {/* شريط البحث الرئيسي */}
+            <div className="widget-2 widget mb-4">
+              <div className="widget-body row">
+                <div className="col-lg-8 mx-auto">
+                  <form className="form d-flex no-gutters mb-20" action="/search" method="get">
+                    <div className="col pl-12">
+                      <input 
+                        type="text" 
+                        className="form-control bg-transparent border border-gray-600 text-white rounded-r-none" 
+                        id="widget2SearchInput" 
+                        name="q"
+                        placeholder="ابحث عن فيلم او مسلسل او لعبة او برنامج ..."
+                      />
+                    </div>
+                    <div className="col-auto">
+                      <button type="submit" className="btn bg-[#26baee] hover:bg-[#0d82ab] text-white px-6 py-2 rounded-l-none border-0">
+                        بحث
+                      </button>
+                    </div>
+                  </form>
+                  
+                  {/* الأقسام الرئيسية مطابقة للأصل */}
+                  <div className="main-categories-list">
+                    <div className="row grid grid-cols-4 gap-2">
+                      <div className="col-lg col-4">
+                        <a href="/movies" className="item d-block text-center text-white py-3 h-100 bg-[#1a1a1a] rounded border border-[#333] hover:border-[#26baee] transition-all">
+                          <div className="icn mb-2">
+                            <i className="icon-video-camera text-2xl">🎬</i>
+                          </div>
+                          <div className="font-size-16">أفلام</div>
+                        </a>
+                      </div>
+                      <div className="col-lg col-4">
+                        <a href="/series" className="item d-block text-center text-white py-3 h-100 bg-[#1a1a1a] rounded border border-[#333] hover:border-[#26baee] transition-all">
+                          <div className="icn mb-2">
+                            <i className="icon-monitor text-2xl">📺</i>
+                          </div>
+                          <div className="font-size-16">مسلسلات</div>
+                        </a>
+                      </div>
+                      <div className="col-lg col-4">
+                        <a href="/shows" className="item d-block text-center text-white py-3 h-100 bg-[#1a1a1a] rounded border border-[#333] hover:border-[#26baee] transition-all">
+                          <div className="icn mb-2">
+                            <i className="icon-tv text-2xl">📡</i>
+                          </div>
+                          <div className="font-size-16">تلفزيون</div>
+                        </a>
+                      </div>
+                      <div className="col-lg col-4">
+                        <a href="/mix" className="item d-block text-center text-white py-3 h-100 bg-[#1a1a1a] rounded border border-[#333] hover:border-[#26baee] transition-all">
+                          <div className="icn mb-2">
+                            <i className="icon-mix text-2xl">🎭</i>
+                          </div>
+                          <div className="font-size-16">منوعات</div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             
             {/* إحصائيات الموقع */}
