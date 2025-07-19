@@ -349,7 +349,7 @@ export class AutoNotificationManager {
       // فحص استخدام الذاكرة
       if (typeof process !== 'undefined') {
         const memUsage = process.memoryUsage()
-        const memUsagePercent = (memUsage.used / memUsage.total) * 100
+        const memUsagePercent = (memUsage.heapUsed / memUsage.heapTotal) * 100
 
         if (memUsagePercent > 80) {
           this.notificationService.addPerformanceAlert(
