@@ -1,146 +1,177 @@
 import { Suspense } from 'react'
-import { Header } from '@/components/layout/header'
-import { Footer } from '@/components/layout/footer'
-import { HeroSection } from '@/components/home/hero-section'
-import { TrendingSection } from '@/components/home/trending-section'
-import { LatestMovies } from '@/components/home/latest-movies'
-import { LatestSeries } from '@/components/home/latest-series'
-import { TopRated } from '@/components/home/top-rated'
-import { LoadingSpinner } from '@/components/ui/loading-spinner'
+import { MainHeader } from '@/components/layout/main-header'
+import { MainMenu } from '@/components/layout/main-menu'
+import { SearchBox } from '@/components/layout/search-box'
+import { AkwamLogo } from '@/components/ui/akwam-logo'
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
-      <Header />
+    <div dir="rtl" className="body-home header-fixed">
+      <span className="site-overlay"></span>
       
-      <main>
-        {/* Hero Section */}
-        <Suspense fallback={<LoadingSpinner />}>
-          <HeroSection />
-        </Suspense>
-
-        {/* Content Sections */}
-        <div className="container mx-auto px-4 py-8 space-y-12">
-          {/* Trending Now */}
-          <section>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
-                <span className="w-1 h-8 bg-red-600 rounded"></span>
-                الأكثر مشاهدة الآن
-              </h2>
-              <a href="/movies" className="text-red-500 hover:text-red-400 font-medium">
-                عرض الكل ←
-              </a>
-            </div>
-            <Suspense fallback={<LoadingSpinner />}>
-              <TrendingSection />
-            </Suspense>
-          </section>
-
-          {/* Latest Movies */}
-          <section>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
-                <span className="w-1 h-8 bg-red-600 rounded"></span>
-                أحدث الأفلام
-              </h2>
-              <a href="/movies" className="text-red-500 hover:text-red-400 font-medium">
-                عرض الكل ←
-              </a>
-            </div>
-            <Suspense fallback={<LoadingSpinner />}>
-              <LatestMovies />
-            </Suspense>
-          </section>
-
-          {/* Latest Series */}
-          <section>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
-                <span className="w-1 h-8 bg-red-600 rounded"></span>
-                أحدث المسلسلات
-              </h2>
-              <a href="/series" className="text-red-500 hover:text-red-400 font-medium">
-                عرض الكل ←
-              </a>
-            </div>
-            <Suspense fallback={<LoadingSpinner />}>
-              <LatestSeries />
-            </Suspense>
-          </section>
-
-          {/* Top Rated */}
-          <section>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
-                <span className="w-1 h-8 bg-red-600 rounded"></span>
-                الأعلى تقييماً
-              </h2>
-              <a href="/mix" className="text-red-500 hover:text-red-400 font-medium">
-                عرض الكل ←
-              </a>
-            </div>
-            <Suspense fallback={<LoadingSpinner />}>
-              <TopRated />
-            </Suspense>
-          </section>
-
-          {/* Categories Quick Access */}
-          <section>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
-                <span className="w-1 h-8 bg-red-600 rounded"></span>
-                تصفح حسب النوع
-              </h2>
+      {/* القائمة الجانبية */}
+      <MainMenu />
+      
+      {/* شريط البحث المتنقل */}
+      <SearchBox />
+      
+      {/* حاوي الموقع */}
+      <div className="site-container">
+        <div className="page-home">
+          {/* مساحة فارغة للهيدر */}
+          <div className="main-header-top"></div>
+          
+          {/* رأس الموقع */}
+          <MainHeader />
+          
+          {/* مساحة فارغة للهيدر */}
+          <div className="main-header-height"></div>
+          
+          {/* المحتوى الرئيسي */}
+          <div className="container py-5 my-5">
+            {/* زر الموقع الرئيسي الدائري */}
+            <div className="home-site-btn-container mt-5">
+              <h1>
+                <a href="/ones" className="link" style={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  width: '100%',
+                  height: '100%',
+                  zIndex: 10
+                }}></a>
+              </h1>
+              <div 
+                className="home-site-btn"
+                style={{
+                  backgroundImage: "url('/images/site-new.webp')",
+                  transition: 'background-position 5s'
+                }}
+              >
+                <span className="logo">
+                  <AkwamLogo />
+                </span>
+                <span className="text font-size-20 font-weight-medium text-white">الصفحة الرئيسية</span>
+              </div>
             </div>
             
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {/* شريط البحث الرئيسي */}
+            <div className="widget-2 widget mb-4">
+              <div className="widget-body row">
+                <div className="col-lg-8 mx-auto">
+                  <form className="form d-flex no-gutters mb-20" action="/search" method="get">
+                    <div className="col pl-12">
+                      <input 
+                        type="text" 
+                        className="form-control bg-transparent border border-gray-600 text-white rounded-r-none" 
+                        id="widget2SearchInput" 
+                        name="q"
+                        placeholder="ابحث عن فيلم او مسلسل او لعبة او برنامج ..."
+                      />
+                    </div>
+                    <div className="col-auto">
+                      <button type="submit" className="btn bg-[#26baee] hover:bg-[#0d82ab] text-white px-6 py-2 rounded-l-none border-0">
+                        بحث
+                      </button>
+                    </div>
+                  </form>
+                  
+                  {/* الأقسام الرئيسية مطابقة للأصل */}
+                  <div className="main-categories-list">
+                    <div className="row grid grid-cols-4 gap-2">
+                      <div className="col-lg col-4">
+                        <a href="/movies" className="item d-block text-center text-white py-3 h-100 bg-[#1a1a1a] rounded border border-[#333] hover:border-[#26baee] transition-all">
+                          <div className="icn mb-2">
+                            <i className="icon-video-camera text-2xl">🎬</i>
+                          </div>
+                          <div className="font-size-16">أفلام</div>
+                        </a>
+                      </div>
+                      <div className="col-lg col-4">
+                        <a href="/series" className="item d-block text-center text-white py-3 h-100 bg-[#1a1a1a] rounded border border-[#333] hover:border-[#26baee] transition-all">
+                          <div className="icn mb-2">
+                            <i className="icon-monitor text-2xl">📺</i>
+                          </div>
+                          <div className="font-size-16">مسلسلات</div>
+                        </a>
+                      </div>
+                      <div className="col-lg col-4">
+                        <a href="/shows" className="item d-block text-center text-white py-3 h-100 bg-[#1a1a1a] rounded border border-[#333] hover:border-[#26baee] transition-all">
+                          <div className="icn mb-2">
+                            <i className="icon-tv text-2xl">📡</i>
+                          </div>
+                          <div className="font-size-16">تلفزيون</div>
+                        </a>
+                      </div>
+                      <div className="col-lg col-4">
+                        <a href="/mix" className="item d-block text-center text-white py-3 h-100 bg-[#1a1a1a] rounded border border-[#333] hover:border-[#26baee] transition-all">
+                          <div className="icn mb-2">
+                            <i className="icon-mix text-2xl">🎭</i>
+                          </div>
+                          <div className="font-size-16">منوعات</div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* إحصائيات الموقع */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-[#26baee] mb-2">15,000+</div>
+                <div className="text-gray-300 text-sm">فيلم</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-[#26baee] mb-2">8,500+</div>
+                <div className="text-gray-300 text-sm">مسلسل</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-[#26baee] mb-2">2,300+</div>
+                <div className="text-gray-300 text-sm">برنامج</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-[#26baee] mb-2">500K+</div>
+                <div className="text-gray-300 text-sm">مستخدم</div>
+              </div>
+            </div>
+            
+            {/* أقسام التصفح السريع */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
               {[
-                { name: 'أكشن', href: '/movies?genre=action', color: 'from-red-600 to-red-800' },
-                { name: 'كوميدي', href: '/movies?genre=comedy', color: 'from-yellow-600 to-yellow-800' },
-                { name: 'دراما', href: '/movies?genre=drama', color: 'from-blue-600 to-blue-800' },
-                { name: 'رعب', href: '/movies?genre=horror', color: 'from-purple-600 to-purple-800' },
-                { name: 'رومانسي', href: '/movies?genre=romance', color: 'from-pink-600 to-pink-800' },
-                { name: 'خيال علمي', href: '/movies?genre=sci-fi', color: 'from-green-600 to-green-800' },
-              ].map((genre) => (
-                <a
-                  key={genre.name}
-                  href={genre.href}
-                  className={`bg-gradient-to-br ${genre.color} p-6 rounded-lg text-center hover:scale-105 transition-transform duration-300 group`}
+                { name: 'أفلام', href: '/movies', icon: '🎬', count: '15,000+' },
+                { name: 'مسلسلات', href: '/series', icon: '📺', count: '8,500+' },
+                { name: 'تلفزيون', href: '/shows', icon: '📡', count: '2,300+' },
+                { name: 'منوعات', href: '/mix', icon: '🎭', count: '3,200+' }
+              ].map((item) => (
+                <a 
+                  key={item.name}
+                  href={item.href}
+                  className="group bg-[#1a1a1a] border border-[#333] rounded-xl p-6 text-center hover:border-[#26baee] transition-all duration-300 hover:bg-[#26baee]/10"
                 >
-                  <h3 className="text-white font-semibold group-hover:text-gray-200">
-                    {genre.name}
+                  <div className="text-4xl mb-3">{item.icon}</div>
+                  <h3 className="text-white font-bold text-lg mb-2 group-hover:text-[#26baee] transition-colors">
+                    {item.name}
                   </h3>
+                  <p className="text-gray-400 text-sm">{item.count}</p>
                 </a>
               ))}
             </div>
-          </section>
-
-          {/* Stats Section */}
-          <section className="bg-gray-900 rounded-xl p-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-              <div>
-                <div className="text-3xl font-bold text-red-500 mb-2">15,000+</div>
-                <div className="text-gray-400">فيلم</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-red-500 mb-2">8,500+</div>
-                <div className="text-gray-400">مسلسل</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-red-500 mb-2">2,300+</div>
-                <div className="text-gray-400">برنامج</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-red-500 mb-2">500K+</div>
-                <div className="text-gray-400">مستخدم</div>
-              </div>
+            
+            {/* تحديثات حديثة */}
+            <div className="mt-12 text-center">
+              <a 
+                href="/recent" 
+                className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-[#26baee] to-[#0d82ab] text-white font-bold rounded-full hover:shadow-lg transition-all duration-300 hover:scale-105"
+              >
+                <span className="ml-2">أضيف حديثاً</span>
+                <span>✨</span>
+              </a>
             </div>
-          </section>
+          </div>
         </div>
-      </main>
-
-      <Footer />
+      </div>
     </div>
   )
 }
