@@ -1,63 +1,91 @@
 import Link from 'next/link'
-import { Film, Mail, Phone, MapPin } from 'lucide-react'
+import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from 'lucide-react'
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
 
   const footerLinks = {
-    about: [
-      { name: 'من نحن', href: '/about' },
-      { name: 'سياسة الخصوصية', href: '/privacy' },
-      { name: 'شروط الاستخدام', href: '/terms' },
-      { name: 'اتصل بنا', href: '/contact' },
+    browse: [
+      { name: 'الأفلام', href: '/movies' },
+      { name: 'المسلسلات', href: '/series' },
+      { name: 'البرامج', href: '/shows' },
+      { name: 'المختلط', href: '/mix' },
     ],
-    categories: [
-      { name: 'أفلام عربية', href: '/movies?genre=arabic' },
-      { name: 'أفلام أجنبية', href: '/movies?genre=foreign' },
-      { name: 'مسلسلات عربية', href: '/series?genre=arabic' },
-      { name: 'مسلسلات أجنبية', href: '/series?genre=foreign' },
+    genres: [
+      { name: 'أكشن', href: '/movies?genre=action' },
+      { name: 'كوميدي', href: '/movies?genre=comedy' },
+      { name: 'دراما', href: '/movies?genre=drama' },
+      { name: 'رعب', href: '/movies?genre=horror' },
     ],
     support: [
       { name: 'مركز المساعدة', href: '/help' },
+      { name: 'اتصل بنا', href: '/contact' },
       { name: 'الأسئلة الشائعة', href: '/faq' },
-      { name: 'بلاغ عن مشكلة', href: '/report' },
-      { name: 'طلب محتوى', href: '/request' },
+      { name: 'الإبلاغ عن مشكلة', href: '/report' },
     ],
+    legal: [
+      { name: 'شروط الاستخدام', href: '/terms' },
+      { name: 'سياسة الخصوصية', href: '/privacy' },
+      { name: 'إخلاء المسؤولية', href: '/disclaimer' },
+      { name: 'حقوق الطبع والنشر', href: '/copyright' },
+    ]
   }
 
+  const socialLinks = [
+    { name: 'Facebook', icon: Facebook, href: '#', color: 'hover:text-blue-500' },
+    { name: 'Twitter', icon: Twitter, href: '#', color: 'hover:text-blue-400' },
+    { name: 'Instagram', icon: Instagram, href: '#', color: 'hover:text-pink-500' },
+    { name: 'YouTube', icon: Youtube, href: '#', color: 'hover:text-red-500' },
+  ]
+
   return (
-    <footer className="border-t bg-background">
+    <footer className="bg-gray-900 border-t border-gray-800">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Brand */}
-          <div className="space-y-4">
-            <Link href="/" className="flex items-center space-x-2 space-x-reverse">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                <Film className="h-5 w-5" />
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
+          {/* Brand Section */}
+          <div className="lg:col-span-2">
+            <div className="flex items-center space-x-2 space-x-reverse mb-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-red-600 to-red-700 text-white">
+                <span className="text-xl font-bold">AK</span>
               </div>
-              <span className="text-xl font-bold">StreamHub</span>
-            </Link>
-            <p className="text-sm text-muted-foreground max-w-sm">
-              أفضل منصة لمشاهدة الأفلام والمسلسلات العربية والأجنبية بجودة عالية ومجاناً. 
-              استمتع بمكتبة ضخمة من المحتوى المتنوع.
+              <div>
+                <span className="text-2xl font-bold text-white">AK</span>
+                <span className="text-xl text-gray-300">.SV</span>
+              </div>
+            </div>
+            
+            <p className="text-gray-400 mb-4 leading-relaxed">
+              أفضل موقع لمشاهدة وتحميل الأفلام والمسلسلات العربية والأجنبية بجودة عالية.
+              استمتع بأحدث الإصدارات والكلاسيكيات المميزة مجاناً.
             </p>
-            <div className="flex space-x-4 space-x-reverse text-sm text-muted-foreground">
-              <div className="flex items-center space-x-2 space-x-reverse">
+
+            {/* Contact Info */}
+            <div className="space-y-2 text-sm text-gray-400">
+              <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                <span>info@streamhub.com</span>
+                <span>info@ak.sv</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Phone className="h-4 w-4" />
+                <span>+966 50 123 4567</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4" />
+                <span>المملكة العربية السعودية</span>
               </div>
             </div>
           </div>
 
-          {/* About Links */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">حول الموقع</h3>
+          {/* Browse Links */}
+          <div>
+            <h3 className="text-white font-semibold mb-4">تصفح</h3>
             <ul className="space-y-2">
-              {footerLinks.about.map((link) => (
+              {footerLinks.browse.map((link) => (
                 <li key={link.name}>
-                  <Link
+                  <Link 
                     href={link.href}
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    className="text-gray-400 hover:text-white transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -66,15 +94,15 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Categories */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">التصنيفات</h3>
+          {/* Genres Links */}
+          <div>
+            <h3 className="text-white font-semibold mb-4">التصنيفات</h3>
             <ul className="space-y-2">
-              {footerLinks.categories.map((link) => (
+              {footerLinks.genres.map((link) => (
                 <li key={link.name}>
-                  <Link
+                  <Link 
                     href={link.href}
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    className="text-gray-400 hover:text-white transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -83,15 +111,15 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Support */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">الدعم</h3>
+          {/* Support Links */}
+          <div>
+            <h3 className="text-white font-semibold mb-4">الدعم</h3>
             <ul className="space-y-2">
               {footerLinks.support.map((link) => (
                 <li key={link.name}>
-                  <Link
+                  <Link 
                     href={link.href}
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    className="text-gray-400 hover:text-white transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -101,16 +129,76 @@ export function Footer() {
           </div>
         </div>
 
-        <hr className="my-8" />
-
-        <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <p className="text-sm text-muted-foreground">
-            © {currentYear} StreamHub. جميع الحقوق محفوظة.
-          </p>
-          
-          <div className="flex items-center space-x-4 space-x-reverse text-sm text-muted-foreground">
-            <span>تم التطوير بـ ❤️ في المملكة العربية السعودية</span>
+        {/* Newsletter Subscription */}
+        <div className="bg-gray-800 rounded-lg p-6 mb-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h3 className="text-white font-semibold mb-2">اشترك في النشرة الإخبارية</h3>
+              <p className="text-gray-400 text-sm">احصل على أحدث الأفلام والمسلسلات فور إضافتها</p>
+            </div>
+            <div className="flex gap-2 max-w-md w-full md:w-auto">
+              <input
+                type="email"
+                placeholder="أدخل بريدك الإلكتروني"
+                className="flex-1 px-4 py-2 bg-gray-700 text-white rounded-md border border-gray-600 focus:border-red-500 focus:outline-none"
+              />
+              <button className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors duration-200">
+                اشتراك
+              </button>
+            </div>
           </div>
+        </div>
+
+        {/* Bottom Section */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pt-8 border-t border-gray-800">
+          {/* Copyright */}
+          <div className="text-gray-400 text-sm">
+            <p>© {currentYear} AK.SV. جميع الحقوق محفوظة.</p>
+            <p className="mt-1">موقع AK.SV لا يستضيف أي ملفات على خوادمه، جميع الروابط خارجية.</p>
+          </div>
+
+          {/* Social Links */}
+          <div className="flex items-center gap-4">
+            <span className="text-gray-400 text-sm">تابعنا:</span>
+            <div className="flex gap-3">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.href}
+                  className={`text-gray-400 ${social.color} transition-colors duration-200`}
+                  aria-label={social.name}
+                >
+                  <social.icon className="h-5 w-5" />
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Legal Links */}
+        <div className="flex flex-wrap justify-center gap-4 pt-4 border-t border-gray-800 mt-4">
+          {footerLinks.legal.map((link, index) => (
+            <span key={link.name} className="flex items-center">
+              <Link 
+                href={link.href}
+                className="text-gray-500 hover:text-gray-300 text-xs transition-colors duration-200"
+              >
+                {link.name}
+              </Link>
+              {index < footerLinks.legal.length - 1 && (
+                <span className="text-gray-600 mx-2">•</span>
+              )}
+            </span>
+          ))}
+        </div>
+
+        {/* Disclaimer */}
+        <div className="mt-6 p-4 bg-yellow-900/20 border border-yellow-800/30 rounded-lg">
+          <p className="text-yellow-300 text-xs text-center leading-relaxed">
+            <strong>تنبيه:</strong> هذا الموقع لا يستضيف أو يخزن أي ملفات فيديو على خوادمه. 
+            جميع المحتويات المعروضة هي روابط خارجية يتم جمعها من مصادر متاحة على الإنترنت. 
+            إذا كنت مالك المحتوى وتريد إزالته، يرجى التواصل معنا.
+          </p>
         </div>
       </div>
     </footer>

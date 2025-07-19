@@ -83,7 +83,7 @@ export default function MixPage() {
   const shows = mixedContent.filter(item => item.type === 'show')
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#0a0a0a] text-white">
       <Header />
       
       <main className="container mx-auto px-4 py-8">

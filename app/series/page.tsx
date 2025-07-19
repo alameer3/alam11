@@ -70,7 +70,7 @@ const series = [
 
 export default function SeriesPage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#0a0a0a] text-white">
       <Header />
       
       <main className="container mx-auto px-4 py-8">

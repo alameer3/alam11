@@ -92,7 +92,7 @@ export function SearchBar() {
     <div className="relative w-full">
       {/* Search Input */}
       <div className="relative">
-        <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+        <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
         <input
           ref={inputRef}
           type="text"
@@ -103,7 +103,7 @@ export function SearchBar() {
             setIsOpen(true)
           }}
           onFocus={() => setIsOpen(true)}
-          className="w-full bg-background border border-input rounded-md py-2 pr-10 pl-10 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+          className="w-full bg-gray-700 border border-gray-600 rounded-md py-2 pr-10 pl-10 text-sm text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
         />
         {query && (
           <Button

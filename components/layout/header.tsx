@@ -17,7 +17,8 @@ import {
   Home,
   User,
   LogOut,
-  Settings
+  Settings,
+  Search
 } from 'lucide-react'
 
 export function Header() {
@@ -30,28 +31,31 @@ export function Header() {
     { name: 'الأفلام', href: '/movies', icon: Film },
     { name: 'المسلسلات', href: '/series', icon: Tv },
     { name: 'البرامج', href: '/shows', icon: Tv },
-    { name: 'المختلط', href: '/mix', icon: Film },
+    { name: 'المختلط', href: '/mix', icon: Film }
   ]
 
   return (
-    <header className="header-sticky w-full">
+    <header className="bg-[#0a0a0a] border-b border-gray-800 sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 space-x-reverse">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Film className="h-5 w-5" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-red-600 to-red-700 text-white">
+              <span className="text-xl font-bold">AK</span>
             </div>
-            <span className="text-xl font-bold">AK Stream</span>
+            <div className="hidden md:block">
+              <span className="text-2xl font-bold text-white">AK</span>
+              <span className="text-xl text-gray-300">.SV</span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6 space-x-reverse">
+          <nav className="hidden md:flex items-center space-x-8 space-x-reverse">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-sm font-medium transition-colors hover:text-primary"
+                className="text-gray-300 hover:text-white transition-colors duration-200 font-medium"
               >
                 {item.name}
               </Link>
@@ -59,115 +63,120 @@ export function Header() {
           </nav>
 
           {/* Search Bar */}
-          <div className="hidden lg:flex flex-1 max-w-md mx-8">
+          <div className="hidden md:block flex-1 max-w-md mx-8">
             <SearchBar />
           </div>
 
-          {/* Right Side */}
+          {/* Right Side Actions */}
           <div className="flex items-center space-x-4 space-x-reverse">
             {/* Theme Toggle */}
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="text-gray-300 hover:text-white hover:bg-gray-800"
             >
-              <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              <span className="sr-only">تبديل المظهر</span>
+              {theme === 'dark' ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )}
             </Button>
 
             {/* User Menu */}
             {session ? (
               <UserMenu />
             ) : (
-              <div className="flex items-center space-x-2 space-x-reverse">
-                <Button asChild variant="ghost">
-                  <Link href="/auth/login">تسجيل الدخول</Link>
+              <div className="hidden md:flex items-center space-x-2 space-x-reverse">
+                <Button variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-800">
+                  تسجيل الدخول
                 </Button>
-                <Button asChild>
-                  <Link href="/auth/register">إنشاء حساب</Link>
+                <Button className="bg-red-600 hover:bg-red-700 text-white">
+                  إنشاء حساب
                 </Button>
               </div>
             )}
 
-            {/* Mobile Menu Toggle */}
+            {/* Mobile Menu Button */}
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden"
+              className="md:hidden text-gray-300 hover:text-white hover:bg-gray-800"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? (
-                <X className="h-5 w-5" />
+                <X className="h-6 w-6" />
               ) : (
-                <Menu className="h-5 w-5" />
+                <Menu className="h-6 w-6" />
               )}
             </Button>
           </div>
         </div>
 
-        {/* Mobile Search */}
-        <div className="lg:hidden pb-4">
-          <SearchBar />
-        </div>
-      </div>
-
-      {/* Mobile Navigation */}
-      {isMenuOpen && (
-        <div className="md:hidden border-t bg-background">
-          <div className="container mx-auto px-4 py-4">
-            <nav className="flex flex-col space-y-4">
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden py-4 border-t border-gray-800">
+            {/* Mobile Search */}
+            <div className="px-4 py-2">
+              <SearchBar />
+            </div>
+            
+            {/* Mobile Navigation */}
+            <nav className="space-y-2 px-4">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="flex items-center space-x-3 space-x-reverse text-sm font-medium hover:text-primary"
+                  className="flex items-center space-x-3 space-x-reverse px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <item.icon className="h-4 w-4" />
+                  <item.icon className="h-5 w-5" />
                   <span>{item.name}</span>
                 </Link>
               ))}
               
-              {session && (
+              {session ? (
                 <>
-                  <hr className="my-2" />
                   <Link
                     href="/profile"
-                    className="flex items-center space-x-3 space-x-reverse text-sm font-medium hover:text-primary"
-                    onClick={() => setIsMenuOpen(false)}
+                    className="flex items-center space-x-3 space-x-reverse px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md transition-colors"
                   >
-                    <User className="h-4 w-4" />
+                    <User className="h-5 w-5" />
                     <span>الملف الشخصي</span>
                   </Link>
                   
                   {session.user?.email === 'admin@example.com' && (
                     <Link
                       href="/admin"
-                      className="flex items-center space-x-3 space-x-reverse text-sm font-medium hover:text-primary"
-                      onClick={() => setIsMenuOpen(false)}
+                      className="flex items-center space-x-3 space-x-reverse px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md transition-colors"
                     >
-                      <Settings className="h-4 w-4" />
+                      <Settings className="h-5 w-5" />
                       <span>لوحة التحكم</span>
                     </Link>
                   )}
                   
                   <button
-                    onClick={() => {
-                      signOut()
-                      setIsMenuOpen(false)
-                    }}
-                    className="flex items-center space-x-3 space-x-reverse text-sm font-medium hover:text-primary text-start"
+                    onClick={() => signOut()}
+                    className="flex items-center space-x-3 space-x-reverse px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md transition-colors w-full text-right"
                   >
-                    <LogOut className="h-4 w-4" />
+                    <LogOut className="h-5 w-5" />
                     <span>تسجيل الخروج</span>
                   </button>
                 </>
+              ) : (
+                <div className="space-y-2 px-3 py-2">
+                  <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800">
+                    تسجيل الدخول
+                  </Button>
+                  <Button className="w-full bg-red-600 hover:bg-red-700 text-white">
+                    إنشاء حساب
+                  </Button>
+                </div>
               )}
             </nav>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </header>
   )
 }
