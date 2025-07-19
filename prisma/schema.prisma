@@ -1,10 +1,29 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  role          String    @default("user")
+  accounts      Account[]
+  sessions      Session[]
+  watchLists    WatchList[]
+  ratings       Rating[]
+  comments      Comment[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
 model Account {
@@ -34,25 +53,6 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?
-  role          String    @default("USER") // USER or ADMIN
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
-  accounts      Account[]
-  sessions      Session[]
-  watchLater    WatchLater[]
-  ratings       Rating[]
-  comments      Comment[]
-  views         View[]
-}
-
 model VerificationToken {
   identifier String
   token      String   @unique
@@ -61,205 +61,322 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Genre {
-  id       String @id @default(cuid())
-  name     String @unique
-  slug     String @unique
-  image    String?
-  
-  movies   MovieGenre[]
-  series   SeriesGenre[]
-  
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model Movie {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
-  description String?
-  poster      String?
-  backdrop    String?
-  trailer     String?
-  year        Int?
-  duration    Int?    // in minutes
-  rating      Float?   @default(0)
-  imdbId      String?
-  tmdbId      Int?
-  status      String   @default("ACTIVE") // ACTIVE, INACTIVE, COMING_SOON
-  featured    Boolean  @default(false)
-  
-  genres      MovieGenre[]
-  sources     MovieSource[]
-  watchLater  WatchLater[]
-  ratings     Rating[]
-  comments    Comment[]
-  views       View[]
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String      @id @default(cuid())
+  title        String
+  titleAr      String?
+  slug         String      @unique
+  description  String?
+  descriptionAr String?
+  poster       String?
+  backdrop     String?
+  trailer      String?
+  rating       Float       @default(0)
+  imdbRating   Float?
+  year         Int
+  duration     Int?
+  quality      String?
+  country      String?
+  language     String?
+  director     String?
+  cast         String?
+  status       String      @default("published")
+  featured     Boolean     @default(false)
+  trending     Boolean     @default(false)
+  watchLists   WatchList[]
+  ratings      Rating[]
+  comments     Comment[]
+  genres       GenreMovie[]
+  servers      Server[]
+  views        View[]
+  downloads    Download[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
 }
 
 model Series {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
+  id           String        @id @default(cuid())
+  title        String
+  titleAr      String?
+  slug         String        @unique
+  description  String?
+  descriptionAr String?
+  poster       String?
+  backdrop     String?
+  trailer      String?
+  rating       Float         @default(0)
+  imdbRating   Float?
+  year         Int
+  country      String?
+  language     String?
+  director     String?
+  cast         String?
+  status       String        @default("published")
+  featured     Boolean       @default(false)
+  trending     Boolean       @default(false)
+  totalSeasons Int           @default(1)
+  totalEpisodes Int          @default(0)
+  watchLists   WatchList[]
+  ratings      Rating[]
+  comments     Comment[]
+  genres       GenreSeries[]
+  seasons      Season[]
+  views        View[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Season {
+  id          String    @id @default(cuid())
+  seriesId    String
+  seasonNumber Int
+  title       String?
   description String?
   poster      String?
-  backdrop    String?
-  trailer     String?
-  year        Int?
-  seasons     Int?     @default(1)
-  rating      Float?   @default(0)
-  imdbId      String?
-  tmdbId      Int?
-  status      String   @default("ACTIVE") // ACTIVE, INACTIVE, COMING_SOON
-  featured    Boolean  @default(false)
-  
-  genres      SeriesGenre[]
+  totalEpisodes Int     @default(0)
+  series      Series    @relation(fields: [seriesId], references: [id], onDelete: Cascade)
   episodes    Episode[]
-  watchLater  WatchLater[]
-  ratings     Rating[]
-  comments    Comment[]
-  views       View[]
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([seriesId, seasonNumber])
 }
 
 model Episode {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String
-  description String?
-  poster      String?
-  season      Int
-  episode     Int
-  duration    Int?     // in minutes
-  airDate     DateTime?
-  
-  seriesId    String
-  series      Series   @relation(fields: [seriesId], references: [id], onDelete: Cascade)
-  
-  sources     EpisodeSource[]
-  views       View[]
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  @@unique([seriesId, season, episode])
+  id            String     @id @default(cuid())
+  seasonId      String
+  episodeNumber Int
+  title         String?
+  description   String?
+  duration      Int?
+  thumbnail     String?
+  season        Season     @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  servers       Server[]
+  views         View[]
+  downloads     Download[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@unique([seasonId, episodeNumber])
 }
 
-model MovieGenre {
+model Genre {
+  id       String        @id @default(cuid())
+  name     String        @unique
+  nameAr   String?
+  slug     String        @unique
+  movies   GenreMovie[]
+  series   GenreSeries[]
+}
+
+model GenreMovie {
   movieId String
   genreId String
-  
-  movie   Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
-  genre   Genre @relation(fields: [genreId], references: [id], onDelete: Cascade)
-  
+  movie   Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  genre   Genre  @relation(fields: [genreId], references: [id], onDelete: Cascade)
+
   @@id([movieId, genreId])
 }
 
-model SeriesGenre {
+model GenreSeries {
   seriesId String
   genreId  String
-  
   series   Series @relation(fields: [seriesId], references: [id], onDelete: Cascade)
   genre    Genre  @relation(fields: [genreId], references: [id], onDelete: Cascade)
-  
+
   @@id([seriesId, genreId])
 }
 
-model MovieSource {
-  id       String @id @default(cuid())
-  movieId  String
-  quality  String // HD, FHD, 4K
-  language String // ar, en, etc
-  url      String
-  type     String @default("STREAM") // STREAM or DOWNLOAD
-  
-  movie    Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
-  
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model EpisodeSource {
-  id        String @id @default(cuid())
-  episodeId String
-  quality   String // HD, FHD, 4K
-  language  String // ar, en, etc
+model Server {
+  id        String   @id @default(cuid())
+  name      String
   url       String
-  type      String @default("STREAM") // STREAM or DOWNLOAD
-  
-  episode   Episode @relation(fields: [episodeId], references: [id], onDelete: Cascade)
-  
+  quality   String?
+  language  String?
+  movieId   String?
+  episodeId String?
+  movie     Movie?   @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  episode   Episode? @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+  status    String   @default("active")
+  priority  Int      @default(1)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model WatchLater {
-  id     String @id @default(cuid())
-  userId String
-  movieId String?
+model WatchList {
+  id       String  @id @default(cuid())
+  userId   String
+  movieId  String?
   seriesId String?
-  
-  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  movie  Movie?  @relation(fields: [movieId], references: [id], onDelete: Cascade)
-  series Series? @relation(fields: [seriesId], references: [id], onDelete: Cascade)
-  
-  createdAt DateTime @default(now())
-  
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie    Movie?  @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  series   Series? @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  addedAt  DateTime @default(now())
+
   @@unique([userId, movieId])
   @@unique([userId, seriesId])
 }
 
 model Rating {
-  id       String @id @default(cuid())
+  id       String  @id @default(cuid())
   userId   String
   movieId  String?
   seriesId String?
-  rating   Int     // 1-5 stars
-  
+  rating   Int
   user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   movie    Movie?  @relation(fields: [movieId], references: [id], onDelete: Cascade)
   series   Series? @relation(fields: [seriesId], references: [id], onDelete: Cascade)
-  
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
+
   @@unique([userId, movieId])
   @@unique([userId, seriesId])
 }
 
 model Comment {
-  id       String @id @default(cuid())
+  id       String  @id @default(cuid())
   userId   String
   movieId  String?
   seriesId String?
   content  String
-  
   user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   movie    Movie?  @relation(fields: [movieId], references: [id], onDelete: Cascade)
   series   Series? @relation(fields: [seriesId], references: [id], onDelete: Cascade)
-  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model View {
-  id        String @id @default(cuid())
-  userId    String?
+  id        String   @id @default(cuid())
   movieId   String?
   seriesId  String?
   episodeId String?
-  ipAddress String
-  
-  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  ipAddress String?
+  userAgent String?
   movie     Movie?   @relation(fields: [movieId], references: [id], onDelete: Cascade)
   series    Series?  @relation(fields: [seriesId], references: [id], onDelete: Cascade)
   episode   Episode? @relation(fields: [episodeId], references: [id], onDelete: Cascade)
-  
-  createdAt DateTime @default(now())
+  viewedAt  DateTime @default(now())
+}
+
+model Download {
+  id        String   @id @default(cuid())
+  movieId   String?
+  episodeId String?
+  ipAddress String?
+  userAgent String?
+  quality   String?
+  movie     Movie?   @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  episode   Episode? @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+  downloadedAt DateTime @default(now())
+}
+
+// نظام المراقبة والصيانة الذكي
+
+model SystemHealth {
+  id              String   @id @default(cuid())
+  status          String   // healthy, warning, critical
+  cpuUsage        Float?
+  memoryUsage     Float?
+  diskUsage       Float?
+  responseTime    Int?     // milliseconds
+  uptime          Int?     // seconds
+  activeUsers     Int?
+  totalRequests   Int?
+  errorRate       Float?
+  lastChecked     DateTime @default(now())
+  checkedAt       DateTime @default(now())
+}
+
+model PageMonitor {
+  id              String   @id @default(cuid())
+  url             String   @unique
+  name            String
+  status          String   // up, down, slow
+  responseTime    Int?     // milliseconds
+  statusCode      Int?
+  errorMessage    String?
+  lastChecked     DateTime @default(now())
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  incidents       Incident[]
+}
+
+model ServerMonitor {
+  id              String   @id @default(cuid())
+  serverId        String   @unique
+  serverName      String
+  serverUrl       String
+  status          String   // online, offline, maintenance
+  responseTime    Int?
+  uptime          Float?   // percentage
+  lastPing        DateTime?
+  errorCount      Int      @default(0)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  incidents       Incident[]
+}
+
+model Incident {
+  id              String         @id @default(cuid())
+  title           String
+  description     String?
+  severity        String         // low, medium, high, critical
+  status          String         // open, investigating, resolved
+  pageMonitorId   String?
+  serverMonitorId String?
+  pageMonitor     PageMonitor?   @relation(fields: [pageMonitorId], references: [id])
+  serverMonitor   ServerMonitor? @relation(fields: [serverMonitorId], references: [id])
+  notifications   Notification[]
+  createdAt       DateTime       @default(now())
+  resolvedAt      DateTime?
+  updatedAt       DateTime       @updatedAt
+}
+
+model Notification {
+  id          String   @id @default(cuid())
+  incidentId  String
+  type        String   // email, sms, webhook
+  recipient   String
+  subject     String?
+  message     String
+  status      String   // pending, sent, failed
+  incident    Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  sentAt      DateTime?
+  createdAt   DateTime @default(now())
+}
+
+model ErrorLog {
+  id          String   @id @default(cuid())
+  level       String   // error, warning, info
+  message     String
+  stack       String?
+  url         String?
+  userAgent   String?
+  ipAddress   String?
+  userId      String?
+  metadata    String?  // JSON string
+  createdAt   DateTime @default(now())
+}
+
+model PerformanceMetric {
+  id            String   @id @default(cuid())
+  metricName    String
+  value         Float
+  unit          String?
+  timestamp     DateTime @default(now())
+  metadata      String?  // JSON string
+}
+
+model MaintenanceWindow {
+  id            String   @id @default(cuid())
+  title         String
+  description   String?
+  startTime     DateTime
+  endTime       DateTime
+  status        String   // scheduled, active, completed, cancelled
+  affectedPages String?  // JSON array of page IDs
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }

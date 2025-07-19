@@ -4,121 +4,75 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { 
-  LayoutDashboard,
-  Film,
-  Tv,
-  Users,
-  Tags,
-  Settings,
+  LayoutDashboard, 
+  Film, 
+  Tv, 
+  Users, 
+  Settings, 
   BarChart3,
-  Plus,
-  List,
-  Server
+  Server,
+  Activity,
+  Shield,
+  Download
 } from 'lucide-react'
 
-const sidebarItems = [
-  {
-    title: 'لوحة التحكم',
-    href: '/admin',
-    icon: LayoutDashboard
-  },
-  {
-    title: 'الأفلام',
-    icon: Film,
-    children: [
-      { title: 'عرض الأفلام', href: '/admin/movies', icon: List },
-      { title: 'إضافة فيلم', href: '/admin/movies/add', icon: Plus }
-    ]
-  },
-  {
-    title: 'المسلسلات',
-    icon: Tv,
-    children: [
-      { title: 'عرض المسلسلات', href: '/admin/series', icon: List },
-      { title: 'إضافة مسلسل', href: '/admin/series/add', icon: Plus }
-    ]
-  },
-  {
-    title: 'التصنيفات',
-    icon: Tags,
-    children: [
-      { title: 'عرض التصنيفات', href: '/admin/genres', icon: List },
-      { title: 'إضافة تصنيف', href: '/admin/genres/add', icon: Plus }
-    ]
-  },
-  {
-    title: 'المستخدمين',
-    href: '/admin/users',
-    icon: Users
-  },
-  {
-    title: 'السيرفرات',
-    href: '/admin/servers',
-    icon: Server
-  },
-  {
-    title: 'الإحصائيات',
-    href: '/admin/analytics',
-    icon: BarChart3
-  },
-  {
-    title: 'الإعدادات',
-    href: '/admin/settings',
-    icon: Settings
-  }
+const navigation = [
+  { name: 'لوحة التحكم', href: '/admin', icon: LayoutDashboard },
+  { name: 'الأفلام', href: '/admin/movies', icon: Film },
+  { name: 'المسلسلات', href: '/admin/series', icon: Tv },
+  { name: 'الخوادم', href: '/admin/servers', icon: Server },
+  { name: 'المراقبة والصيانة', href: '/admin/monitoring', icon: Activity },
+  { name: 'المستخدمون', href: '/admin/users', icon: Users },
+  { name: 'الإحصائيات', href: '/admin/stats', icon: BarChart3 },
+  { name: 'الإعدادات', href: '/admin/settings', icon: Settings },
 ]
 
 export function AdminSidebar() {
   const pathname = usePathname()
 
   return (
-    <div className="w-64 bg-card border-l h-[calc(100vh-4rem)] overflow-y-auto">
-      <nav className="p-4 space-y-2">
-        {sidebarItems.map((item) => (
-          <div key={item.title}>
-            {item.href ? (
-              <Link
-                href={item.href}
+    <div className="flex h-screen w-64 flex-col bg-gray-900">
+      <div className="flex h-16 items-center justify-center border-b border-gray-800">
+        <h1 className="text-xl font-bold text-white">لوحة الإدارة</h1>
+      </div>
+      
+      <nav className="flex-1 space-y-1 px-2 py-4">
+        {navigation.map((item) => {
+          const Icon = item.icon
+          const isActive = pathname === item.href
+          
+          return (
+            <Link
+              key={item.name}
+              href={item.href}
+              className={cn(
+                'group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors',
+                isActive
+                  ? 'bg-red-600 text-white'
+                  : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+              )}
+            >
+              <Icon
                 className={cn(
-                  "flex items-center space-x-3 space-x-reverse px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                  pathname === item.href
-                    ? "bg-primary text-primary-foreground"
-                    : "hover:bg-muted"
+                  'mr-3 h-5 w-5 flex-shrink-0',
+                  isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'
                 )}
-              >
-                <item.icon className="h-4 w-4" />
-                <span>{item.title}</span>
-              </Link>
-            ) : (
-              <>
-                <div className="flex items-center space-x-3 space-x-reverse px-3 py-2 text-sm font-medium text-muted-foreground">
-                  <item.icon className="h-4 w-4" />
-                  <span>{item.title}</span>
-                </div>
-                {item.children && (
-                  <div className="mr-6 space-y-1">
-                    {item.children.map((child) => (
-                      <Link
-                        key={child.href}
-                        href={child.href}
-                        className={cn(
-                          "flex items-center space-x-3 space-x-reverse px-3 py-2 rounded-md text-sm transition-colors",
-                          pathname === child.href
-                            ? "bg-primary text-primary-foreground"
-                            : "hover:bg-muted"
-                        )}
-                      >
-                        <child.icon className="h-3 w-3" />
-                        <span>{child.title}</span>
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        ))}
+              />
+              {item.name}
+            </Link>
+          )
+        })}
       </nav>
+      
+      <div className="border-t border-gray-800 p-4">
+        <div className="flex items-center">
+          <Shield className="h-8 w-8 text-red-500" />
+          <div className="mr-3">
+            <p className="text-sm font-medium text-white">AK.SV Admin</p>
+            <p className="text-xs text-gray-400">نظام إدارة متقدم</p>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
