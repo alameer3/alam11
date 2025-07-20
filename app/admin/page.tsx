@@ -1,205 +1,469 @@
-'use client'
+'use client';
 
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
-  UsersIcon, 
-  FilmIcon, 
-  TvIcon, 
-  CurrencyDollarIcon,
-  EyeIcon,
-  ClockIcon,
-  ExclamationTriangleIcon,
-  CheckCircleIcon
-} from '@heroicons/react/24/outline';
+  Users, 
+  Film, 
+  TrendingUp, 
+  DollarSign, 
+  AlertTriangle, 
+  Settings,
+  Plus,
+  Edit,
+  Trash2,
+  Eye,
+  CheckCircle,
+  XCircle
+} from 'lucide-react';
+
+interface AdminStats {
+  totalUsers: number;
+  totalVideos: number;
+  totalRevenue: number;
+  activeSubscriptions: number;
+  pendingReports: number;
+  uploadsToday: number;
+}
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  avatar: string;
+  role: 'admin' | 'moderator' | 'user';
+  status: 'active' | 'suspended' | 'pending';
+  joinDate: string;
+  lastLogin: string;
+}
+
+interface Video {
+  id: string;
+  title: string;
+  thumbnail: string;
+  duration: string;
+  views: number;
+  likes: number;
+  status: 'published' | 'pending' | 'rejected';
+  uploadDate: string;
+  uploader: string;
+}
 
 export default function AdminDashboard() {
-  const stats = [
-    {
-      title: 'إجمالي المستخدمين',
-      value: '12,847',
-      change: '+12%',
-      icon: UsersIcon,
-      color: 'bg-blue-500',
-    },
-    {
-      title: 'الأفلام المضافة',
-      value: '2,341',
-      change: '+8%',
-      icon: FilmIcon,
-      color: 'bg-green-500',
-    },
-    {
-      title: 'المسلسلات',
-      value: '1,234',
-      change: '+15%',
-      icon: TvIcon,
-      color: 'bg-purple-500',
-    },
-    {
-      title: 'الإيرادات الشهرية',
-      value: '$45,230',
-      change: '+23%',
-      icon: CurrencyDollarIcon,
-      color: 'bg-yellow-500',
-    },
-  ];
+  const [stats, setStats] = useState<AdminStats>({
+    totalUsers: 0,
+    totalVideos: 0,
+    totalRevenue: 0,
+    activeSubscriptions: 0,
+    pendingReports: 0,
+    uploadsToday: 0
+  });
 
-  const recentActivities = [
-    {
-      id: 1,
-      type: 'upload',
-      message: 'تم رفع فيلم جديد: "عنوان الفيلم"',
-      time: '5 دقائق',
-      user: 'أحمد محمد',
-    },
-    {
-      id: 2,
-      type: 'report',
-      message: 'تقرير إساءة جديد تم إرساله',
-      time: '10 دقائق',
-      user: 'سارة أحمد',
-    },
-    {
-      id: 3,
-      type: 'payment',
-      message: 'دفعة جديدة: $29.99',
-      time: '1 ساعة',
-      user: 'محمد علي',
-    },
-    {
-      id: 4,
-      type: 'moderation',
-      message: 'تمت مراجعة محتوى جديد',
-      time: '2 ساعة',
-      user: 'فاطمة حسن',
-    },
-  ];
+  const [users, setUsers] = useState<User[]>([]);
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [selectedTab, setSelectedTab] = useState('overview');
 
-  const pendingTasks = [
-    {
-      id: 1,
-      title: 'مراجعة 15 فيديو جديد',
-      priority: 'high',
-      due: 'اليوم',
-    },
-    {
-      id: 2,
-      title: 'الرد على 8 تقارير إساءة',
-      priority: 'medium',
-      due: 'غداً',
-    },
-    {
-      id: 3,
-      title: 'تحديث قائمة المسلسلات',
-      priority: 'low',
-      due: 'بعد غد',
-    },
-  ];
+  useEffect(() => {
+    // Simulate loading admin data
+    setStats({
+      totalUsers: 15420,
+      totalVideos: 8920,
+      totalRevenue: 45678.90,
+      activeSubscriptions: 3420,
+      pendingReports: 23,
+      uploadsToday: 156
+    });
+
+    setUsers([
+      {
+        id: '1',
+        name: 'أحمد محمد',
+        email: 'ahmed@example.com',
+        avatar: '/avatars/ahmed.jpg',
+        role: 'user',
+        status: 'active',
+        joinDate: '2024-01-15',
+        lastLogin: '2024-01-20'
+      },
+      {
+        id: '2',
+        name: 'سارة أحمد',
+        email: 'sara@example.com',
+        avatar: '/avatars/sara.jpg',
+        role: 'moderator',
+        status: 'active',
+        joinDate: '2023-12-10',
+        lastLogin: '2024-01-20'
+      }
+    ]);
+
+    setVideos([
+      {
+        id: '1',
+        title: 'فيلم أكشن جديد 2024',
+        thumbnail: '/thumbnails/movie1.jpg',
+        duration: '2:15:30',
+        views: 15420,
+        likes: 892,
+        status: 'published',
+        uploadDate: '2024-01-20',
+        uploader: 'أحمد محمد'
+      },
+      {
+        id: '2',
+        title: 'مسلسل درامي حصري',
+        thumbnail: '/thumbnails/series1.jpg',
+        duration: '45:20',
+        views: 8920,
+        likes: 456,
+        status: 'pending',
+        uploadDate: '2024-01-19',
+        uploader: 'سارة أحمد'
+      }
+    ]);
+  }, []);
+
+  const handleUserAction = (userId: string, action: 'suspend' | 'activate' | 'delete') => {
+    // Handle user management actions
+    console.log(`User ${userId} action: ${action}`);
+  };
+
+  const handleVideoAction = (videoId: string, action: 'approve' | 'reject' | 'delete') => {
+    // Handle video moderation actions
+    console.log(`Video ${videoId} action: ${action}`);
+  };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900">لوحة التحكم</h1>
-        <div className="flex space-x-3">
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-            إضافة محتوى جديد
-          </button>
-          <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-            تصدير التقرير
-          </button>
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">لوحة تحكم المشرف</h1>
+          <p className="text-gray-600 mt-2">إدارة المحتوى والمستخدمين والإحصائيات</p>
         </div>
-      </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat) => (
-          <div key={stat.title} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-                <p className="text-sm text-green-600">{stat.change} من الشهر الماضي</p>
-              </div>
-              <div className={`p-3 rounded-full ${stat.color} text-white`}>
-                <stat.icon className="h-6 w-6" />
-              </div>
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-8">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">إجمالي المستخدمين</CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.totalUsers.toLocaleString()}</div>
+              <p className="text-xs text-muted-foreground">+12% من الشهر الماضي</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">إجمالي الفيديوهات</CardTitle>
+              <Film className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.totalVideos.toLocaleString()}</div>
+              <p className="text-xs text-muted-foreground">+8% من الشهر الماضي</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">إجمالي الإيرادات</CardTitle>
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">${stats.totalRevenue.toLocaleString()}</div>
+              <p className="text-xs text-muted-foreground">+15% من الشهر الماضي</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">الاشتراكات النشطة</CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.activeSubscriptions.toLocaleString()}</div>
+              <p className="text-xs text-muted-foreground">+5% من الشهر الماضي</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">التقارير المعلقة</CardTitle>
+              <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.pendingReports}</div>
+              <p className="text-xs text-muted-foreground">تتطلب مراجعة</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">الرفوعات اليوم</CardTitle>
+              <Plus className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.uploadsToday}</div>
+              <p className="text-xs text-muted-foreground">+23% من أمس</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Main Content Tabs */}
+        <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-5">
+            <TabsTrigger value="overview">نظرة عامة</TabsTrigger>
+            <TabsTrigger value="users">المستخدمين</TabsTrigger>
+            <TabsTrigger value="content">المحتوى</TabsTrigger>
+            <TabsTrigger value="reports">التقارير</TabsTrigger>
+            <TabsTrigger value="settings">الإعدادات</TabsTrigger>
+          </TabsList>
+
+          {/* Overview Tab */}
+          <TabsContent value="overview" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>النشاط الأخير</CardTitle>
+                  <CardDescription>آخر الأنشطة في النظام</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <div key={i} className="flex items-center space-x-4">
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage src={`/avatars/user${i}.jpg`} />
+                          <AvatarFallback>U{i}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium">مستخدم جديد انضم للنظام</p>
+                          <p className="text-xs text-muted-foreground">منذ {i} دقائق</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>إحصائيات سريعة</CardTitle>
+                  <CardDescription>أداء النظام الحالي</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-between">
+                      <span>معدل المشاهدة</span>
+                      <span className="font-medium">89%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>معدل الإشتراك</span>
+                      <span className="font-medium">12.5%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>وقت الاستجابة</span>
+                      <span className="font-medium">1.2s</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>معدل الخطأ</span>
+                      <span className="font-medium">0.1%</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
-          </div>
-        ))}
-      </div>
+          </TabsContent>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Activities */}
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">النشاطات الأخيرة</h2>
-          <div className="space-y-4">
-            {recentActivities.map((activity) => (
-              <div key={activity.id} className="flex items-center space-x-3">
-                <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                    {activity.type === 'upload' && <FilmIcon className="h-4 w-4 text-blue-600" />}
-                    {activity.type === 'report' && <ExclamationTriangleIcon className="h-4 w-4 text-red-600" />}
-                    {activity.type === 'payment' && <CurrencyDollarIcon className="h-4 w-4 text-green-600" />}
-                    {activity.type === 'moderation' && <CheckCircleIcon className="h-4 w-4 text-purple-600" />}
+          {/* Users Tab */}
+          <TabsContent value="users" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <CardTitle>إدارة المستخدمين</CardTitle>
+                    <CardDescription>عرض وإدارة جميع المستخدمين</CardDescription>
+                  </div>
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    إضافة مستخدم
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {users.map((user) => (
+                    <div key={user.id} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex items-center space-x-4">
+                        <Avatar>
+                          <AvatarImage src={user.avatar} />
+                          <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="font-medium">{user.name}</p>
+                          <p className="text-sm text-muted-foreground">{user.email}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Badge variant={user.status === 'active' ? 'default' : 'secondary'}>
+                          {user.status === 'active' ? 'نشط' : user.status === 'suspended' ? 'معلق' : 'معلق'}
+                        </Badge>
+                        <Badge variant="outline">{user.role}</Badge>
+                        <Button size="sm" variant="outline">
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => handleUserAction(user.id, 'suspend')}>
+                          <XCircle className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Content Tab */}
+          <TabsContent value="content" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <CardTitle>إدارة المحتوى</CardTitle>
+                    <CardDescription>مراجعة وإدارة الفيديوهات المرفوعة</CardDescription>
+                  </div>
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    إضافة محتوى
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {videos.map((video) => (
+                    <div key={video.id} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex items-center space-x-4">
+                        <img src={video.thumbnail} alt={video.title} className="w-16 h-12 object-cover rounded" />
+                        <div>
+                          <p className="font-medium">{video.title}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {video.views.toLocaleString()} مشاهدة • {video.likes} إعجاب
+                          </p>
+                          <p className="text-xs text-muted-foreground">بواسطة {video.uploader}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Badge variant={video.status === 'published' ? 'default' : video.status === 'pending' ? 'secondary' : 'destructive'}>
+                          {video.status === 'published' ? 'منشور' : video.status === 'pending' ? 'معلق' : 'مرفوض'}
+                        </Badge>
+                        <Button size="sm" variant="outline">
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => handleVideoAction(video.id, 'approve')}>
+                          <CheckCircle className="h-4 w-4" />
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => handleVideoAction(video.id, 'reject')}>
+                          <XCircle className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Reports Tab */}
+          <TabsContent value="reports" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>التقارير والبلاغات</CardTitle>
+                <CardDescription>مراجعة البلاغات المرفوعة من المستخدمين</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="p-4 border rounded-lg">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="font-medium">بلاغ على فيديو #{i}</p>
+                          <p className="text-sm text-muted-foreground">محتوى غير مناسب</p>
+                          <p className="text-xs text-muted-foreground">منذ {i} ساعة</p>
+                        </div>
+                        <div className="flex space-x-2">
+                          <Button size="sm" variant="outline">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button size="sm" variant="outline">
+                            <CheckCircle className="h-4 w-4" />
+                          </Button>
+                          <Button size="sm" variant="outline">
+                            <XCircle className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Settings Tab */}
+          <TabsContent value="settings" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>إعدادات النظام</CardTitle>
+                <CardDescription>تكوين إعدادات النظام العامة</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label>تفعيل التسجيل الجديد</Label>
+                      <p className="text-sm text-muted-foreground">السماح للمستخدمين الجدد بالتسجيل</p>
+                    </div>
+                    <Switch defaultChecked />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label>مراجعة المحتوى</Label>
+                      <p className="text-sm text-muted-foreground">مراجعة المحتوى قبل النشر</p>
+                    </div>
+                    <Switch defaultChecked />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label>إشعارات البريد الإلكتروني</Label>
+                      <p className="text-sm text-muted-foreground">إرسال إشعارات عبر البريد الإلكتروني</p>
+                    </div>
+                    <Switch defaultChecked />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label>وضع الصيانة</Label>
+                      <p className="text-sm text-muted-foreground">إيقاف الموقع للصيانة</p>
+                    </div>
+                    <Switch />
                   </div>
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900">{activity.message}</p>
-                  <p className="text-xs text-gray-500">{activity.user} • {activity.time}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Pending Tasks */}
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">المهام المعلقة</h2>
-          <div className="space-y-4">
-            {pendingTasks.map((task) => (
-              <div key={task.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div>
-                  <p className="text-sm font-medium text-gray-900">{task.title}</p>
-                  <p className="text-xs text-gray-500">مستحق: {task.due}</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className={`px-2 py-1 text-xs rounded-full ${
-                    task.priority === 'high' ? 'bg-red-100 text-red-800' :
-                    task.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-green-100 text-green-800'
-                  }`}>
-                    {task.priority === 'high' ? 'عالي' : task.priority === 'medium' ? 'متوسط' : 'منخفض'}
-                  </span>
-                  <button className="text-blue-600 hover:text-blue-800 text-sm">
-                    معالجة
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">إجراءات سريعة</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-center">
-            <FilmIcon className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-            <p className="text-sm font-medium">إضافة فيلم</p>
-          </button>
-          <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-center">
-            <TvIcon className="h-8 w-8 text-purple-600 mx-auto mb-2" />
-            <p className="text-sm font-medium">إضافة مسلسل</p>
-          </button>
-          <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-center">
-            <UsersIcon className="h-8 w-8 text-green-600 mx-auto mb-2" />
-            <p className="text-sm font-medium">إدارة المستخدمين</p>
-          </button>
-          <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-center">
-            <ExclamationTriangleIcon className="h-8 w-8 text-red-600 mx-auto mb-2" />
-            <p className="text-sm font-medium">مراجعة التقارير</p>
-          </button>
-        </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
