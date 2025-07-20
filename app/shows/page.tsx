@@ -15,7 +15,7 @@ import {
   Search,
   SlidersHorizontal,
   ArrowUpDown,
-  Fire,
+  Flame,
   Award,
   Zap,
   TrendingUp,
@@ -452,7 +452,7 @@ const ShowsPage: React.FC = () => {
                               )}
                               {show.isTrending && (
                                 <Badge className="bg-orange-600 hover:bg-orange-600 text-white border-0 text-xs">
-                                  <Fire className="w-2 h-2 mr-1 rtl:ml-1 rtl:mr-0" />
+                                  <Flame className="w-2 h-2 mr-1 rtl:ml-1 rtl:mr-0" />
                                   رائج
                                 </Badge>
                               )}

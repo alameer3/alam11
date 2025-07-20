@@ -16,7 +16,7 @@ model User {
   username  String   @unique
   name      String?
   image     String?
-  role      Role     @default(USER)
+  role      String   @default("USER") // Changed from enum to string
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -90,9 +90,9 @@ model Movie {
   budget      String?
   boxOffice   String?
   director    String?
-  cast        String[] // JSON array of cast names
-  awards      String[] // JSON array of awards
-  quality     Quality  @default(HD)
+  cast        String?  // Changed from String[] to String (JSON)
+  awards      String?  // Changed from String[] to String (JSON)
+  quality     String   @default("HD") // Changed from enum to string
   size        String?  // file size
   views       Int      @default(0)
   downloads   Int      @default(0)
@@ -134,12 +134,12 @@ model Series {
   country     String?
   language    String?
   director    String?
-  cast        String[] // JSON array of cast names
-  awards      String[] // JSON array of awards
-  quality     Quality  @default(HD)
+  cast        String?  // Changed from String[] to String (JSON)
+  awards      String?  // Changed from String[] to String (JSON)
+  quality     String   @default("HD") // Changed from enum to string
   seasons     Int      @default(1)
   totalEpisodes Int    @default(0)
-  status      SeriesStatus @default(ONGOING)
+  status      String   @default("ONGOING") // Changed from enum to string
   views       Int      @default(0)
   downloads   Int      @default(0)
   likes       Int      @default(0)
@@ -154,6 +154,8 @@ model Series {
   sectionId  String
   categories SeriesCategory[]
   episodes   Episode[]
+  servers    Server[]
+  files      File[]
   favorites  Favorite[]
   watchHistory WatchHistory[]
   ratings    Rating[]
@@ -170,7 +172,7 @@ model Episode {
   seasonNumber Int
   duration    Int      // minutes
   poster      String?
-  quality     Quality  @default(HD)
+  quality     String   @default("HD") // Changed from enum to string
   size        String?  // file size
   views       Int      @default(0)
   downloads   Int      @default(0)
@@ -202,8 +204,8 @@ model Show {
   host        String?
   network     String?
   episodes    Int      @default(1)
-  quality     Quality  @default(HD)
-  type        ShowType @default(TALK_SHOW)
+  quality     String   @default("HD") // Changed from enum to string
+  type        String   @default("TALK_SHOW") // Changed from enum to string
   views       Int      @default(0)
   downloads   Int      @default(0)
   likes       Int      @default(0)
@@ -240,15 +242,14 @@ model Mix {
   artist      String?
   size        String?  // file size
   format      String?  // MP4, MP3, etc.
-  quality     Quality  @default(HD)
-  type        MixType  @default(SONG)
+  quality     String   @default("HD") // Changed from enum to string
+  type        String   @default("SONG") // Changed from enum to string
   views       Int      @default(0)
   downloads   Int      @default(0)
   likes       Int      @default(0)
   dislikes    Int      @default(0)
   isActive    Boolean  @default(true)
   isFeatured  Boolean  @default(false)
-  isExclusive Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -263,105 +264,120 @@ model Mix {
   comments   Comment[]
   files      File[]
 
-  @@map("mix")
+  @@map("mixes")
 }
 
 model Section {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  slug      String   @unique
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  icon        String?
+  color       String?
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // Relations
-  movies Movie[]
-  series Series[]
-  shows  Show[]
-  mix    Mix[]
+  movies  Movie[]
+  series  Series[]
+  shows   Show[]
+  mixes   Mix[]
 
   @@map("sections")
 }
 
 model Category {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  slug      String   @unique
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  icon        String?
+  color       String?
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // Relations
   movies MovieCategory[]
   series SeriesCategory[]
   shows  ShowCategory[]
-  mix    MixCategory[]
+  mixes  MixCategory[]
 
   @@map("categories")
 }
 
 model Server {
-  id        String      @id @default(cuid())
-  name      String
-  quality   Quality     @default(HD)
-  url       String
-  status    ServerStatus @default(ACTIVE)
-  priority  Int         @default(1)
-  isActive  Boolean     @default(true)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  id          String   @id @default(cuid())
+  name        String
+  url         String
+  quality     String   @default("HD") // Changed from enum to string
+  status      String   @default("ACTIVE") // Changed from enum to string
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // Relations
-  movies   Movie[]
-  episodes Episode[]
-  shows    Show[]
-  mix      Mix[]
+  movie   Movie?   @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  movieId String?
+  series  Series?  @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  seriesId String?
+  show    Show?    @relation(fields: [showId], references: [id], onDelete: Cascade)
+  showId  String?
+  mix     Mix?     @relation(fields: [mixId], references: [id], onDelete: Cascade)
+  mixId   String?
+  episode Episode? @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+  episodeId String?
 
   @@map("servers")
 }
 
 model File {
-  id        String   @id @default(cuid())
-  filename  String
-  originalName String
-  size      Int      // bytes
-  mimetype  String
-  path      String
-  url       String?
-  quality   Quality? @default(HD)
-  type      FileType @default(VIDEO)
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  name        String
+  path        String
+  size        Int      // bytes
+  type        String   @default("VIDEO") // Changed from enum to string
+  format      String?
+  quality     String   @default("HD") // Changed from enum to string
+  duration    Int?     // seconds
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // Relations
-  movieId   String?
-  movie     Movie?   @relation(fields: [movieId], references: [id])
+  movie   Movie?   @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  movieId String?
+  series  Series?  @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  seriesId String?
+  show    Show?    @relation(fields: [showId], references: [id], onDelete: Cascade)
+  showId  String?
+  mix     Mix?     @relation(fields: [mixId], references: [id], onDelete: Cascade)
+  mixId   String?
+  episode Episode? @relation(fields: [episodeId], references: [id], onDelete: Cascade)
   episodeId String?
-  episode   Episode? @relation(fields: [episodeId], references: [id])
-  showId    String?
-  show      Show?    @relation(fields: [showId], references: [id])
-  mixId     String?
-  mix       Mix?     @relation(fields: [mixId], references: [id])
 
   @@map("files")
 }
 
 model Favorite {
   id        String   @id @default(cuid())
-  userId    String
   createdAt DateTime @default(now())
 
   // Relations
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  movie  Movie? @relation(fields: [movieId], references: [id], onDelete: Cascade)
   movieId String?
-  movie   Movie? @relation(fields: [movieId], references: [id])
+  series Series? @relation(fields: [seriesId], references: [id], onDelete: Cascade)
   seriesId String?
-  series  Series? @relation(fields: [seriesId], references: [id])
-  showId  String?
-  show    Show?  @relation(fields: [showId], references: [id])
-  mixId   String?
-  mix     Mix?   @relation(fields: [mixId], references: [id])
+  show   Show?  @relation(fields: [showId], references: [id], onDelete: Cascade)
+  showId String?
+  mix    Mix?   @relation(fields: [mixId], references: [id], onDelete: Cascade)
+  mixId  String?
 
   @@unique([userId, movieId])
   @@unique([userId, seriesId])
@@ -371,24 +387,23 @@ model Favorite {
 }
 
 model WatchHistory {
-  id         String   @id @default(cuid())
-  userId     String
-  progress   Int      @default(0) // seconds
-  completed  Boolean  @default(false)
-  lastWatched DateTime @default(now())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id        String   @id @default(cuid())
+  progress  Float    @default(0) // percentage watched
+  duration  Int      @default(0) // seconds watched
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  movie  Movie? @relation(fields: [movieId], references: [id], onDelete: Cascade)
   movieId String?
-  movie   Movie? @relation(fields: [movieId], references: [id])
+  series Series? @relation(fields: [seriesId], references: [id], onDelete: Cascade)
   seriesId String?
-  series  Series? @relation(fields: [seriesId], references: [id])
-  showId  String?
-  show    Show?  @relation(fields: [showId], references: [id])
-  mixId   String?
-  mix     Mix?   @relation(fields: [mixId], references: [id])
+  show   Show?  @relation(fields: [showId], references: [id], onDelete: Cascade)
+  showId String?
+  mix    Mix?   @relation(fields: [mixId], references: [id], onDelete: Cascade)
+  mixId  String?
 
   @@unique([userId, movieId])
   @@unique([userId, seriesId])
@@ -399,21 +414,22 @@ model WatchHistory {
 
 model Rating {
   id        String   @id @default(cuid())
-  userId    String
-  rating    Int      // 1-10
+  rating    Int      // 1-5 stars
+  comment   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Relations
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  movie  Movie? @relation(fields: [movieId], references: [id], onDelete: Cascade)
   movieId String?
-  movie   Movie? @relation(fields: [movieId], references: [id])
+  series Series? @relation(fields: [seriesId], references: [id], onDelete: Cascade)
   seriesId String?
-  series  Series? @relation(fields: [seriesId], references: [id])
-  showId  String?
-  show    Show?  @relation(fields: [showId], references: [id])
-  mixId   String?
-  mix     Mix?   @relation(fields: [mixId], references: [id])
+  show   Show?  @relation(fields: [showId], references: [id], onDelete: Cascade)
+  showId String?
+  mix    Mix?   @relation(fields: [mixId], references: [id], onDelete: Cascade)
+  mixId  String?
 
   @@unique([userId, movieId])
   @@unique([userId, seriesId])
@@ -424,124 +440,71 @@ model Rating {
 
 model Comment {
   id        String   @id @default(cuid())
-  userId    String
   content   String
-  isApproved Boolean @default(false)
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Relations
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  movie  Movie? @relation(fields: [movieId], references: [id], onDelete: Cascade)
   movieId String?
-  movie   Movie? @relation(fields: [movieId], references: [id])
+  series Series? @relation(fields: [seriesId], references: [id], onDelete: Cascade)
   seriesId String?
-  series  Series? @relation(fields: [seriesId], references: [id])
-  showId  String?
-  show    Show?  @relation(fields: [showId], references: [id])
-  mixId   String?
-  mix     Mix?   @relation(fields: [mixId], references: [id])
+  show   Show?  @relation(fields: [showId], references: [id], onDelete: Cascade)
+  showId String?
+  mix    Mix?   @relation(fields: [mixId], references: [id], onDelete: Cascade)
+  mixId  String?
 
   @@map("comments")
 }
 
-// Junction tables
+// Junction tables for many-to-many relationships
 model MovieCategory {
+  id         String @id @default(cuid())
   movieId    String
   categoryId String
-  movie      Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
-  @@id([movieId, categoryId])
+  movie    Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([movieId, categoryId])
   @@map("movie_categories")
 }
 
 model SeriesCategory {
+  id         String @id @default(cuid())
   seriesId   String
   categoryId String
-  series     Series   @relation(fields: [seriesId], references: [id], onDelete: Cascade)
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
-  @@id([seriesId, categoryId])
+  series   Series   @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([seriesId, categoryId])
   @@map("series_categories")
 }
 
 model ShowCategory {
+  id         String @id @default(cuid())
   showId     String
   categoryId String
-  show       Show     @relation(fields: [showId], references: [id], onDelete: Cascade)
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
-  @@id([showId, categoryId])
+  show     Show     @relation(fields: [showId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([showId, categoryId])
   @@map("show_categories")
 }
 
 model MixCategory {
+  id         String @id @default(cuid())
   mixId      String
   categoryId String
-  mix        Mix      @relation(fields: [mixId], references: [id], onDelete: Cascade)
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
-  @@id([mixId, categoryId])
+  mix      Mix      @relation(fields: [mixId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([mixId, categoryId])
   @@map("mix_categories")
-}
-
-// Enums
-enum Role {
-  USER
-  ADMIN
-  MODERATOR
-}
-
-enum Quality {
-  SD
-  HD
-  FHD
-  UHD_4K
-}
-
-enum SeriesStatus {
-  ONGOING
-  COMPLETED
-  PAUSED
-  CANCELLED
-  COMING_SOON
-}
-
-enum ShowType {
-  TALK_SHOW
-  GAME_SHOW
-  NEWS
-  DOCUMENTARY
-  COOKING
-  TRAVEL
-  SPORTS
-  WRESTLING
-  MUSIC
-  VARIETY
-}
-
-enum MixType {
-  SONG
-  ALBUM
-  CONCERT
-  GAME
-  APP
-  AUDIOBOOK
-  PODCAST
-  THEATER
-  PERFORMANCE
-}
-
-enum ServerStatus {
-  ACTIVE
-  MAINTENANCE
-  OFFLINE
-}
-
-enum FileType {
-  VIDEO
-  AUDIO
-  IMAGE
-  SUBTITLE
-  DOCUMENT
 }

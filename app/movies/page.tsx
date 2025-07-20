@@ -15,7 +15,7 @@ import {
   Search,
   SlidersHorizontal,
   ArrowUpDown,
-  Fire,
+  Flame,
   Award,
   Zap
 } from 'lucide-react'
@@ -212,7 +212,7 @@ const MoviesPage: React.FC = () => {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
-                <Fire className="w-5 h-5 mr-2 rtl:ml-2 rtl:mr-0" />
+                <Flame className="w-5 h-5 mr-2 rtl:ml-2 rtl:mr-0" />
                 الأكثر شعبية
               </Button>
               <Button size="lg" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
@@ -422,7 +422,7 @@ const MoviesPage: React.FC = () => {
                               )}
                               {movie.isTrending && (
                                 <Badge className="bg-orange-600 hover:bg-orange-600 text-white border-0 text-xs">
-                                  <Fire className="w-2 h-2 mr-1 rtl:ml-1 rtl:mr-0" />
+                                  <Flame className="w-2 h-2 mr-1 rtl:ml-1 rtl:mr-0" />
                                   رائج
                                 </Badge>
                               )}

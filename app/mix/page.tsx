@@ -15,7 +15,7 @@ import {
   Search,
   SlidersHorizontal,
   ArrowUpDown,
-  Fire,
+  Flame,
   Award,
   Zap,
   TrendingUp,
@@ -456,7 +456,7 @@ const MixPage: React.FC = () => {
                               )}
                               {content.isTrending && (
                                 <Badge className="bg-pink-600 hover:bg-pink-600 text-white border-0 text-xs">
-                                  <Fire className="w-2 h-2 mr-1 rtl:ml-1 rtl:mr-0" />
+                                  <Flame className="w-2 h-2 mr-1 rtl:ml-1 rtl:mr-0" />
                                   رائج
                                 </Badge>
                               )}
