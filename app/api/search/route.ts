@@ -1,105 +1,225 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { connectToDatabase } from '@/lib/database/connection'
-import { SearchModel } from '@/lib/database/models'
 
-// GET /api/search - البحث العام
+// محاكاة قاعدة البيانات
+const mockData = [
+  {
+    id: 1,
+    title: "فيلم الإثارة الجديد",
+    poster: "/api/placeholder/200/300",
+    year: 2024,
+    rating: 8.7,
+    type: "movie",
+    genre: ["إثارة", "دراما"],
+    description: "فيلم مثير يحكي قصة..."
+  },
+  {
+    id: 2,
+    title: "مسلسل الجريمة",
+    poster: "/api/placeholder/200/300",
+    year: 2024,
+    rating: 9.1,
+    type: "series",
+    genre: ["جريمة", "دراما"],
+    description: "مسلسل بوليسي مشوق..."
+  },
+  {
+    id: 3,
+    title: "برنامج الحوار",
+    poster: "/api/placeholder/200/300",
+    year: 2024,
+    rating: 8.3,
+    type: "show",
+    genre: ["حوار", "ثقافة"],
+    description: "برنامج حواري يناقش..."
+  },
+  {
+    id: 4,
+    title: "فيلم الكوميديا",
+    poster: "/api/placeholder/200/300",
+    year: 2023,
+    rating: 7.9,
+    type: "movie",
+    genre: ["كوميديا"],
+    description: "فيلم كوميدي خفيف..."
+  },
+  {
+    id: 5,
+    title: "مسلسل الخيال العلمي",
+    poster: "/api/placeholder/200/300",
+    year: 2024,
+    rating: 8.8,
+    type: "series",
+    genre: ["خيال علمي", "إثارة"],
+    description: "مسلسل خيال علمي..."
+  }
+]
+
 export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url)
+  const query = searchParams.get('q')?.toLowerCase() || ''
+  const type = searchParams.get('type') || 'all'
+  const limit = parseInt(searchParams.get('limit') || '10')
+
   try {
-    // التأكد من الاتصال بقاعدة البيانات
-    await connectToDatabase()
-    
-    const { searchParams } = new URL(request.url)
-    
-    const query = searchParams.get('q')
-    const limit = parseInt(searchParams.get('limit') || '20')
-    const type = searchParams.get('type') // movies, series, people, all
-
-    if (!query || query.trim().length < 2) {
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: 'استعلام البحث مطلوب',
-          message: 'يجب أن يكون طول البحث على الأقل حرفين'
-        },
-        { status: 400 }
-      )
+    if (!query || query.length < 2) {
+      return NextResponse.json({
+        success: true,
+        results: [],
+        suggestions: [
+          "أفلام 2024",
+          "مسلسلات عربية",
+          "أفلام إثارة",
+          "برامج حوارية",
+          "مسلسلات كوميدية"
+        ],
+        total: 0
+      })
     }
 
-    let results
+    // فلترة النتائج بناءً على البحث
+    let filteredResults = mockData.filter(item => {
+      const titleMatch = item.title.toLowerCase().includes(query)
+      const genreMatch = item.genre.some(g => g.toLowerCase().includes(query))
+      const descriptionMatch = item.description.toLowerCase().includes(query)
+      
+      return titleMatch || genreMatch || descriptionMatch
+    })
 
-    if (type === 'all' || !type) {
-      // البحث الشامل
-      results = await SearchModel.globalSearch(query, limit)
-    } else {
-      // البحث المحدد
-      switch (type) {
-        case 'movies':
-          const { MovieModel } = await import('@/lib/database/models')
-          const movieResults = await MovieModel.searchMovies(query, 1, limit)
-          results = { movies: movieResults.data, series: [], people: [] }
-          break
-          
-        case 'series':
-          const { SeriesModel } = await import('@/lib/database/models')
-          const seriesResults = await SeriesModel.searchSeries(query, 1, limit)
-          results = { movies: [], series: seriesResults.data, people: [] }
-          break
-          
-        case 'people':
-          const { PersonModel } = await import('@/lib/database/models')
-          const people = await PersonModel.searchPeople(query, limit)
-          results = { movies: [], series: [], people }
-          break
-          
-        default:
-          return NextResponse.json(
-            { 
-              success: false, 
-              error: 'نوع البحث غير صحيح',
-              message: 'الأنواع المدعومة: movies, series, people, all'
-            },
-            { status: 400 }
-          )
-      }
+    // فلترة بناءً على النوع
+    if (type !== 'all') {
+      filteredResults = filteredResults.filter(item => item.type === type)
     }
 
-    // حساب إجمالي النتائج
-    const totalResults = results.movies.length + results.series.length + results.people.length
+    // ترتيب النتائج (الأعلى تقييماً أولاً)
+    filteredResults.sort((a, b) => b.rating - a.rating)
+
+    // تحديد عدد النتائج
+    const results = filteredResults.slice(0, limit)
+
+    // اقتراحات البحث الذكية
+    const suggestions = [
+      ...new Set([
+        ...mockData
+          .filter(item => item.title.toLowerCase().includes(query))
+          .map(item => item.title),
+        ...mockData
+          .flatMap(item => item.genre)
+          .filter(genre => genre.toLowerCase().includes(query)),
+        `${query} 2024`,
+        `أفلام ${query}`,
+        `مسلسلات ${query}`
+      ])
+    ].slice(0, 5)
 
     return NextResponse.json({
       success: true,
+      results: results.map(item => ({
+        id: item.id,
+        title: item.title,
+        poster: item.poster,
+        year: item.year,
+        rating: item.rating,
+        type: item.type === 'movie' ? 'فيلم' : 
+              item.type === 'series' ? 'مسلسل' : 'برنامج',
+        genres: item.genre,
+        url: `/${item.type}/${item.id}`
+      })),
+      suggestions,
+      total: filteredResults.length,
       query,
-      total_results: totalResults,
-      results,
-      suggestions: totalResults === 0 ? await getSearchSuggestions(query) : []
+      searchTime: Date.now()
     })
 
   } catch (error) {
-    console.error('خطأ في البحث:', error)
-    return NextResponse.json(
-      { 
-        success: false, 
-        error: 'خطأ في الخادم الداخلي',
-        message: error instanceof Error ? error.message : 'خطأ غير معروف'
-      },
-      { status: 500 }
-    )
+    console.error('Search API Error:', error)
+    return NextResponse.json({
+      success: false,
+      error: 'خطأ في البحث',
+      results: [],
+      suggestions: [],
+      total: 0
+    }, { status: 500 })
   }
 }
 
-// اقتراحات البحث - دالة مساعدة داخلية
-async function getSearchSuggestions(query: string): Promise<string[]> {
+export async function POST(request: NextRequest) {
   try {
-    // يمكن تحسين هذا لاحقاً بناءً على تاريخ البحث والشعبية
-    const popularSearches = await SearchModel.getPopularSearches(10)
-    
-    // إرجاع اقتراحات تحتوي على النص المبحوث عنه
-    return popularSearches.filter(search => 
-      search.toLowerCase().includes(query.toLowerCase())
-    ).slice(0, 5)
-    
+    const body = await request.json()
+    const { query, filters, sort } = body
+
+    // معالجة البحث المتقدم مع الفلاتر
+    let results = mockData
+
+    // تطبيق الفلاتر
+    if (filters?.type && filters.type !== 'all') {
+      results = results.filter(item => item.type === filters.type)
+    }
+
+    if (filters?.genre) {
+      results = results.filter(item => 
+        item.genre.some(g => g.toLowerCase().includes(filters.genre.toLowerCase()))
+      )
+    }
+
+    if (filters?.year) {
+      results = results.filter(item => item.year === parseInt(filters.year))
+    }
+
+    if (filters?.rating) {
+      results = results.filter(item => item.rating >= parseFloat(filters.rating))
+    }
+
+    // البحث النصي
+    if (query && query.length >= 2) {
+      results = results.filter(item => {
+        return item.title.toLowerCase().includes(query.toLowerCase()) ||
+               item.description.toLowerCase().includes(query.toLowerCase()) ||
+               item.genre.some(g => g.toLowerCase().includes(query.toLowerCase()))
+      })
+    }
+
+    // ترتيب النتائج
+    switch (sort) {
+      case 'rating':
+        results.sort((a, b) => b.rating - a.rating)
+        break
+      case 'year':
+        results.sort((a, b) => b.year - a.year)
+        break
+      case 'title':
+        results.sort((a, b) => a.title.localeCompare(b.title, 'ar'))
+        break
+      default:
+        // ترتيب افتراضي: الأحدث ثم الأعلى تقييماً
+        results.sort((a, b) => {
+          if (a.year !== b.year) return b.year - a.year
+          return b.rating - a.rating
+        })
+    }
+
+    return NextResponse.json({
+      success: true,
+      results: results.map(item => ({
+        id: item.id,
+        title: item.title,
+        poster: item.poster,
+        year: item.year,
+        rating: item.rating,
+        type: item.type === 'movie' ? 'فيلم' : 
+              item.type === 'series' ? 'مسلسل' : 'برنامج',
+        genres: item.genre,
+        url: `/${item.type}/${item.id}`
+      })),
+      total: results.length,
+      applied_filters: filters,
+      sort_by: sort
+    })
+
   } catch (error) {
-    console.error('خطأ في الحصول على اقتراحات البحث:', error)
-    return []
+    console.error('Advanced Search API Error:', error)
+    return NextResponse.json({
+      success: false,
+      error: 'خطأ في البحث المتقدم'
+    }, { status: 500 })
   }
 }
