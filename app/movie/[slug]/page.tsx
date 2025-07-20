@@ -3,6 +3,8 @@
 import { MovieDetailsHeader } from '@/components/akwam/MovieDetailsHeader'
 import { WatchServers } from '@/components/akwam/WatchServers'
 import { DownloadLinks } from '@/components/akwam/DownloadLinks'
+import { CastSlider } from '@/components/akwam/CastSlider'
+import { GallerySlider } from '@/components/akwam/GallerySlider'
 
 // temporary dataset
 const movies = [
@@ -50,6 +52,24 @@ export default function MoviePage({ params }: { params: { slug: string } }) {
             { quality: '4K', size: '8 GB', url: '#' },
             { quality: '1080p', size: '4 GB', url: '#' },
             { quality: '720p', size: '2 GB', url: '#' },
+          ]}
+        />
+
+        <CastSlider
+          cast={[
+            { name: 'Christian Bale', photo: 'https://randomuser.me/api/portraits/men/32.jpg' },
+            { name: 'Heath Ledger', photo: 'https://randomuser.me/api/portraits/men/52.jpg' },
+            { name: 'Aaron Eckhart', photo: 'https://randomuser.me/api/portraits/men/44.jpg' },
+            { name: 'Gary Oldman', photo: 'https://randomuser.me/api/portraits/men/66.jpg' },
+          ]}
+        />
+
+        <GallerySlider
+          images={[
+            'https://images.unsplash.com/photo-1520092312209-685e0bb1ecc9?w=400',
+            'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=400',
+            'https://images.unsplash.com/photo-1497032205916-ac775f0649ae?w=400',
+            'https://images.unsplash.com/photo-1508672019048-805c876b67e2?w=400',
           ]}
         />
 
