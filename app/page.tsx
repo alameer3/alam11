@@ -1,117 +1,6 @@
-import React from 'react'
 import Link from 'next/link'
-import { 
-  Play, 
-  TrendingUp, 
-  Star, 
-  Calendar, 
-  Eye,
-  Clock,
-  ChevronRight,
-  Flame,
-  Sparkles,
-  Award
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
 import { IMAGES, optimizeImage } from '@/lib/images'
-
-// محاكاة البيانات بناءً على هيكل ak.sv
-const heroContent = {
-  title: "أحدث الأفلام والمسلسلات",
-  subtitle: "شاهد أجمل المحتويات العربية والعالمية",
-  featured: {
-    id: 1,
-    title: "فيلم مميز حديث",
-    description: "قصة مثيرة تأخذك في رحلة لا تُنسى مع أفضل النجوم",
-    poster: "/api/placeholder/300/450",
-    backdrop: "/api/placeholder/1920/1080",
-    year: 2024,
-    rating: 8.5,
-    duration: "2h 15m",
-    genres: ["دراما", "إثارة"]
-  }
-}
-
-const sections = [
-  {
-    id: 'trending',
-    title: 'الأكثر مشاهدة',
-    subtitle: 'المحتوى الذي يتابعه الجميع الآن',
-    icon: <Flame className="w-5 h-5" />,
-    href: '/ones',
-    color: 'from-red-500 to-orange-500'
-  },
-  {
-    id: 'movies',
-    title: 'الأفلام',
-    subtitle: 'مجموعة ضخمة من أحدث الأفلام',
-    icon: <Play className="w-5 h-5" />,
-    href: '/movies',
-    color: 'from-blue-500 to-purple-500'
-  },
-  {
-    id: 'series',
-    title: 'المسلسلات',
-    subtitle: 'مسلسلات متنوعة ومثيرة',
-    icon: <Star className="w-5 h-5" />,
-    href: '/series',
-    color: 'from-green-500 to-teal-500'
-  },
-  {
-    id: 'shows',
-    title: 'التلفزيون',
-    subtitle: 'برامج تلفزيونية متنوعة',
-    icon: <Clock className="w-5 h-5" />,
-    href: '/shows',
-    color: 'from-yellow-500 to-red-500'
-  },
-  {
-    id: 'mix',
-    title: 'المنوعات',
-    subtitle: 'محتوى متنوع ومميز',
-    icon: <Sparkles className="w-5 h-5" />,
-    href: '/mix',
-    color: 'from-purple-500 to-pink-500'
-  }
-]
-
-// محاكاة المحتوى المميز
-const featuredItems = [
-  {
-    id: 1,
-    title: "المحتوى المميز 1",
-    poster: "/api/placeholder/200/300",
-    rating: 8.7,
-    year: 2024,
-    type: "فيلم"
-  },
-  {
-    id: 2,
-    title: "المحتوى المميز 2", 
-    poster: "/api/placeholder/200/300",
-    rating: 9.1,
-    year: 2024,
-    type: "مسلسل"
-  },
-  {
-    id: 3,
-    title: "المحتوى المميز 3",
-    poster: "/api/placeholder/200/300", 
-    rating: 8.3,
-    year: 2023,
-    type: "فيلم"
-  },
-  {
-    id: 4,
-    title: "المحتوى المميز 4",
-    poster: "/api/placeholder/200/300",
-    rating: 8.9,
-    year: 2024,
-    type: "برنامج"
-  }
-]
+import { Sparkles, Play, TrendingUp, Flame, Star, Clock, Eye, Download, Heart } from 'lucide-react'
 
 export default function HomePage() {
   return (
@@ -128,299 +17,159 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
         </div>
-        
+
         {/* Content */}
-        <div className="relative z-10 container mx-auto px-4">
-          <div className="max-w-4xl">
-            {/* Badges */}
-            <div className="flex items-center space-x-2 rtl:space-x-reverse mb-6">
-              <div className="inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-semibold transition-colors bg-red-600 hover:bg-red-700 text-white border-0">
-                <Sparkles className="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" />
-                جديد
-              </div>
-              <div className="inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-semibold transition-colors border border-gray-600 text-gray-300">
-                2024
-              </div>
+        <div className="relative z-10 container mx-auto px-4 text-center">
+          <div className="animate-fade-in">
+            <div className="flex items-center justify-center mb-6">
+              <Sparkles className="w-8 h-8 text-blue-400 mr-3 rtl:ml-3 rtl:mr-0" />
+              <h1 className="text-5xl lg:text-7xl font-bold text-white">
+                اكوام
+              </h1>
             </div>
             
-            {/* Title */}
-            <h1 className="text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight animate-fade-in">
-              أحدث الأفلام والمسلسلات
-            </h1>
-            
-            {/* Description */}
-            <p className="text-xl lg:text-2xl text-gray-300 mb-8 max-w-2xl animate-fade-in-delay">
-              شاهد أجمل المحتويات العربية والعالمية
+            <p className="text-xl lg:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
+              اكتشف عالم من الأفلام والمسلسلات والبرامج المتنوعة
+              <br />
+              <span className="text-blue-400">أفضل محتوى عربي وعالمي</span>
             </p>
-            
-            {/* Featured Content Card */}
-            <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 mb-8 border border-gray-800 animate-fade-in-delay-2">
-              <h3 className="text-2xl font-bold text-white mb-3">فيلم مميز حديث</h3>
-              <p className="text-gray-300 mb-4">قصة مثيرة تأخذك في رحلة لا تُنسى مع أفضل النجوم</p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+              <Link 
+                href="/movies"
+                className="btn-primary text-lg px-8 py-4 flex items-center justify-center"
+              >
+                <Play className="w-6 h-6 mr-2 rtl:ml-2 rtl:mr-0" />
+                استكشف الأفلام
+              </Link>
               
-              <div className="flex items-center space-x-6 rtl:space-x-reverse text-sm text-gray-400">
-                <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                  <Star className="w-4 h-4 text-yellow-500" />
-                  <span className="text-white font-semibold">8.5</span>
-                </div>
-                <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                  <Clock className="w-4 h-4" />
-                  <span>2024</span>
-                </div>
-                <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                  <Clock className="w-4 h-4" />
-                  <span>2h 15m</span>
-                </div>
-              </div>
+              <Link 
+                href="/series"
+                className="btn-secondary text-lg px-8 py-4 flex items-center justify-center"
+              >
+                <TrendingUp className="w-6 h-6 mr-2 rtl:ml-2 rtl:mr-0" />
+                المسلسلات
+              </Link>
             </div>
-            
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-delay-3">
-              <button className="inline-flex items-center justify-center whitespace-nowrap font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 shadow h-10 rounded-md bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg group">
-                <Play className="w-5 h-5 mr-2 rtl:ml-2 rtl:mr-0 group-hover:scale-110 transition-transform" />
-                شاهد الآن
-              </button>
-              <button className="inline-flex items-center justify-center whitespace-nowrap font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border bg-background shadow-sm hover:text-accent-foreground h-10 rounded-md border-gray-600 text-white hover:bg-gray-800 px-8 py-3 text-lg group">
-                <TrendingUp className="w-5 h-5 mr-2 rtl:ml-2 rtl:mr-0 group-hover:scale-110 transition-transform" />
-                استكشف المزيد
-              </button>
+
+            {/* Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white mb-2">1000+</div>
+                <div className="text-gray-400">فيلم</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white mb-2">500+</div>
+                <div className="text-gray-400">مسلسل</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white mb-2">50K+</div>
+                <div className="text-gray-400">مستخدم</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white mb-2">1M+</div>
+                <div className="text-gray-400">مشاهدة</div>
+              </div>
             </div>
           </div>
         </div>
-        
+
         {/* Scroll Indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-white/60 rounded-full mt-2 animate-pulse"></div>
+          <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-white rounded-full mt-2 animate-pulse"></div>
           </div>
         </div>
       </section>
 
-      {/* Explore Section */}
-      <section className="py-20 bg-gray-950">
+      {/* Featured Movies */}
+      <section className="py-20 bg-gradient-to-b from-gray-950 to-gray-900">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4">استكشف عالم الترفيه</h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">اكتشف أفضل المحتويات من أفلام ومسلسلات وبرامج متنوعة</p>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-white mb-4 animate-fade-in-delay">
+              الأفلام المميزة
+            </h2>
+            <p className="text-gray-400 text-lg animate-fade-in-delay-2">
+              أحدث وأفضل الأفلام العربية والعالمية
+            </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Trending */}
-            <Link href="/ones" className="group">
-              <div className="rounded-lg border text-card-foreground shadow-sm group bg-gray-900/50 backdrop-blur border-gray-800 hover:border-gray-700 transition-all duration-300 overflow-hidden hover:scale-105">
-                <div className="p-0">
-                  <div 
-                    className="h-24 bg-gradient-to-r from-red-500 to-orange-500 relative"
-                    style={{
-                      backgroundImage: `url(${optimizeImage(IMAGES.sections.movies, 400, 200)})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center'
-                    }}
-                  >
-                    <div className="absolute inset-0 bg-black/20"></div>
-                    <div className="absolute bottom-4 right-4 rtl:left-4 rtl:right-auto">
-                      <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-full flex items-center justify-center text-white">
-                        <Flame className="w-5 h-5" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">الأكثر مشاهدة</h3>
-                      <svg className="w-5 h-5 text-gray-400 group-hover:text-white group-hover:translate-x-1 rtl:rotate-180 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m9 18 6-6-6-6" />
-                      </svg>
-                    </div>
-                    <p className="text-gray-400 group-hover:text-gray-300 transition-colors">المحتوى الذي يتابعه الجميع الآن</p>
-                  </div>
-                </div>
-              </div>
-            </Link>
 
-            {/* Movies */}
-            <Link href="/movies" className="group">
-              <div className="rounded-lg border text-card-foreground shadow-sm group bg-gray-900/50 backdrop-blur border-gray-800 hover:border-gray-700 transition-all duration-300 overflow-hidden hover:scale-105">
-                <div className="p-0">
-                  <div 
-                    className="h-24 bg-gradient-to-r from-blue-500 to-purple-500 relative"
-                    style={{
-                      backgroundImage: `url(${optimizeImage(IMAGES.sections.movies, 400, 200)})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center'
-                    }}
-                  >
-                    <div className="absolute inset-0 bg-black/20"></div>
-                    <div className="absolute bottom-4 right-4 rtl:left-4 rtl:right-auto">
-                      <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-full flex items-center justify-center text-white">
-                        <Play className="w-5 h-5" />
-                      </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="group card-hover animate-fade-in-delay-3">
+                <div className="relative aspect-[2/3] overflow-hidden rounded-lg mb-4">
+                  <img
+                    src={optimizeImage(IMAGES.featured[`movie${i + 1}` as keyof typeof IMAGES.featured], 300, 450)}
+                    alt={`فيلم مميز ${i + 1}`}
+                    className="w-full h-full object-cover image-hover"
+                  />
+                  
+                  {/* Rating Badge */}
+                  <div className="absolute top-3 right-3 rtl:left-3 rtl:right-auto">
+                    <div className="inline-flex items-center rounded-md px-2 py-1 text-xs font-semibold bg-black/70 text-yellow-500">
+                      <Star className="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" />
+                      {8.5 + i * 0.3}
                     </div>
                   </div>
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">الأفلام</h3>
-                      <svg className="w-5 h-5 text-gray-400 group-hover:text-white group-hover:translate-x-1 rtl:rotate-180 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m9 18 6-6-6-6" />
-                      </svg>
-                    </div>
-                    <p className="text-gray-400 group-hover:text-gray-300 transition-colors">مجموعة ضخمة من أحدث الأفلام</p>
-                  </div>
-                </div>
-              </div>
-            </Link>
 
-            {/* Series */}
-            <Link href="/series" className="group">
-              <div className="rounded-lg border text-card-foreground shadow-sm group bg-gray-900/50 backdrop-blur border-gray-800 hover:border-gray-700 transition-all duration-300 overflow-hidden hover:scale-105">
-                <div className="p-0">
-                  <div 
-                    className="h-24 bg-gradient-to-r from-green-500 to-teal-500 relative"
-                    style={{
-                      backgroundImage: `url(${optimizeImage(IMAGES.sections.series, 400, 200)})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center'
-                    }}
-                  >
-                    <div className="absolute inset-0 bg-black/20"></div>
-                    <div className="absolute bottom-4 right-4 rtl:left-4 rtl:right-auto">
-                      <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-full flex items-center justify-center text-white">
-                        <Star className="w-5 h-5" />
-                      </div>
+                  {/* Play Overlay */}
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-full flex items-center justify-center">
+                      <Play className="w-6 h-6 text-white" />
                     </div>
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">المسلسلات</h3>
-                      <svg className="w-5 h-5 text-gray-400 group-hover:text-white group-hover:translate-x-1 rtl:rotate-180 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m9 18 6-6-6-6" />
-                      </svg>
-                    </div>
-                    <p className="text-gray-400 group-hover:text-gray-300 transition-colors">مسلسلات متنوعة ومثيرة</p>
                   </div>
                 </div>
-              </div>
-            </Link>
 
-            {/* Shows */}
-            <Link href="/shows" className="group">
-              <div className="rounded-lg border text-card-foreground shadow-sm group bg-gray-900/50 backdrop-blur border-gray-800 hover:border-gray-700 transition-all duration-300 overflow-hidden hover:scale-105">
-                <div className="p-0">
-                  <div 
-                    className="h-24 bg-gradient-to-r from-yellow-500 to-red-500 relative"
-                    style={{
-                      backgroundImage: `url(${optimizeImage(IMAGES.sections.shows, 400, 200)})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center'
-                    }}
-                  >
-                    <div className="absolute inset-0 bg-black/20"></div>
-                    <div className="absolute bottom-4 right-4 rtl:left-4 rtl:right-auto">
-                      <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-full flex items-center justify-center text-white">
-                        <Clock className="w-5 h-5" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">التلفزيون</h3>
-                      <svg className="w-5 h-5 text-gray-400 group-hover:text-white group-hover:translate-x-1 rtl:rotate-180 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m9 18 6-6-6-6" />
-                      </svg>
-                    </div>
-                    <p className="text-gray-400 group-hover:text-gray-300 transition-colors">برامج تلفزيونية متنوعة</p>
+                <div className="text-center">
+                  <h3 className="font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors">
+                    فيلم رائع {i + 1}
+                  </h3>
+                  <div className="flex items-center justify-center space-x-4 rtl:space-x-reverse text-sm text-gray-400">
+                    <span>2024</span>
+                    <span className="flex items-center">
+                      <Clock className="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" />
+                      {120 + i * 15}م
+                    </span>
                   </div>
                 </div>
               </div>
-            </Link>
+            ))}
+          </div>
 
-            {/* Mix */}
-            <Link href="/mix" className="group">
-              <div className="rounded-lg border text-card-foreground shadow-sm group bg-gray-900/50 backdrop-blur border-gray-800 hover:border-gray-700 transition-all duration-300 overflow-hidden hover:scale-105">
-                <div className="p-0">
-                  <div 
-                    className="h-24 bg-gradient-to-r from-purple-500 to-pink-500 relative"
-                    style={{
-                      backgroundImage: `url(${optimizeImage(IMAGES.sections.mix, 400, 200)})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center'
-                    }}
-                  >
-                    <div className="absolute inset-0 bg-black/20"></div>
-                    <div className="absolute bottom-4 right-4 rtl:left-4 rtl:right-auto">
-                      <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-full flex items-center justify-center text-white">
-                        <Sparkles className="w-5 h-5" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">المنوعات</h3>
-                      <svg className="w-5 h-5 text-gray-400 group-hover:text-white group-hover:translate-x-1 rtl:rotate-180 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m9 18 6-6-6-6" />
-                      </svg>
-                    </div>
-                    <p className="text-gray-400 group-hover:text-gray-300 transition-colors">محتوى متنوع ومميز</p>
-                  </div>
-                </div>
-              </div>
+          <div className="text-center mt-12">
+            <Link 
+              href="/movies"
+              className="btn-primary text-lg px-8 py-4"
+            >
+              عرض جميع الأفلام
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Featured Content Section */}
-      <section className="py-20 bg-gray-900/50">
+      {/* Categories */}
+      <section className="py-20 bg-gray-900">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-12">
-            <div>
-              <h2 className="text-3xl lg:text-4xl font-bold text-white mb-2">المحتوى المميز</h2>
-              <p className="text-gray-400">أفضل المحتويات المختارة بعناية</p>
-            </div>
-            <Link href="/ones">
-              <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border bg-background shadow-sm hover:text-accent-foreground h-9 px-4 py-2 border-gray-600 text-white hover:bg-gray-800">
-                عرض الكل
-                <svg className="w-4 h-4 mr-2 rtl:ml-2 rtl:mr-0 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m9 18 6-6-6-6" />
-                </svg>
-              </button>
-            </Link>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-white mb-4">
+              تصفح حسب النوع
+            </h2>
+            <p className="text-gray-400 text-lg">
+              اختر من بين مجموعة متنوعة من التصنيفات
+            </p>
           </div>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[1, 2, 3, 4].map((item) => (
-              <Link key={item} href={`/movie/${item}`}>
-                <div className="rounded-lg border text-card-foreground shadow-sm group bg-gray-900/30 border-gray-800 hover:border-gray-700 transition-all duration-300 overflow-hidden hover:scale-105">
-                  <div className="p-0">
-                    <div className="relative aspect-[2/3] overflow-hidden">
-                      <img 
-                        src={optimizeImage(IMAGES.featured[`movie${item}` as keyof typeof IMAGES.featured], 200, 300)} 
-                        alt={`المحتوى المميز ${item}`} 
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                      />
-                      <div className="absolute top-3 right-3 rtl:left-3 rtl:right-auto">
-                        <div className="inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-semibold transition-colors bg-black/70 hover:bg-black/70 text-yellow-500 border-0">
-                          <Star className="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" />
-                          {8.5 + (item * 0.2)}
-                        </div>
-                      </div>
-                      <div className="absolute bottom-3 left-3 rtl:right-3 rtl:left-auto">
-                        <div className="inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-semibold transition-colors bg-white/90 text-gray-900 hover:bg-white">
-                          {item % 2 === 0 ? 'مسلسل' : 'فيلم'}
-                        </div>
-                      </div>
-                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <div className="w-16 h-16 bg-white/20 backdrop-blur rounded-full flex items-center justify-center">
-                          <Play className="w-8 h-8 text-white" />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="p-4">
-                      <h3 className="font-semibold text-white mb-1 line-clamp-2 group-hover:text-blue-400 transition-colors">
-                        المحتوى المميز {item}
-                      </h3>
-                      <p className="text-sm text-gray-400">2024</p>
-                    </div>
-                  </div>
+            {[
+              { name: 'أكشن', icon: Flame, color: 'bg-red-600', href: '/movies?category=action' },
+              { name: 'دراما', icon: Star, color: 'bg-blue-600', href: '/movies?category=drama' },
+              { name: 'كوميدي', icon: Sparkles, color: 'bg-yellow-600', href: '/movies?category=comedy' },
+              { name: 'إثارة', icon: TrendingUp, color: 'bg-purple-600', href: '/movies?category=thriller' },
+            ].map((category, i) => (
+              <Link key={i} href={category.href}>
+                <div className={`${category.color} p-8 rounded-lg text-center group hover:scale-105 transition-transform duration-300`}>
+                  <category.icon className="w-12 h-12 text-white mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-white">{category.name}</h3>
                 </div>
               </Link>
             ))}
@@ -428,26 +177,133 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-900/20 to-purple-900/20">
+      {/* Latest Content */}
+      <section className="py-20 bg-gradient-to-b from-gray-900 to-gray-950">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-4xl font-bold text-white mb-2">10,000+</div>
-              <div className="text-gray-400">أفلام</div>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-white mb-4">
+              أحدث المحتوى
+            </h2>
+            <p className="text-gray-400 text-lg">
+              اكتشف أحدث الأفلام والمسلسلات المضافة
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Movies */}
+            <div className="bg-gray-800 rounded-lg p-6">
+              <div className="flex items-center mb-4">
+                <Play className="w-6 h-6 text-blue-400 mr-3 rtl:ml-3 rtl:mr-0" />
+                <h3 className="text-xl font-semibold text-white">أحدث الأفلام</h3>
+              </div>
+              <p className="text-gray-400 mb-4">
+                اكتشف أحدث الأفلام العربية والعالمية المضافة إلى المكتبة
+              </p>
+              <Link href="/movies" className="text-blue-400 hover:text-blue-300 transition-colors">
+                تصفح الأفلام →
+              </Link>
             </div>
-            <div>
-              <div className="text-4xl font-bold text-white mb-2">5,000+</div>
-              <div className="text-gray-400">مسلسلات</div>
+
+            {/* Series */}
+            <div className="bg-gray-800 rounded-lg p-6">
+              <div className="flex items-center mb-4">
+                <TrendingUp className="w-6 h-6 text-green-400 mr-3 rtl:ml-3 rtl:mr-0" />
+                <h3 className="text-xl font-semibold text-white">أحدث المسلسلات</h3>
+              </div>
+              <p className="text-gray-400 mb-4">
+                تابع أحدث المسلسلات العربية والعالمية مع جميع الحلقات
+              </p>
+              <Link href="/series" className="text-green-400 hover:text-green-300 transition-colors">
+                تصفح المسلسلات →
+              </Link>
             </div>
-            <div>
-              <div className="text-4xl font-bold text-white mb-2">1M+</div>
-              <div className="text-gray-400">مستخدم</div>
+
+            {/* Shows */}
+            <div className="bg-gray-800 rounded-lg p-6">
+              <div className="flex items-center mb-4">
+                <Sparkles className="w-6 h-6 text-purple-400 mr-3 rtl:ml-3 rtl:mr-0" />
+                <h3 className="text-xl font-semibold text-white">أحدث البرامج</h3>
+              </div>
+              <p className="text-gray-400 mb-4">
+                شاهد أحدث البرامج والمسلسلات الوثائقية المتنوعة
+              </p>
+              <Link href="/shows" className="text-purple-400 hover:text-purple-300 transition-colors">
+                تصفح البرامج →
+              </Link>
             </div>
-            <div>
-              <div className="text-4xl font-bold text-white mb-2">24/7</div>
-              <div className="text-gray-400">مشاهدة</div>
-            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="py-20 bg-gray-950">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-white mb-4">
+              لماذا اكوام؟
+            </h2>
+            <p className="text-gray-400 text-lg">
+              مميزات تجعلنا الخيار الأفضل لمشاهدة المحتوى
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              {
+                icon: Eye,
+                title: 'جودة عالية',
+                description: 'جميع المحتوى بجودة HD و 4K'
+              },
+              {
+                icon: Download,
+                title: 'تحميل سريع',
+                description: 'إمكانية التحميل بسرعة عالية'
+              },
+              {
+                icon: Heart,
+                title: 'محتوى متنوع',
+                description: 'أفلام ومسلسلات من جميع أنحاء العالم'
+              },
+              {
+                icon: Star,
+                title: 'تحديث مستمر',
+                description: 'إضافة محتوى جديد يومياً'
+              }
+            ].map((feature, i) => (
+              <div key={i} className="text-center group">
+                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <feature.icon className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
+                <p className="text-gray-400">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-4xl font-bold text-white mb-4">
+            ابدأ رحلتك مع اكوام
+          </h2>
+          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+            انضم إلى آلاف المستخدمين واستمتع بأفضل محتوى عربي وعالمي
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link 
+              href="/movies"
+              className="bg-white text-blue-600 font-semibold px-8 py-4 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              ابدأ الآن
+            </Link>
+            <Link 
+              href="/about"
+              className="border-2 border-white text-white font-semibold px-8 py-4 rounded-lg hover:bg-white hover:text-blue-600 transition-colors"
+            >
+              تعرف علينا
+            </Link>
           </div>
         </div>
       </section>

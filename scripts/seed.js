@@ -247,6 +247,39 @@ async function main() {
           sectionId: sections[1].id, // series section
         },
       }),
+      prisma.series.upsert({
+        where: { slug: 'game-of-thrones' },
+        update: {},
+        create: {
+          title: 'لعبة العرش',
+          originalTitle: 'Game of Thrones',
+          slug: 'game-of-thrones',
+          description: 'مسلسل خيال ملحمي من إنتاج HBO',
+          poster: '/images/series/game-of-thrones.jpg',
+          backdrop: '/images/series/game-of-thrones-backdrop.jpg',
+          rating: 9.3,
+          imdbRating: 9.3,
+          year: 2011,
+          startYear: 2011,
+          endYear: 2019,
+          country: 'الولايات المتحدة',
+          language: 'الإنجليزية',
+          director: 'ديفيد بينيوف',
+          cast: JSON.stringify(['إيميليا كلارك', 'كيت هارينغتون', 'بيتر دينكليج']),
+          awards: JSON.stringify(['إيمي أفضل مسلسل درامي', 'إيمي أفضل ممثل مساعد']),
+          quality: 'FHD',
+          seasons: 8,
+          totalEpisodes: 73,
+          status: 'COMPLETED',
+          views: 45000,
+          downloads: 22000,
+          likes: 3200,
+          dislikes: 150,
+          isActive: true,
+          isFeatured: true,
+          sectionId: sections[1].id, // series section
+        },
+      }),
     ]);
     console.log('✅ تم إنشاء المسلسلات التجريبية');
 
@@ -275,6 +308,33 @@ async function main() {
           downloads: 6000,
           likes: 800,
           dislikes: 30,
+          isActive: true,
+          isFeatured: true,
+          sectionId: sections[2].id, // shows section
+        },
+      }),
+      prisma.show.upsert({
+        where: { slug: 'american-idol' },
+        update: {},
+        create: {
+          title: 'أمريكان أيدول',
+          originalTitle: 'American Idol',
+          slug: 'american-idol',
+          description: 'برنامج مواهب غنائية أمريكي',
+          poster: '/images/shows/american-idol.jpg',
+          backdrop: '/images/shows/american-idol-backdrop.jpg',
+          rating: 7.8,
+          year: 2002,
+          duration: 120,
+          host: 'سايمون كويل',
+          network: 'FOX',
+          episodes: 18,
+          quality: 'HD',
+          type: 'TALENT_SHOW',
+          views: 18000,
+          downloads: 9000,
+          likes: 1200,
+          dislikes: 50,
           isActive: true,
           isFeatured: true,
           sectionId: sections[2].id, // shows section
@@ -311,47 +371,191 @@ async function main() {
           sectionId: sections[3].id, // mix section
         },
       }),
+      prisma.mix.upsert({
+        where: { slug: 'stairway-to-heaven' },
+        update: {},
+        create: {
+          title: 'Stairway to Heaven',
+          slug: 'stairway-to-heaven',
+          description: 'أغنية كلاسيكية من فرقة ليد زيبلين',
+          poster: '/images/mixes/stairway-to-heaven.jpg',
+          rating: 9.3,
+          year: 1971,
+          duration: 482,
+          artist: 'Led Zeppelin',
+          size: '12.3 MB',
+          format: 'MP3',
+          quality: 'HD',
+          type: 'SONG',
+          views: 12000,
+          downloads: 6800,
+          likes: 950,
+          dislikes: 35,
+          isActive: true,
+          isFeatured: true,
+          sectionId: sections[3].id, // mix section
+        },
+      }),
     ]);
     console.log('✅ تم إنشاء المحتوى المختلط التجريبي');
 
     // ربط الأفلام بالتصنيفات
     console.log('🔗 ربط الأفلام بالتصنيفات...');
     await Promise.all([
-      prisma.movieCategory.createMany({
-        data: [
-          { movieId: movies[0].id, categoryId: categories[0].id }, // Matrix - Action
-          { movieId: movies[0].id, categoryId: categories[1].id }, // Matrix - Drama
-          { movieId: movies[1].id, categoryId: categories[0].id }, // Inception - Action
-          { movieId: movies[1].id, categoryId: categories[1].id }, // Inception - Drama
-        ],
+      // فيلم المصفوفة - أكشن وإثارة
+      prisma.movieCategory.upsert({
+        where: { 
+          movieId_categoryId: { 
+            movieId: movies[0].id, 
+            categoryId: categories[0].id 
+          } 
+        },
+        update: {},
+        create: {
+          movieId: movies[0].id,
+          categoryId: categories[0].id,
+        },
+      }),
+      prisma.movieCategory.upsert({
+        where: { 
+          movieId_categoryId: { 
+            movieId: movies[0].id, 
+            categoryId: categories[4].id 
+          } 
+        },
+        update: {},
+        create: {
+          movieId: movies[0].id,
+          categoryId: categories[4].id,
+        },
+      }),
+      
+      // فيلم البداية - إثارة وخيال علمي
+      prisma.movieCategory.upsert({
+        where: { 
+          movieId_categoryId: { 
+            movieId: movies[1].id, 
+            categoryId: categories[4].id 
+          } 
+        },
+        update: {},
+        create: {
+          movieId: movies[1].id,
+          categoryId: categories[4].id,
+        },
       }),
     ]);
 
     // ربط المسلسلات بالتصنيفات
+    console.log('🔗 ربط المسلسلات بالتصنيفات...');
     await Promise.all([
-      prisma.seriesCategory.createMany({
-        data: [
-          { seriesId: series[0].id, categoryId: categories[1].id }, // Breaking Bad - Drama
-          { seriesId: series[0].id, categoryId: categories[4].id }, // Breaking Bad - Thriller
-        ],
+      // مسلسل بريكينغ باد - إثارة ودراما
+      prisma.seriesCategory.upsert({
+        where: { 
+          seriesId_categoryId: { 
+            seriesId: series[0].id, 
+            categoryId: categories[4].id 
+          } 
+        },
+        update: {},
+        create: {
+          seriesId: series[0].id,
+          categoryId: categories[4].id,
+        },
+      }),
+      prisma.seriesCategory.upsert({
+        where: { 
+          seriesId_categoryId: { 
+            seriesId: series[0].id, 
+            categoryId: categories[1].id 
+          } 
+        },
+        update: {},
+        create: {
+          seriesId: series[0].id,
+          categoryId: categories[1].id,
+        },
+      }),
+      
+      // مسلسل جيم أوف ثرونز - خيال ودراما
+      prisma.seriesCategory.upsert({
+        where: { 
+          seriesId_categoryId: { 
+            seriesId: series[1].id, 
+            categoryId: categories[1].id 
+          } 
+        },
+        update: {},
+        create: {
+          seriesId: series[1].id,
+          categoryId: categories[1].id,
+        },
       }),
     ]);
 
     // ربط البرامج بالتصنيفات
+    console.log('🔗 ربط البرامج بالتصنيفات...');
     await Promise.all([
-      prisma.showCategory.createMany({
-        data: [
-          { showId: shows[0].id, categoryId: categories[2].id }, // Oprah - Comedy
-        ],
+      // برنامج كوميدي
+      prisma.showCategory.upsert({
+        where: { 
+          showId_categoryId: { 
+            showId: shows[0].id, 
+            categoryId: categories[2].id 
+          } 
+        },
+        update: {},
+        create: {
+          showId: shows[0].id,
+          categoryId: categories[2].id,
+        },
+      }),
+      
+      // برنامج موسيقي
+      prisma.showCategory.upsert({
+        where: { 
+          showId_categoryId: { 
+            showId: shows[1].id, 
+            categoryId: categories[3].id 
+          } 
+        },
+        update: {},
+        create: {
+          showId: shows[1].id,
+          categoryId: categories[3].id,
+        },
       }),
     ]);
 
     // ربط المحتوى المختلط بالتصنيفات
+    console.log('🔗 ربط المحتوى المختلط بالتصنيفات...');
     await Promise.all([
-      prisma.mixCategory.createMany({
-        data: [
-          { mixId: mixes[0].id, categoryId: categories[3].id }, // Bohemian Rhapsody - Romance
-        ],
+      // محتوى متنوع
+      prisma.mixCategory.upsert({
+        where: { 
+          mixId_categoryId: { 
+            mixId: mixes[0].id, 
+            categoryId: categories[0].id 
+          } 
+        },
+        update: {},
+        create: {
+          mixId: mixes[0].id,
+          categoryId: categories[0].id,
+        },
+      }),
+      prisma.mixCategory.upsert({
+        where: { 
+          mixId_categoryId: { 
+            mixId: mixes[1].id, 
+            categoryId: categories[0].id 
+          } 
+        },
+        update: {},
+        create: {
+          mixId: mixes[1].id,
+          categoryId: categories[0].id,
+        },
       }),
     ]);
     console.log('✅ تم ربط المحتوى بالتصنيفات');
