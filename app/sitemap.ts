@@ -4,7 +4,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://akwam-clone.vercel.app'
   
   // الصفحات الثابتة
-  const staticPages = [
+  const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       lastModified: new Date(),
@@ -68,7 +68,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ]
 
   // صفحات المحتوى الديناميكية (مثال)
-  const dynamicPages = [
+  const dynamicPages: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/movie/the-matrix`,
       lastModified: new Date(),
