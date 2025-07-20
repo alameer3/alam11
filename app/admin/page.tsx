@@ -24,8 +24,20 @@ import {
   MoreHorizontal,
   Search,
   Filter,
-  ChevronDown
+  ChevronDown,
+  MessageSquare,
+  CreditCard,
+  Bell
 } from 'lucide-react'
+import AnalyticsSystem from '@/components/ui/AnalyticsSystem';
+import DownloadSystem from '@/components/ui/DownloadSystem';
+import SiteSettings from '@/components/ui/SiteSettings';
+import ReportingSystem from '@/components/ui/ReportingSystem';
+import SupportSystem from '@/components/ui/SupportSystem';
+import UserProfile from '@/components/ui/UserProfile';
+import ContentManagement from '@/components/ui/ContentManagement';
+import SubscriptionSystem from '@/components/ui/SubscriptionSystem';
+import NotificationSystem from '@/components/ui/NotificationSystem';
 
 // Mock admin data
 const adminData = {
@@ -172,7 +184,13 @@ export default function AdminDashboard() {
               { id: 'users', label: 'Users', icon: Users },
               { id: 'content', label: 'Content', icon: Film },
               { id: 'analytics', label: 'Analytics', icon: TrendingUp },
-              { id: 'system', label: 'System', icon: Activity }
+              { id: 'downloads', label: 'Downloads', icon: Download },
+              { id: 'reports', label: 'Reports', icon: FileText },
+              { id: 'settings', label: 'Settings', icon: Settings },
+              { id: 'system', label: 'System', icon: Activity },
+              { id: 'support', label: 'Support', icon: MessageSquare },
+              { id: 'subscriptions', label: 'Subscriptions', icon: CreditCard },
+              { id: 'notifications', label: 'Notifications', icon: Bell }
             ].map(tab => {
               const Icon = tab.icon
               return (
@@ -506,53 +524,26 @@ export default function AdminDashboard() {
           )}
 
           {activeTab === 'analytics' && (
-            <div>
-              <h2 className="text-xl font-semibold mb-6">Analytics</h2>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold mb-4">Traffic Overview</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span>Page Views</span>
-                      <span className="font-semibold">2.8M</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Unique Visitors</span>
-                      <span className="font-semibold">450K</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Avg. Session Duration</span>
-                      <span className="font-semibold">12m 34s</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Bounce Rate</span>
-                      <span className="font-semibold">23%</span>
-                    </div>
-                  </div>
-                </div>
+            <div className="bg-gray-50 dark:bg-gray-900">
+              <AnalyticsSystem />
+            </div>
+          )}
 
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold mb-4">User Engagement</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span>Active Users</span>
-                      <span className="font-semibold">{adminData.stats.activeUsers.toLocaleString()}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Total Downloads</span>
-                      <span className="font-semibold">{adminData.stats.totalDownloads.toLocaleString()}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Avg. Rating</span>
-                      <span className="font-semibold">{adminData.stats.avgRating}/10</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Content Completion</span>
-                      <span className="font-semibold">78%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          {activeTab === 'downloads' && (
+            <div className="bg-gray-50 dark:bg-gray-900">
+              <DownloadSystem />
+            </div>
+          )}
+
+          {activeTab === 'settings' && (
+            <div className="bg-gray-50 dark:bg-gray-900">
+              <SiteSettings />
+            </div>
+          )}
+
+          {activeTab === 'reports' && (
+            <div className="bg-gray-50 dark:bg-gray-900">
+              <ReportingSystem />
             </div>
           )}
 
@@ -597,6 +588,24 @@ export default function AdminDashboard() {
                   </div>
                 </div>
               </div>
+            </div>
+          )}
+
+          {activeTab === 'support' && (
+            <div className="bg-gray-50 dark:bg-gray-900">
+              <SupportSystem />
+            </div>
+          )}
+
+          {activeTab === 'subscriptions' && (
+            <div className="bg-gray-50 dark:bg-gray-900">
+              <SubscriptionSystem />
+            </div>
+          )}
+
+          {activeTab === 'notifications' && (
+            <div className="bg-gray-50 dark:bg-gray-900">
+              <NotificationSystem />
             </div>
           )}
         </div>
