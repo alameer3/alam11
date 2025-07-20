@@ -195,16 +195,8 @@ export default function SeriesPage() {
           <AdSystem 
             type="banner"
             position="content"
-            desktop={{
-              key: 'c4dafd2afd106c16f2da137131642dc4',
-              width: 728,
-              height: 90
-            }}
-            mobile={{
-              key: '96a30fbd2b80990e89652a08f49b609f',
-              width: 300,
-              height: 250
-            }}
+            width="728px"
+            height="90px"
           />
         </div>
         

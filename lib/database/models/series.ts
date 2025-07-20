@@ -299,7 +299,7 @@ export class SeriesModel extends BaseModel {
   /**
    * البحث في المسلسلات
    */
-  static async search(
+  static async searchSeries(
     searchTerm: string,
     page: number = 1,
     perPage: number = 20

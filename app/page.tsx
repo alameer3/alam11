@@ -47,15 +47,20 @@ export default async function HomePage() {
   const data = await getHomePageData()
   
   // تحويل البيانات لتتناسب مع المكونات الموجودة
-  const sliderItems = data.featuredContent.map(item => ({
-    id: item.id.toString(),
-    type: (item.total_episodes ? 'series' : 'movie') as 'movie' | 'series',
-    title: item.title,
-    image: item.poster || '/images/placeholder.jpg',
-    url: item.total_episodes ? `/series/${item.slug}` : `/movie/${item.slug}`,
-    rating: item.imdb_rating?.toString() || item.local_rating?.toString(),
-    quality: item.quality_name || 'HD'
-  }))
+  const sliderItems = data.featuredContent.map(item => {
+    // التحقق من نوع العنصر
+    const isSeries = 'total_episodes' in item && item.total_episodes !== undefined
+    
+    return {
+      id: item.id.toString(),
+      type: (isSeries ? 'series' : 'movie') as 'movie' | 'series',
+      title: item.title,
+      image: item.poster || '/images/placeholder.jpg',
+      url: isSeries ? `/series/${item.slug}` : `/movie/${item.slug}`,
+      rating: item.imdb_rating?.toString() || item.local_rating?.toString(),
+      quality: item.quality?.name || 'HD'
+    }
+  })
   
   // تحضير عناصر الأفلام
   const movieItems = data.movies.latest.map(movie => ({
@@ -65,7 +70,7 @@ export default async function HomePage() {
     rating: movie.imdb_rating?.toString() || movie.local_rating?.toString(),
     year: movie.release_date ? new Date(movie.release_date).getFullYear().toString() : '',
     genres: movie.categories ? movie.categories.map(c => c.name) : [],
-    quality: movie.quality_name || 'HD',
+    quality: movie.quality?.name || 'HD',
     url: `/movie/${movie.slug}`
   }))
   
@@ -78,7 +83,7 @@ export default async function HomePage() {
     year: series.first_air_date ? new Date(series.first_air_date).getFullYear().toString() : '',
     genres: series.categories ? series.categories.map(c => c.name) : [],
     episodes: series.total_episodes || 0,
-    quality: series.quality_name || 'HD',
+    quality: series.quality?.name || 'HD',
     url: `/series/${series.slug}`
   }))
   
@@ -90,7 +95,7 @@ export default async function HomePage() {
     image: data.movies.featured.backdrop || '/images/placeholder.jpg',
     poster: data.movies.featured.poster || '/images/placeholder.jpg',
     rating: data.movies.featured.imdb_rating?.toString() || data.movies.featured.local_rating?.toString() || '0',
-    quality: data.movies.featured.quality_name || 'HD',
+    quality: data.movies.featured.quality?.name || 'HD',
     url: `/movie/${data.movies.featured.slug}`,
     trailer: data.movies.featured.trailer_url
   } : undefined
@@ -103,7 +108,7 @@ export default async function HomePage() {
     image: data.series.featured.backdrop || '/images/placeholder.jpg',
     poster: data.series.featured.poster || '/images/placeholder.jpg',
     rating: data.series.featured.imdb_rating?.toString() || data.series.featured.local_rating?.toString() || '0',
-    quality: data.series.featured.quality_name || 'HD',
+    quality: data.series.featured.quality?.name || 'HD',
     url: `/series/${data.series.featured.slug}`,
     trailer: data.series.featured.trailer_url
   } : undefined
@@ -156,16 +161,8 @@ export default async function HomePage() {
               <AdSystem 
                 type="banner"
                 position="content"
-                desktop={{
-                  key: 'c4dafd2afd106c16f2da137131642dc4',
-                  width: 728,
-                  height: 90
-                }}
-                mobile={{
-                  key: '96a30fbd2b80990e89652a08f49b609f',
-                  width: 300,
-                  height: 250
-                }}
+                width="728px"
+                height="90px"
               />
             </div>
 

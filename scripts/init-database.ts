@@ -46,7 +46,7 @@ async function checkDatabaseData() {
       const count = await db.queryOne(`SELECT COUNT(*) as count FROM ${table}`)
       console.log(`📋 ${table}: ${count?.count || 0} سجل`)
     } catch (error) {
-      console.warn(`⚠️ خطأ في التحقق من جدول ${table}:`, error.message)
+      console.warn(`⚠️ خطأ في التحقق من جدول ${table}:`, error instanceof Error ? error.message : error)
     }
   }
 
@@ -71,12 +71,12 @@ async function showQuickStats() {
         as total_views`),
     ])
 
-    console.log(`🎬 الأفلام: ${stats[0]?.count || 0}`)
-    console.log(`📺 المسلسلات: ${stats[1]?.count || 0}`)
-    console.log(`🎞️ الحلقات: ${stats[2]?.count || 0}`)
-    console.log(`👥 المستخدمون: ${stats[3]?.count || 0}`)
-    console.log(`🏷️ التصنيفات: ${stats[4]?.count || 0}`)
-    console.log(`👁️ إجمالي المشاهدات: ${stats[5]?.total_views || 0}`)
+    console.log(`🎬 الأفلام: ${(stats[0] as any)?.count || 0}`)
+    console.log(`📺 المسلسلات: ${(stats[1] as any)?.count || 0}`)
+    console.log(`🎞️ الحلقات: ${(stats[2] as any)?.count || 0}`)
+    console.log(`👥 المستخدمون: ${(stats[3] as any)?.count || 0}`)
+    console.log(`🏷️ التصنيفات: ${(stats[4] as any)?.count || 0}`)
+    console.log(`👁️ إجمالي المشاهدات: ${(stats[5] as any)?.total_views || 0}`)
 
     // عرض أشهر المحتوى
     const popularMovies = await db.query(`
@@ -110,7 +110,7 @@ async function showQuickStats() {
     }
 
   } catch (error) {
-    console.warn('⚠️ خطأ في عرض الإحصائيات:', error.message)
+    console.warn('⚠️ خطأ في عرض الإحصائيات:', error instanceof Error ? error.message : error)
   }
 }
 

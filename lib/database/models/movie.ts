@@ -261,7 +261,7 @@ export class MovieModel extends BaseModel {
   /**
    * البحث في الأفلام
    */
-  static async search(
+  static async searchMovies(
     searchTerm: string,
     page: number = 1,
     perPage: number = 20

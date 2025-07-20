@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
 
     if (search) {
       // البحث في المسلسلات
-      result = await SeriesModel.search(search, page, perPage)
+      result = await SeriesModel.searchSeries(search, page, perPage)
     } else if (featured) {
       // المسلسلات المميزة
       const series = await SeriesModel.getFeatured(perPage)
