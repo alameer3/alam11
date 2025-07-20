@@ -1,6 +1,22 @@
 import { MainHeader } from '@/components/layout/main-header'
 import { MainMenu } from '@/components/layout/main-menu'
 import { SearchBox } from '@/components/layout/search-box'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'الصفحة الرئيسية | اكوام',
+  description: 'شمس المواقع، الموقع العربي الاول لتحميل و مشاهدة الافلام, المسلسلات, الالعاب, البرامج و التطبيقات, التلفزيون, المسرحيات, المصارعة, الرياضة, تحميل و مشاهدة مباشرة',
+  openGraph: {
+    title: 'الصفحة الرئيسية | اكوام',
+    description: 'شمس المواقع، الموقع العربي الاول لتحميل و مشاهدة الافلام, المسلسلات, الالعاب, البرامج و التطبيقات, التلفزيون, المسرحيات, المصارعة, الرياضة, تحميل و مشاهدة مباشرة',
+    url: 'https://ak.sv/main',
+    type: 'article'
+  },
+  twitter: {
+    title: 'الصفحة الرئيسية | اكوام',
+    description: 'شمس المواقع، الموقع العربي الاول لتحميل و مشاهدة الافلام, المسلسلات, الالعاب, البرامج و التطبيقات, التلفزيون, المسرحيات, المصارعة, الرياضة, تحميل و مشاهدة مباشرة'
+  }
+}
 
 // بيانات وهمية للمحتوى الحديث
 const recentContent = [
@@ -38,166 +54,100 @@ export default function OnesPage() {
       <SearchBox />
       
       <div className="site-container">
-        <div className="page-home">
+        <div className="page-content">
           <div className="main-header-top"></div>
           <MainHeader />
           <div className="main-header-height"></div>
           
           <div className="container py-5 my-5">
-            {/* المحتوى الرئيسي */}
-            <div className="text-center mb-8">
-              <h1 className="text-4xl font-bold text-white mb-4">
-                🌟 شمس المواقع 🌟
+            <div className="text-center mb-5">
+              <h1 className="text-4xl font-bold text-white mb-3">
+                شمس المواقع
               </h1>
-              <p className="text-xl text-gray-300 mb-6">
-                الموقع العربي الأول لتحميل ومشاهدة الأفلام والمسلسلات
+              <p className="text-gray-300 text-lg">
+                الموقع العربي الاول لتحميل و مشاهدة الافلام و المسلسلات
               </p>
             </div>
 
-            {/* شريط البحث المتقدم */}
-            <div className="bg-[#1a1a1a] rounded-lg p-6 mb-8 border border-[#333]">
-              <form className="flex flex-col md:flex-row gap-4" action="/search" method="get">
-                <input 
-                  type="text" 
-                  name="q"
-                  placeholder="ابحث عن فيلم او مسلسل او لعبة او برنامج ..." 
-                  className="flex-1 px-4 py-3 bg-[#222] border border-[#333] rounded text-white placeholder-gray-400 focus:border-[#26baee] focus:outline-none"
-                />
-                <button 
-                  type="submit"
-                  className="px-8 py-3 bg-[#26baee] hover:bg-[#0d82ab] text-white font-bold rounded transition-colors"
-                >
-                  🔍 بحث
-                </button>
-              </form>
-            </div>
-
-            {/* الأقسام الرئيسية */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <a href="/movies" className="group bg-[#1a1a1a] border border-[#333] rounded-xl p-6 text-center hover:border-[#26baee] transition-all duration-300 hover:bg-[#26baee]/10">
-                <div className="text-4xl mb-3">🎬</div>
-                <h3 className="text-white font-bold text-lg mb-2 group-hover:text-[#26baee] transition-colors">أفلام</h3>
-                <p className="text-gray-400 text-sm">15,000+ فيلم</p>
-              </a>
-              
-              <a href="/series" className="group bg-[#1a1a1a] border border-[#333] rounded-xl p-6 text-center hover:border-[#26baee] transition-all duration-300 hover:bg-[#26baee]/10">
-                <div className="text-4xl mb-3">📺</div>
-                <h3 className="text-white font-bold text-lg mb-2 group-hover:text-[#26baee] transition-colors">مسلسلات</h3>
-                <p className="text-gray-400 text-sm">8,500+ مسلسل</p>
-              </a>
-              
-              <a href="/shows" className="group bg-[#1a1a1a] border border-[#333] rounded-xl p-6 text-center hover:border-[#26baee] transition-all duration-300 hover:bg-[#26baee]/10">
-                <div className="text-4xl mb-3">📡</div>
-                <h3 className="text-white font-bold text-lg mb-2 group-hover:text-[#26baee] transition-colors">تلفزيون</h3>
-                <p className="text-gray-400 text-sm">2,300+ برنامج</p>
-              </a>
-              
-              <a href="/mix" className="group bg-[#1a1a1a] border border-[#333] rounded-xl p-6 text-center hover:border-[#26baee] transition-all duration-300 hover:bg-[#26baee]/10">
-                <div className="text-4xl mb-3">🎭</div>
-                <h3 className="text-white font-bold text-lg mb-2 group-hover:text-[#26baee] transition-colors">منوعات</h3>
-                <p className="text-gray-400 text-sm">3,200+ محتوى</p>
-              </a>
-            </div>
-
-            {/* المحتوى الأحدث */}
-            <div className="bg-[#1a1a1a] rounded-lg p-6 mb-8 border border-[#333]">
-              <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-                <span className="text-3xl ml-3">⭐</span>
+            {/* أحدث المحتوى */}
+            <div className="bg-[#1a1a1a] rounded-lg p-6 border border-[#333] mb-6">
+              <h2 className="text-2xl font-bold text-white mb-4 flex items-center">
+                <span className="text-3xl ml-3">🔥</span>
                 أحدث الإضافات
               </h2>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {recentContent.map((item) => (
-                  <div key={item.id} className="bg-[#222] rounded-lg p-4 border border-[#333] hover:border-[#26baee] transition-all duration-300 group">
-                    <div className="aspect-[2/3] bg-[#333] rounded-lg mb-4 flex items-center justify-center text-6xl">
-                      {item.type === 'movie' ? '🎬' : item.type === 'series' ? '📺' : '📡'}
+                  <div key={item.id} className="bg-[#2a2a2a] rounded-lg overflow-hidden border border-[#444] hover:border-[#26baee] transition-colors">
+                    <div className="aspect-video bg-gray-700 flex items-center justify-center">
+                      <span className="text-gray-400 text-sm">صورة المحتوى</span>
                     </div>
-                    
-                    <h3 className="text-white font-bold mb-2 group-hover:text-[#26baee] transition-colors">
-                      {item.title}
-                    </h3>
-                    
-                    <div className="flex justify-between items-center text-sm text-gray-400">
-                      <span>{item.year}</span>
-                      <span className="bg-[#26baee] text-white px-2 py-1 rounded text-xs">
-                        {item.quality}
-                      </span>
+                    <div className="p-4">
+                      <h3 className="text-white font-bold text-lg mb-2 line-clamp-1">{item.title}</h3>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-400">{item.year}</span>
+                        <span className="bg-[#26baee] text-white px-2 py-1 rounded text-xs">{item.quality}</span>
+                      </div>
+                      <div className="mt-3">
+                        <button className="w-full bg-[#26baee] text-white py-2 rounded hover:bg-[#1fa3d1] transition-colors">
+                          مشاهدة الآن
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* الإحصائيات */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <div className="text-center bg-[#1a1a1a] rounded-lg p-6 border border-[#333]">
-                <div className="text-3xl font-bold text-[#26baee] mb-2">15,000+</div>
-                <div className="text-gray-300">فيلم</div>
+            {/* إحصائيات الموقع */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <div className="bg-[#1a1a1a] p-4 rounded-lg border border-[#333] text-center">
+                <div className="text-2xl font-bold text-[#26baee] mb-1">15,000+</div>
+                <div className="text-gray-400 text-sm">أفلام</div>
               </div>
-              <div className="text-center bg-[#1a1a1a] rounded-lg p-6 border border-[#333]">
-                <div className="text-3xl font-bold text-[#26baee] mb-2">8,500+</div>
-                <div className="text-gray-300">مسلسل</div>
+              <div className="bg-[#1a1a1a] p-4 rounded-lg border border-[#333] text-center">
+                <div className="text-2xl font-bold text-[#26baee] mb-1">8,500+</div>
+                <div className="text-gray-400 text-sm">مسلسلات</div>
               </div>
-              <div className="text-center bg-[#1a1a1a] rounded-lg p-6 border border-[#333]">
-                <div className="text-3xl font-bold text-[#26baee] mb-2">2,300+</div>
-                <div className="text-gray-300">برنامج</div>
+              <div className="bg-[#1a1a1a] p-4 rounded-lg border border-[#333] text-center">
+                <div className="text-2xl font-bold text-[#26baee] mb-1">3,200+</div>
+                <div className="text-gray-400 text-sm">برامج تلفزيونية</div>
               </div>
-              <div className="text-center bg-[#1a1a1a] rounded-lg p-6 border border-[#333]">
-                <div className="text-3xl font-bold text-[#26baee] mb-2">500K+</div>
-                <div className="text-gray-300">مستخدم</div>
+              <div className="bg-[#1a1a1a] p-4 rounded-lg border border-[#333] text-center">
+                <div className="text-2xl font-bold text-[#26baee] mb-1">1,800+</div>
+                <div className="text-gray-400 text-sm">منوعات</div>
               </div>
             </div>
 
-            {/* زر الانتقال للمحتوى الحديث */}
-            <div className="text-center">
-              <a href="/recent" className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-[#26baee] to-[#0d82ab] text-white font-bold rounded-full hover:shadow-lg transition-all duration-300 hover:scale-105">
-                <span className="ml-2">أضيف حديثاً</span>
-                <span>✨</span>
+            {/* أقسام سريعة */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <a href="/movies" className="bg-[#1a1a1a] p-6 rounded-lg border border-[#333] hover:border-[#26baee] transition-colors text-center group">
+                <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">🎬</div>
+                <div className="text-white font-bold">أفلام</div>
+                <div className="text-gray-400 text-sm mt-1">أحدث الأفلام العالمية</div>
+              </a>
+              
+              <a href="/series" className="bg-[#1a1a1a] p-6 rounded-lg border border-[#333] hover:border-[#26baee] transition-colors text-center group">
+                <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">📺</div>
+                <div className="text-white font-bold">مسلسلات</div>
+                <div className="text-gray-400 text-sm mt-1">مسلسلات عربية وأجنبية</div>
+              </a>
+              
+              <a href="/shows" className="bg-[#1a1a1a] p-6 rounded-lg border border-[#333] hover:border-[#26baee] transition-colors text-center group">
+                <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">📡</div>
+                <div className="text-white font-bold">تلفزيون</div>
+                <div className="text-gray-400 text-sm mt-1">برامج ومصارعة</div>
+              </a>
+              
+              <a href="/mix" className="bg-[#1a1a1a] p-6 rounded-lg border border-[#333] hover:border-[#26baee] transition-colors text-center group">
+                <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">🎭</div>
+                <div className="text-white font-bold">منوعات</div>
+                <div className="text-gray-400 text-sm mt-1">محتوى متنوع</div>
               </a>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="main-footer py-5">
-        <nav className="social flex justify-center flex-wrap">
-          <a href="https://akw.to" target="_blank" className="mx-2 mb-2" title="الموقع الرئيسي" rel="noopener noreferrer">
-            <span className="text-xl">🏠</span>
-          </a>
-          <a href="https://www.facebook.com/akwamnet" target="_blank" className="mx-2 mb-2" title="فيسبوك" rel="noopener noreferrer">
-            <span className="text-xl">📘</span>
-          </a>
-          <a href="https://www.facebook.com/groups/AKOAMweb" target="_blank" className="mx-2 mb-2" title="مجموعة فيسبوك" rel="noopener noreferrer">
-            <span className="text-xl">👥</span>
-          </a>
-          <a href="https://akw.net.in/" target="_blank" className="mx-2 mb-2" title="التطبيق" rel="noopener noreferrer">
-            <span className="text-xl">📱</span>
-          </a>
-          <a href="https://www.youtube.com/c/AKWAMnetwork" target="_blank" className="mx-2 mb-2" title="يوتيوب" rel="noopener noreferrer">
-            <span className="text-xl">📺</span>
-          </a>
-          <a href="/AKWAM-Notifications" target="_self" className="mx-2 mb-2" title="الإشعارات">
-            <span className="text-xl">🔔</span>
-          </a>
-          <a href="/contactus" target="_self" className="mx-2 mb-2" title="اتصل بنا">
-            <span className="text-xl">✉️</span>
-          </a>
-        </nav>
-
-        <nav className="links flex justify-center mt-3 flex-wrap">
-          <a href="/" className="mx-2 text-gray-400 hover:text-white text-sm">اكوام</a>
-          <a href="/old" className="mx-2 text-gray-400 hover:text-white text-sm">الموقع القديم</a>
-          <a href="/dmca" className="mx-2 text-gray-400 hover:text-white text-sm">DMCA</a>
-          <a href="/ad-policy" className="mx-2 text-gray-400 hover:text-white text-sm">AD-P</a>
-          <a href="https://ak-news.com" target="_blank" className="mx-2 text-gray-400 hover:text-white text-sm">اكوام نيوز</a>
-          <a href="https://akw.net.co" target="_blank" className="mx-2 text-gray-400 hover:text-white text-sm">شبكة اكوام</a>
-        </nav>
-
-        <p className="copyright mb-0 text-xs text-center mt-3 text-gray-500">
-          جميع الحقوق محفوظة لـ شبكة اكوام © 2025
-        </p>
-      </footer>
     </div>
   )
 }
