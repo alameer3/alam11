@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Search, Menu, X, Play, Star, Clock, Flame } from 'lucide-react'
+import { Search, Menu, X, Play, Star, Clock, Flame, User, Bell, Crown, Settings, HelpCircle, BarChart3 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -12,6 +12,8 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
+import DarkModeToggle from './ui/DarkModeToggle'
+import NotificationSystem from './ui/NotificationSystem'
 
 interface Movie {
   id: number
@@ -24,6 +26,7 @@ interface Movie {
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<Movie[]>([])
   const [isSearching, setIsSearching] = useState(false)
@@ -67,8 +70,8 @@ const Header: React.FC = () => {
   const navigationItems = [
     {
       title: 'الرئيسية',
-      href: '/ones',
-              icon: <Flame className="w-4 h-4" />,
+      href: '/',
+      icon: <Flame className="w-4 h-4" />,
       description: 'أحدث وأهم المحتويات'
     },
     {
@@ -113,6 +116,15 @@ const Header: React.FC = () => {
       icon: <Star className="w-4 h-4" />,
       description: 'محتوى متنوع ومميز'
     }
+  ]
+
+  const userMenuItems = [
+    { title: 'الملف الشخصي', href: '/profile', icon: <User className="w-4 h-4" /> },
+    { title: 'الإشعارات', href: '/notifications', icon: <Bell className="w-4 h-4" /> },
+    { title: 'الاشتراك', href: '/subscription', icon: <Crown className="w-4 h-4" /> },
+    { title: 'الإعدادات', href: '/settings', icon: <Settings className="w-4 h-4" /> },
+    { title: 'المساعدة', href: '/help', icon: <HelpCircle className="w-4 h-4" /> },
+    { title: 'التحليلات', href: '/analytics', icon: <BarChart3 className="w-4 h-4" /> }
   ]
 
   return (
@@ -231,6 +243,41 @@ const Header: React.FC = () => {
                   </div>
                 )}
               </div>
+              
+              {/* نظام الإشعارات */}
+              <NotificationSystem />
+              
+              {/* قائمة المستخدم */}
+              <div className="relative">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-white hover:bg-gray-800"
+                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                >
+                  <User className="w-5 h-5" />
+                </Button>
+                {isUserMenuOpen && (
+                  <div className="absolute right-0 rtl:left-0 rtl:right-auto top-full mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-xl z-50">
+                    <div className="py-2">
+                      {userMenuItems.map((item, index) => (
+                        <Link
+                          key={index}
+                          href={item.href}
+                          className="flex items-center space-x-3 rtl:space-x-reverse px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 transition-colors"
+                          onClick={() => setIsUserMenuOpen(false)}
+                        >
+                          {item.icon}
+                          <span className="text-sm">{item.title}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {/* زر الوضع المظلم */}
+              <DarkModeToggle />
             </div>
 
             {/* زر القائمة المحمولة */}
@@ -306,6 +353,22 @@ const Header: React.FC = () => {
                     )}
                   </div>
                 ))}
+                
+                {/* قائمة المستخدم المحمولة */}
+                <div className="border-t border-gray-700 pt-4 mt-4">
+                  <h3 className="text-sm font-medium text-gray-400 mb-2 px-3">حسابي</h3>
+                  {userMenuItems.map((item, index) => (
+                    <Link
+                      key={index}
+                      href={item.href}
+                      className="flex items-center space-x-3 rtl:space-x-reverse p-3 rounded-lg hover:bg-gray-800 transition-colors text-gray-300 hover:text-white"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {item.icon}
+                      <span className="font-medium">{item.title}</span>
+                    </Link>
+                  ))}
+                </div>
               </nav>
             </div>
           </div>

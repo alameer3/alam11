@@ -49,7 +49,7 @@ const seriesData = {
       id: 1,
       number: 1,
       title: "Season 1",
-      episodes: 7,
+      episodeCount: 7,
       year: 2008,
       episodes: [
         {
@@ -88,7 +88,7 @@ const seriesData = {
       id: 2,
       number: 2,
       title: "Season 2",
-      episodes: 13,
+      episodeCount: 13,
       year: 2009,
       episodes: [
         {

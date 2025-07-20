@@ -1,470 +1,436 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { Search, Filter, Star, Play, Eye, Download, Heart, Grid, List, Sliders, Calendar, Users } from 'lucide-react'
+import { Search, Filter, Grid3X3, List, Star, Eye, Calendar, Clock } from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Badge } from '@/components/ui/badge'
 
-// بيانات تجريبية للمسلسلات
-const seriesData = [
+interface Series {
+  id: string
+  title: string
+  arabicTitle: string
+  description: string
+  year: number
+  rating: number
+  views: number
+  episodes: number
+  seasons: number
+  genre: string[]
+  quality: string
+  status: 'ongoing' | 'completed'
+  poster: string
+  backdrop: string
+  duration: string
+  language: string
+  country: string
+  director: string
+  cast: string[]
+  synopsis: string
+}
+
+const mockSeries: Series[] = [
   {
-    id: 1,
-    title: "Breaking Bad",
-    originalTitle: "Breaking Bad",
-    slug: "breaking-bad",
-    description: "مسلسل درامي أمريكي عن معلم كيمياء يتحول إلى تاجر مخدرات",
-    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
-    rating: 9.5,
+    id: '1',
+    title: 'Breaking Bad',
+    arabicTitle: 'بريكينغ باد',
+    description: 'A high school chemistry teacher turned methamphetamine manufacturer',
     year: 2008,
-    seasons: 5,
-    episodes: 62,
-    duration: 47,
-    quality: "FHD",
+    rating: 9.5,
     views: 2500000,
-    downloads: 800000,
-    likes: 45000,
-    isFeatured: true,
-    status: "مكتمل",
-    categories: ["Drama", "Crime", "Thriller"]
+    episodes: 62,
+    seasons: 5,
+    genre: ['Crime', 'Drama', 'Thriller'],
+    quality: '1080p',
+    status: 'completed',
+    poster: 'https://images.unsplash.com/photo-1626814026160-2237a95fc5a9?w=300&h=450&fit=crop',
+    backdrop: 'https://images.unsplash.com/photo-1626814026160-2237a95fc5a9?w=1200&h=400&fit=crop',
+    duration: '47 min',
+    language: 'English',
+    country: 'USA',
+    director: 'Vince Gilligan',
+    cast: ['Bryan Cranston', 'Aaron Paul', 'Anna Gunn'],
+    synopsis: 'A high school chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine in order to secure his family\'s financial future.'
   },
   {
-    id: 2,
-    title: "Game of Thrones",
-    originalTitle: "Game of Thrones",
-    slug: "game-of-thrones",
-    description: "مسلسل خيالي ملحمي عن الصراع على العرش الحديدي",
-    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
-    rating: 9.3,
+    id: '2',
+    title: 'Game of Thrones',
+    arabicTitle: 'لعبة العرش',
+    description: 'Nine noble families fight for control over the lands of Westeros',
     year: 2011,
-    seasons: 8,
+    rating: 9.3,
+    views: 3200000,
     episodes: 73,
-    duration: 55,
-    quality: "4K",
-    views: 3000000,
-    downloads: 1000000,
-    likes: 60000,
-    isFeatured: true,
-    status: "مكتمل",
-    categories: ["Fantasy", "Drama", "Adventure"]
+    seasons: 8,
+    genre: ['Action', 'Adventure', 'Drama'],
+    quality: '4K',
+    status: 'completed',
+    poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=450&fit=crop',
+    backdrop: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1200&h=400&fit=crop',
+    duration: '57 min',
+    language: 'English',
+    country: 'USA',
+    director: 'David Benioff',
+    cast: ['Emilia Clarke', 'Kit Harington', 'Peter Dinklage'],
+    synopsis: 'Nine noble families fight for control over the lands of Westeros, while an ancient enemy returns after being dormant for millennia.'
   },
   {
-    id: 3,
-    title: "Stranger Things",
-    originalTitle: "Stranger Things",
-    slug: "stranger-things",
-    description: "مسلسل خيال علمي عن مجموعة أطفال يواجهون قوى خارقة",
-    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
+    id: '3',
+    title: 'Stranger Things',
+    arabicTitle: 'أشياء غريبة',
+    description: 'When a young boy disappears, his mother must confront terrifying forces',
+    year: 2016,
     rating: 8.7,
-    year: 2016,
-    seasons: 4,
-    episodes: 34,
-    duration: 50,
-    quality: "FHD",
-    views: 2200000,
-    downloads: 700000,
-    likes: 35000,
-    isFeatured: true,
-    status: "مستمر",
-    categories: ["Sci-Fi", "Drama", "Horror"]
-  },
-  {
-    id: 4,
-    title: "The Crown",
-    originalTitle: "The Crown",
-    slug: "the-crown",
-    description: "مسلسل درامي عن حياة الملكة إليزابيث الثانية",
-    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
-    rating: 8.6,
-    year: 2016,
-    seasons: 6,
-    episodes: 60,
-    duration: 58,
-    quality: "4K",
     views: 1800000,
-    downloads: 500000,
-    likes: 25000,
-    isFeatured: false,
-    status: "مكتمل",
-    categories: ["Drama", "History", "Biography"]
+    episodes: 34,
+    seasons: 4,
+    genre: ['Drama', 'Fantasy', 'Horror'],
+    quality: '1080p',
+    status: 'ongoing',
+    poster: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=450&fit=crop',
+    backdrop: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&h=400&fit=crop',
+    duration: '51 min',
+    language: 'English',
+    country: 'USA',
+    director: 'The Duffer Brothers',
+    cast: ['Millie Bobby Brown', 'Finn Wolfhard', 'Winona Ryder'],
+    synopsis: 'When a young boy disappears, his mother, a police chief and his friends must confront terrifying forces in order to get him back.'
   },
   {
-    id: 5,
-    title: "The Mandalorian",
-    originalTitle: "The Mandalorian",
-    slug: "the-mandalorian",
-    description: "مسلسل خيال علمي في عالم حرب النجوم",
-    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
-    rating: 8.8,
-    year: 2019,
-    seasons: 3,
-    episodes: 24,
-    duration: 40,
-    quality: "4K",
-    views: 2000000,
-    downloads: 600000,
-    likes: 30000,
-    isFeatured: false,
-    status: "مستمر",
-    categories: ["Sci-Fi", "Action", "Adventure"]
-  },
-  {
-    id: 6,
-    title: "The Witcher",
-    originalTitle: "The Witcher",
-    slug: "the-witcher",
-    description: "مسلسل خيالي عن صياد وحوش في عالم مليء بالسحر",
-    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
-    rating: 8.2,
-    year: 2019,
-    seasons: 3,
-    episodes: 24,
-    duration: 60,
-    quality: "FHD",
-    views: 1600000,
-    downloads: 400000,
-    likes: 20000,
-    isFeatured: false,
-    status: "مستمر",
-    categories: ["Fantasy", "Action", "Drama"]
+    id: '4',
+    title: 'The Crown',
+    arabicTitle: 'التاج',
+    description: 'Follows the political rivalries and romance of Queen Elizabeth II',
+    year: 2016,
+    rating: 8.6,
+    views: 1200000,
+    episodes: 40,
+    seasons: 5,
+    genre: ['Biography', 'Drama', 'History'],
+    quality: '4K',
+    status: 'ongoing',
+    poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=450&fit=crop',
+    backdrop: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1200&h=400&fit=crop',
+    duration: '58 min',
+    language: 'English',
+    country: 'UK',
+    director: 'Peter Morgan',
+    cast: ['Olivia Colman', 'Emma Corrin', 'Josh O\'Connor'],
+    synopsis: 'Follows the political rivalries and romance of Queen Elizabeth II\'s reign and the events that shaped the second half of the twentieth century.'
   }
 ]
 
-const categories = ["All", "Drama", "Comedy", "Action", "Thriller", "Sci-Fi", "Fantasy", "Crime", "Adventure", "Horror"]
-const qualities = ["All", "HD", "FHD", "4K"]
-const years = ["All", "2024", "2023", "2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015", "2014", "2013", "2012", "2011", "2010", "2009", "2008", "2007", "2006", "2005", "2004", "2003", "2002", "2001", "2000", "1999", "1998", "1997", "1996", "1995", "1994", "1993", "1992", "1991", "1990"]
-const statuses = ["All", "مستمر", "مكتمل", "متوقف"]
-
 export default function SeriesPage() {
-  const [series, setSeries] = useState(seriesData)
-  const [filteredSeries, setFilteredSeries] = useState(seriesData)
+  const [series, setSeries] = useState<Series[]>(mockSeries)
+  const [filteredSeries, setFilteredSeries] = useState<Series[]>(mockSeries)
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('All')
-  const [selectedQuality, setSelectedQuality] = useState('All')
-  const [selectedYear, setSelectedYear] = useState('All')
-  const [selectedStatus, setSelectedStatus] = useState('All')
+  const [selectedGenre, setSelectedGenre] = useState('all')
+  const [selectedYear, setSelectedYear] = useState('all')
+  const [selectedQuality, setSelectedQuality] = useState('all')
+  const [selectedStatus, setSelectedStatus] = useState('all')
   const [sortBy, setSortBy] = useState('rating')
-  const [viewMode, setViewMode] = useState('grid')
-  const [showFilters, setShowFilters] = useState(false)
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [isLoading, setIsLoading] = useState(false)
 
-  // فلترة وبحث المسلسلات
+  const genres = ['all', ...Array.from(new Set(series.flatMap(s => s.genre)))]
+  const years = ['all', ...Array.from(new Set(series.map(s => s.year.toString())))]
+  const qualities = ['all', ...Array.from(new Set(series.map(s => s.quality)))]
+  const statuses = ['all', 'ongoing', 'completed']
+
   useEffect(() => {
-    let filtered = series.filter(show => {
-      const matchesSearch = show.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          show.description.toLowerCase().includes(searchTerm.toLowerCase())
-      const matchesCategory = selectedCategory === 'All' || show.categories.includes(selectedCategory)
-      const matchesQuality = selectedQuality === 'All' || show.quality === selectedQuality
-      const matchesYear = selectedYear === 'All' || show.year.toString() === selectedYear
-      const matchesStatus = selectedStatus === 'All' || show.status === selectedStatus
+    setIsLoading(true)
+    
+    let filtered = series.filter(series => {
+      const matchesSearch = series.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           series.arabicTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           series.description.toLowerCase().includes(searchTerm.toLowerCase())
       
-      return matchesSearch && matchesCategory && matchesQuality && matchesYear && matchesStatus
+      const matchesGenre = selectedGenre === 'all' || series.genre.includes(selectedGenre)
+      const matchesYear = selectedYear === 'all' || series.year.toString() === selectedYear
+      const matchesQuality = selectedQuality === 'all' || series.quality === selectedQuality
+      const matchesStatus = selectedStatus === 'all' || series.status === selectedStatus
+      
+      return matchesSearch && matchesGenre && matchesYear && matchesQuality && matchesStatus
     })
 
-    // ترتيب النتائج
+    // Sort filtered results
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'rating':
           return b.rating - a.rating
-        case 'year':
-          return b.year - a.year
         case 'views':
           return b.views - a.views
+        case 'year':
+          return b.year - a.year
         case 'title':
           return a.title.localeCompare(b.title)
-        case 'seasons':
-          return b.seasons - a.seasons
         default:
           return 0
       }
     })
 
     setFilteredSeries(filtered)
-  }, [series, searchTerm, selectedCategory, selectedQuality, selectedYear, selectedStatus, sortBy])
-
-  const formatDuration = (minutes: number) => {
-    const hours = Math.floor(minutes / 60)
-    const mins = minutes % 60
-    return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`
-  }
-
-  const formatNumber = (num: number) => {
-    if (num >= 1000000) {
-      return (num / 1000000).toFixed(1) + 'M'
-    }
-    if (num >= 1000) {
-      return (num / 1000).toFixed(1) + 'K'
-    }
-    return num.toString()
-  }
+    
+    // Simulate loading delay
+    setTimeout(() => setIsLoading(false), 300)
+  }, [searchTerm, selectedGenre, selectedYear, selectedQuality, selectedStatus, sortBy, series])
 
   const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'مستمر':
-        return 'bg-green-500'
-      case 'مكتمل':
-        return 'bg-blue-500'
-      case 'متوقف':
-        return 'bg-red-500'
-      default:
-        return 'bg-gray-500'
-    }
+    return status === 'ongoing' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
+  }
+
+  const getStatusText = (status: string) => {
+    return status === 'ongoing' ? 'مستمر' : 'مكتمل'
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 to-pink-600 py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-              المسلسلات
-            </h1>
-            <p className="text-xl text-white/90 max-w-2xl mx-auto">
-              اكتشف أفضل المسلسلات العربية والعالمية بجميع أنواعها
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Hero Section */}
+      <div className="relative h-64 bg-gradient-to-r from-blue-600 to-purple-600">
+        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div className="relative z-10 max-w-7xl mx-auto px-6 h-full flex items-center">
+          <div className="text-white">
+            <h1 className="text-4xl font-bold mb-4">المسلسلات</h1>
+            <p className="text-xl opacity-90">
+              اكتشف أفضل المسلسلات العربية والأجنبية
             </p>
+            <div className="mt-6 flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Eye className="w-5 h-5" />
+                <span>{series.reduce((sum, s) => sum + s.views, 0).toLocaleString()}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Star className="w-5 h-5" />
+                <span>{series.length} مسلسل</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Search and Filters */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="bg-gray-800 rounded-xl p-6 mb-8">
-          {/* Search Bar */}
-          <div className="relative mb-6">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              type="text"
-              placeholder="ابحث عن مسلسل..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-            />
-          </div>
-
-          {/* Filters */}
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-            >
-              {categories.map(category => (
-                <option key={category} value={category}>
-                  {category === 'All' ? 'جميع التصنيفات' : category}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={selectedQuality}
-              onChange={(e) => setSelectedQuality(e.target.value)}
-              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-            >
-              {qualities.map(quality => (
-                <option key={quality} value={quality}>
-                  {quality === 'All' ? 'جميع الجودات' : quality}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-            >
-              {years.map(year => (
-                <option key={year} value={year}>
-                  {year === 'All' ? 'جميع السنوات' : year}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
-              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-            >
-              {statuses.map(status => (
-                <option key={status} value={status}>
-                  {status === 'All' ? 'جميع الحالات' : status}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-            >
-              <option value="rating">الأعلى تقييماً</option>
-              <option value="year">الأحدث</option>
-              <option value="views">الأكثر مشاهدة</option>
-              <option value="seasons">الأكثر مواسم</option>
-              <option value="title">حسب العنوان</option>
-            </select>
-          </div>
-
-          {/* View Mode Toggle */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-400'}`}
-              >
-                <Grid className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => setViewMode('list')}
-                className={`p-2 rounded ${viewMode === 'list' ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-400'}`}
-              >
-                <List className="w-5 h-5" />
-              </button>
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Search and Filters */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+            {/* Search */}
+            <div className="lg:col-span-2">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Input
+                  placeholder="البحث في المسلسلات..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
             </div>
 
-            <div className="text-gray-400">
-              {filteredSeries.length} مسلسل
+            {/* Genre Filter */}
+            <div>
+              <Select value={selectedGenre} onValueChange={setSelectedGenre}>
+                <SelectTrigger>
+                  <SelectValue placeholder="التصنيف" />
+                </SelectTrigger>
+                <SelectContent>
+                  {genres.map(genre => (
+                    <SelectItem key={genre} value={genre}>
+                      {genre === 'all' ? 'جميع التصنيفات' : genre}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Year Filter */}
+            <div>
+              <Select value={selectedYear} onValueChange={setSelectedYear}>
+                <SelectTrigger>
+                  <SelectValue placeholder="السنة" />
+                </SelectTrigger>
+                <SelectContent>
+                  {years.map(year => (
+                    <SelectItem key={year} value={year}>
+                      {year === 'all' ? 'جميع السنوات' : year}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Quality Filter */}
+            <div>
+              <Select value={selectedQuality} onValueChange={setSelectedQuality}>
+                <SelectTrigger>
+                  <SelectValue placeholder="الجودة" />
+                </SelectTrigger>
+                <SelectContent>
+                  {qualities.map(quality => (
+                    <SelectItem key={quality} value={quality}>
+                      {quality === 'all' ? 'جميع الجودات' : quality}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Sort */}
+            <div>
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger>
+                  <SelectValue placeholder="الترتيب" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="rating">التقييم</SelectItem>
+                  <SelectItem value="views">المشاهدات</SelectItem>
+                  <SelectItem value="year">السنة</SelectItem>
+                  <SelectItem value="title">العنوان</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Additional Filters */}
+          <div className="mt-4 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="الحالة" />
+                </SelectTrigger>
+                <SelectContent>
+                  {statuses.map(status => (
+                    <SelectItem key={status} value={status}>
+                      {status === 'all' ? 'جميع الحالات' : 
+                       status === 'ongoing' ? 'مستمر' : 'مكتمل'}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* View Mode Toggle */}
+            <div className="flex items-center gap-2">
+              <Button
+                variant={viewMode === 'grid' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setViewMode('grid')}
+              >
+                <Grid3X3 className="w-4 h-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setViewMode('list')}
+              >
+                <List className="w-4 h-4" />
+              </Button>
             </div>
           </div>
         </div>
 
-        {/* Series Grid/List */}
-        {viewMode === 'grid' ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-            {filteredSeries.map((show) => (
-              <Link 
-                key={show.id}
-                href={`/series/${show.slug}`}
-                className="group relative overflow-hidden rounded-xl bg-gray-800 hover:bg-gray-700 transition-all duration-300 transform hover:scale-105"
-              >
-                <div className="relative aspect-[2/3] overflow-hidden">
-                  <img
-                    src={show.poster}
-                    alt={show.title}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                  />
-                  
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                  
-                  {/* Rating Badge */}
-                  <div className="absolute top-2 right-2 bg-yellow-500 text-black px-2 py-1 rounded text-xs font-bold">
-                    {show.rating}
-                  </div>
+        {/* Results Count */}
+        <div className="mb-6">
+          <p className="text-gray-600 dark:text-gray-400">
+            تم العثور على {filteredSeries.length} مسلسل
+          </p>
+        </div>
 
-                  {/* Quality Badge */}
-                  <div className="absolute bottom-2 left-2 bg-white/90 text-black px-2 py-1 rounded text-xs font-bold">
-                    {show.quality}
-                  </div>
-
-                  {/* Status Badge */}
-                  <div className={`absolute top-2 left-2 ${getStatusColor(show.status)} text-white px-2 py-1 rounded text-xs font-bold`}>
-                    {show.status}
-                  </div>
-
-                  {/* Play Button */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                      <Play className="w-6 h-6 text-white" fill="white" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-3">
-                  <h3 className="text-white font-semibold text-sm mb-1 line-clamp-2">
-                    {show.title}
-                  </h3>
-                  <div className="flex items-center justify-between text-gray-400 text-xs mb-2">
-                    <span>{show.year}</span>
-                    <span>{show.seasons} مواسم</span>
-                  </div>
-                  
-                  {/* Episodes */}
-                  <div className="flex items-center text-gray-400 text-xs mb-2">
-                    <span>{show.episodes} حلقة</span>
-                    <span className="mx-2">•</span>
-                    <span>{formatDuration(show.duration)}</span>
-                  </div>
-                  
-                  {/* Stats */}
-                  <div className="flex items-center space-x-2 text-xs text-gray-500">
-                    <div className="flex items-center">
-                      <Eye className="w-3 h-3 mr-1" />
-                      {formatNumber(show.views)}
-                    </div>
-                    <div className="flex items-center">
-                      <Download className="w-3 h-3 mr-1" />
-                      {formatNumber(show.downloads)}
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
+        {/* Loading State */}
+        {isLoading && (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
           </div>
-        ) : (
-          <div className="space-y-4">
-            {filteredSeries.map((show) => (
-              <Link 
-                key={show.id}
-                href={`/series/${show.slug}`}
-                className="group flex items-center space-x-4 bg-gray-800 rounded-xl p-4 hover:bg-gray-700 transition-all duration-300"
-              >
-                <div className="relative w-20 h-28 flex-shrink-0">
+        )}
+
+        {/* Series Grid/List */}
+        {!isLoading && (
+          <div className={viewMode === 'grid' 
+            ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
+            : 'space-y-4'
+          }>
+            {filteredSeries.map((series) => (
+              <Card key={series.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                <div className="relative">
                   <img
-                    src={show.poster}
-                    alt={show.title}
-                    className="w-full h-full object-cover rounded"
+                    src={series.poster}
+                    alt={series.title}
+                    className={`w-full object-cover ${viewMode === 'grid' ? 'h-64' : 'h-32'}`}
                   />
-                  <div className="absolute top-1 right-1 bg-yellow-500 text-black px-1 py-0.5 rounded text-xs font-bold">
-                    {show.rating}
+                  <div className="absolute top-2 right-2">
+                    <Badge variant="secondary" className="bg-black bg-opacity-75 text-white">
+                      {series.quality}
+                    </Badge>
                   </div>
-                  <div className={`absolute bottom-1 left-1 ${getStatusColor(show.status)} text-white px-1 py-0.5 rounded text-xs font-bold`}>
-                    {show.status}
+                  <div className="absolute top-2 left-2">
+                    <Badge className={getStatusColor(series.status)}>
+                      {getStatusText(series.status)}
+                    </Badge>
                   </div>
-                </div>
-
-                <div className="flex-1">
-                  <h3 className="text-white font-semibold text-lg mb-1">{show.title}</h3>
-                  <p className="text-gray-400 text-sm mb-2 line-clamp-2">{show.description}</p>
-                  
-                  <div className="flex items-center space-x-4 text-sm text-gray-400 mb-2">
-                    <span>{show.year}</span>
-                    <span>{show.seasons} مواسم</span>
-                    <span>{show.episodes} حلقة</span>
-                    <span>{formatDuration(show.duration)}</span>
-                    <span className="bg-gray-700 px-2 py-1 rounded">{show.quality}</span>
-                    <span>{show.categories.join(', ')}</span>
+                  <div className="absolute bottom-2 left-2 flex items-center gap-1">
+                    <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                    <span className="text-white text-sm font-medium">{series.rating}</span>
                   </div>
                 </div>
-
-                <div className="flex flex-col items-end space-y-2">
-                  <div className="flex items-center space-x-2 text-xs text-gray-500">
-                    <div className="flex items-center">
-                      <Eye className="w-3 h-3 mr-1" />
-                      {formatNumber(show.views)}
-                    </div>
-                    <div className="flex items-center">
-                      <Download className="w-3 h-3 mr-1" />
-                      {formatNumber(show.downloads)}
-                    </div>
-                    <div className="flex items-center">
-                      <Heart className="w-3 h-3 mr-1" />
-                      {formatNumber(show.likes)}
+                
+                <CardContent className="p-4">
+                  <div className={viewMode === 'list' ? 'flex items-center gap-4' : ''}>
+                    {viewMode === 'list' && (
+                      <img
+                        src={series.poster}
+                        alt={series.title}
+                        className="w-16 h-24 object-cover rounded"
+                      />
+                    )}
+                    
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-lg mb-1 line-clamp-1">
+                        {series.arabicTitle}
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">
+                        {series.description}
+                      </p>
+                      
+                      <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4" />
+                          <span>{series.year}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-4 h-4" />
+                          <span>{series.episodes} حلقة</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Eye className="w-4 h-4" />
+                          <span>{series.views.toLocaleString()}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        {series.genre.slice(0, 2).map((genre, index) => (
+                          <Badge key={index} variant="outline" className="text-xs">
+                            {genre}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                  
-                  <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm transition-colors">
-                    مشاهدة
-                  </button>
-                </div>
-              </Link>
+                </CardContent>
+              </Card>
             ))}
           </div>
         )}
 
         {/* No Results */}
-        {filteredSeries.length === 0 && (
+        {!isLoading && filteredSeries.length === 0 && (
           <div className="text-center py-12">
-            <div className="text-gray-400 text-6xl mb-4">📺</div>
-            <h3 className="text-xl font-semibold text-white mb-2">لا توجد نتائج</h3>
-            <p className="text-gray-400">جرب تغيير معايير البحث</p>
+            <div className="text-gray-400 mb-4">
+              <Search className="w-16 h-16 mx-auto" />
+            </div>
+            <h3 className="text-lg font-semibold mb-2">لم يتم العثور على نتائج</h3>
+            <p className="text-gray-600 dark:text-gray-400">
+              جرب تغيير معايير البحث أو الفلترة
+            </p>
           </div>
         )}
       </div>

@@ -1,436 +1,670 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
-import { 
-  Search, 
-  Filter, 
-  Grid, 
-  List, 
-  Star, 
-  Eye, 
-  Calendar,
-  Play,
-  Heart,
-  Bookmark,
-  Download,
-  MoreHorizontal,
-  ChevronDown,
-  ChevronUp
-} from 'lucide-react'
+import { Search, Filter, Grid3X3, List, Star, Eye, Calendar, Clock, Film, Tv, Music, Mic, BookOpen, Video, TrendingUp, Clock as ClockIcon, Heart } from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Badge } from '@/components/ui/badge'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
-// Mock search results
-const searchResults = [
+interface SearchResult {
+  id: string
+  title: string
+  arabicTitle: string
+  description: string
+  year: number
+  rating: number
+  views: number
+  duration: string
+  genre: string[]
+  quality: string
+  type: 'movie' | 'series' | 'show' | 'music' | 'podcast' | 'audiobook' | 'documentary'
+  poster: string
+  language: string
+  country: string
+  director?: string
+  cast?: string[]
+  artist?: string
+  album?: string
+  author?: string
+  host?: string
+  synopsis: string
+  isTrending?: boolean
+  isNew?: boolean
+  isFeatured?: boolean
+}
+
+const mockSearchResults: SearchResult[] = [
   {
-    id: 1,
-    title: "Breaking Bad",
-    type: "series",
-    poster: "/api/placeholder/200/300",
-    rating: 9.5,
+    id: '1',
+    title: 'The Dark Knight',
+    arabicTitle: 'الفرسان المظلم',
+    description: 'When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.',
     year: 2008,
-    duration: "49 min",
-    views: 2500000,
-    description: "A high school chemistry teacher turned methamphetamine manufacturer partners with a former student to secure his family's financial future.",
-    genres: ["Crime", "Drama", "Thriller"],
-    quality: "1080p"
-  },
-  {
-    id: 2,
-    title: "The Dark Knight",
-    type: "movie",
-    poster: "/api/placeholder/200/300",
     rating: 9.0,
-    year: 2008,
-    duration: "152 min",
     views: 1800000,
-    description: "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
-    genres: ["Action", "Crime", "Drama"],
-    quality: "1080p"
+    duration: '2:32:00',
+    genre: ['Action', 'Crime', 'Drama'],
+    quality: '4K',
+    type: 'movie',
+    poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=450&fit=crop',
+    language: 'English',
+    country: 'USA',
+    director: 'Christopher Nolan',
+    cast: ['Christian Bale', 'Heath Ledger', 'Aaron Eckhart'],
+    synopsis: 'When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.',
+    isTrending: true
   },
   {
-    id: 3,
-    title: "The Tonight Show",
-    type: "show",
-    poster: "/api/placeholder/200/300",
-    rating: 8.2,
-    year: 2014,
-    duration: "60 min",
+    id: '2',
+    title: 'Breaking Bad',
+    arabicTitle: 'بريكينغ باد',
+    description: 'A high school chemistry teacher turned methamphetamine manufacturer',
+    year: 2008,
+    rating: 9.5,
+    views: 2500000,
+    duration: '47 min',
+    genre: ['Crime', 'Drama', 'Thriller'],
+    quality: '1080p',
+    type: 'series',
+    poster: 'https://images.unsplash.com/photo-1626814026160-2237a95fc5a9?w=300&h=450&fit=crop',
+    language: 'English',
+    country: 'USA',
+    director: 'Vince Gilligan',
+    cast: ['Bryan Cranston', 'Aaron Paul', 'Anna Gunn'],
+    synopsis: 'A high school chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine in order to secure his family\'s financial future.',
+    isFeatured: true
+  },
+  {
+    id: '3',
+    title: 'Bohemian Rhapsody',
+    arabicTitle: 'رابسودي بوهيمي',
+    description: 'One of the most iconic songs in rock music history',
+    year: 1975,
+    rating: 9.8,
+    views: 2500000,
+    duration: '5:55',
+    genre: ['Rock', 'Progressive Rock', 'Opera'],
+    quality: 'Lossless',
+    type: 'music',
+    poster: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=450&fit=crop',
+    language: 'English',
+    country: 'UK',
+    artist: 'Queen',
+    album: 'A Night at the Opera',
+    synopsis: 'Bohemian Rhapsody is a song by the British rock band Queen.',
+    isTrending: true
+  },
+  {
+    id: '4',
+    title: 'The Joe Rogan Experience',
+    arabicTitle: 'تجربة جو روغان',
+    description: 'The most popular podcast in the world',
+    year: 2009,
+    rating: 8.9,
+    views: 1800000,
+    duration: '2:30:00',
+    genre: ['Podcast', 'Interview', 'Comedy'],
+    quality: 'HD',
+    type: 'podcast',
+    poster: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=450&fit=crop',
+    language: 'English',
+    country: 'USA',
+    host: 'Joe Rogan',
+    synopsis: 'The Joe Rogan Experience is a podcast hosted by American comedian Joe Rogan.',
+    isNew: true
+  },
+  {
+    id: '5',
+    title: 'The Great Gatsby',
+    arabicTitle: 'غاتسبي العظيم',
+    description: 'A classic American novel by F. Scott Fitzgerald',
+    year: 1925,
+    rating: 9.2,
     views: 1200000,
-    description: "Jimmy Fallon hosts the iconic Tonight Show, featuring celebrity interviews, comedy sketches, and musical performances.",
-    genres: ["Talk Show", "Comedy", "Entertainment"],
-    quality: "1080p"
+    duration: '8:45:00',
+    genre: ['Fiction', 'Classic', 'Drama'],
+    quality: 'HD',
+    type: 'audiobook',
+    poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=450&fit=crop',
+    language: 'English',
+    country: 'USA',
+    author: 'F. Scott Fitzgerald',
+    synopsis: 'The Great Gatsby is a 1925 novel by American writer F. Scott Fitzgerald.',
+    isFeatured: true
   },
   {
-    id: 4,
-    title: "Game of Thrones",
-    type: "series",
-    poster: "/api/placeholder/200/300",
-    rating: 9.3,
-    year: 2011,
-    duration: "57 min",
-    views: 3200000,
-    description: "Nine noble families fight for control over the lands of Westeros, while an ancient enemy returns after being dormant for millennia.",
-    genres: ["Action", "Adventure", "Drama"],
-    quality: "1080p"
-  },
-  {
-    id: 5,
-    title: "Inception",
-    type: "movie",
-    poster: "/api/placeholder/200/300",
-    rating: 8.8,
-    year: 2010,
-    duration: "148 min",
-    views: 2100000,
-    description: "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.",
-    genres: ["Action", "Adventure", "Sci-Fi"],
-    quality: "1080p"
-  },
-  {
-    id: 6,
-    title: "Stranger Things",
-    type: "series",
-    poster: "/api/placeholder/200/300",
-    rating: 8.7,
-    year: 2016,
-    duration: "51 min",
-    views: 2800000,
-    description: "When a young boy disappears, his mother, a police chief and his friends must confront terrifying supernatural forces in order to get him back.",
-    genres: ["Drama", "Fantasy", "Horror"],
-    quality: "1080p"
+    id: '6',
+    title: 'Cosmos: A Spacetime Odyssey',
+    arabicTitle: 'الكون: رحلة عبر الزمكان',
+    description: 'A documentary series about the universe',
+    year: 2014,
+    rating: 9.4,
+    views: 3500000,
+    duration: '45:00',
+    genre: ['Documentary', 'Science', 'Educational'],
+    quality: '4K',
+    type: 'documentary',
+    poster: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=450&fit=crop',
+    language: 'English',
+    country: 'USA',
+    director: 'Neil deGrasse Tyson',
+    synopsis: 'Cosmos: A Spacetime Odyssey is an American science documentary television series.',
+    isTrending: true
   }
 ]
 
-const filterOptions = {
-  type: ['All', 'Movies', 'Series', 'Shows'],
-  year: ['All', '2024', '2023', '2022', '2021', '2020', '2019', '2018', '2017', '2016', '2015', '2014', '2013', '2012', '2011', '2010', '2009', '2008'],
-  quality: ['All', '4K', '1080p', '720p', '480p'],
-  rating: ['All', '9+', '8+', '7+', '6+', '5+'],
-  genre: ['All', 'Action', 'Adventure', 'Comedy', 'Crime', 'Drama', 'Fantasy', 'Horror', 'Romance', 'Sci-Fi', 'Thriller']
-}
-
 export default function SearchPage() {
-  const searchParams = useSearchParams()
-  const query = searchParams.get('q') || ''
-  
-  const [results, setResults] = useState(searchResults)
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-  const [showFilters, setShowFilters] = useState(false)
-  const [filters, setFilters] = useState({
-    type: 'All',
-    year: 'All',
-    quality: 'All',
-    rating: 'All',
-    genre: 'All'
-  })
+  const [searchTerm, setSearchTerm] = useState('')
+  const [results, setResults] = useState<SearchResult[]>(mockSearchResults)
+  const [filteredResults, setFilteredResults] = useState<SearchResult[]>(mockSearchResults)
+  const [selectedType, setSelectedType] = useState('all')
+  const [selectedGenre, setSelectedGenre] = useState('all')
+  const [selectedYear, setSelectedYear] = useState('all')
+  const [selectedQuality, setSelectedQuality] = useState('all')
+  const [selectedLanguage, setSelectedLanguage] = useState('all')
   const [sortBy, setSortBy] = useState('relevance')
-  const [likedItems, setLikedItems] = useState<number[]>([])
-  const [bookmarkedItems, setBookmarkedItems] = useState<number[]>([])
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [activeTab, setActiveTab] = useState('all')
+  const [isLoading, setIsLoading] = useState(false)
+
+  const types = ['all', 'movie', 'series', 'show', 'music', 'podcast', 'audiobook', 'documentary']
+  const genres = ['all', ...Array.from(new Set(results.flatMap(r => r.genre)))]
+  const years = ['all', ...Array.from(new Set(results.map(r => r.year.toString())))]
+  const qualities = ['all', ...Array.from(new Set(results.map(r => r.quality)))]
+  const languages = ['all', ...Array.from(new Set(results.map(r => r.language)))]
 
   useEffect(() => {
-    // Filter and sort results based on current filters and sort
-    let filteredResults = searchResults.filter(item => {
-      // Type filter
-      if (filters.type !== 'All' && item.type !== filters.type.toLowerCase()) {
-        return false
-      }
+    setIsLoading(true)
+    
+    let filtered = results.filter(result => {
+      const matchesSearch = result.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           result.arabicTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           result.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           result.genre.some(g => g.toLowerCase().includes(searchTerm.toLowerCase()))
       
-      // Year filter
-      if (filters.year !== 'All' && item.year !== parseInt(filters.year)) {
-        return false
-      }
+      const matchesType = selectedType === 'all' || result.type === selectedType
+      const matchesGenre = selectedGenre === 'all' || result.genre.includes(selectedGenre)
+      const matchesYear = selectedYear === 'all' || result.year.toString() === selectedYear
+      const matchesQuality = selectedQuality === 'all' || result.quality === selectedQuality
+      const matchesLanguage = selectedLanguage === 'all' || result.language === selectedLanguage
       
-      // Quality filter
-      if (filters.quality !== 'All' && item.quality !== filters.quality) {
-        return false
-      }
-      
-      // Rating filter
-      if (filters.rating !== 'All') {
-        const minRating = parseInt(filters.rating.replace('+', ''))
-        if (item.rating < minRating) {
-          return false
-        }
-      }
-      
-      // Genre filter
-      if (filters.genre !== 'All' && !item.genres.includes(filters.genre)) {
-        return false
-      }
-      
-      return true
+      return matchesSearch && matchesType && matchesGenre && matchesYear && matchesQuality && matchesLanguage
     })
 
-    // Sort results
-    switch (sortBy) {
-      case 'rating':
-        filteredResults.sort((a, b) => b.rating - a.rating)
-        break
-      case 'year':
-        filteredResults.sort((a, b) => b.year - a.year)
-        break
-      case 'views':
-        filteredResults.sort((a, b) => b.views - a.views)
-        break
-      case 'title':
-        filteredResults.sort((a, b) => a.title.localeCompare(b.title))
-        break
-      default:
-        // Relevance (default) - keep original order for demo
-        break
+    // Sort filtered results
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'relevance':
+          return b.rating - a.rating
+        case 'rating':
+          return b.rating - a.rating
+        case 'views':
+          return b.views - a.views
+        case 'year':
+          return b.year - a.year
+        case 'title':
+          return a.title.localeCompare(b.title)
+        case 'trending':
+          return (b.isTrending ? 1 : 0) - (a.isTrending ? 1 : 0)
+        case 'new':
+          return (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0)
+        default:
+          return 0
+      }
+    })
+
+    setFilteredResults(filtered)
+    
+    // Simulate loading delay
+    setTimeout(() => setIsLoading(false), 300)
+  }, [searchTerm, selectedType, selectedGenre, selectedYear, selectedQuality, selectedLanguage, sortBy, results])
+
+  const getTypeText = (type: string) => {
+    switch (type) {
+      case 'movie': return 'فيلم'
+      case 'series': return 'مسلسل'
+      case 'show': return 'برنامج'
+      case 'music': return 'موسيقى'
+      case 'podcast': return 'بودكاست'
+      case 'audiobook': return 'كتاب صوتي'
+      case 'documentary': return 'وثائقي'
+      default: return type
     }
-
-    setResults(filteredResults)
-  }, [filters, sortBy])
-
-  const handleFilterChange = (filterType: string, value: string) => {
-    setFilters(prev => ({
-      ...prev,
-      [filterType]: value
-    }))
   }
 
-  const toggleLike = (itemId: number) => {
-    setLikedItems(prev => 
-      prev.includes(itemId) 
-        ? prev.filter(id => id !== itemId)
-        : [...prev, itemId]
-    )
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'movie': return <Film className="w-4 h-4" />
+      case 'series': return <Tv className="w-4 h-4" />
+      case 'show': return <Video className="w-4 h-4" />
+      case 'music': return <Music className="w-4 h-4" />
+      case 'podcast': return <Mic className="w-4 h-4" />
+      case 'audiobook': return <BookOpen className="w-4 h-4" />
+      case 'documentary': return <Video className="w-4 h-4" />
+      default: return <Video className="w-4 h-4" />
+    }
   }
 
-  const toggleBookmark = (itemId: number) => {
-    setBookmarkedItems(prev => 
-      prev.includes(itemId) 
-        ? prev.filter(id => id !== itemId)
-        : [...prev, itemId]
-    )
+  const getTabResults = (tabType: string) => {
+    if (tabType === 'all') return filteredResults
+    return filteredResults.filter(result => result.type === tabType)
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      {/* Header */}
-      <div className="bg-gray-800 border-b border-gray-700">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold mb-2">Search Results</h1>
-              <p className="text-gray-400">
-                {results.length} results for "{query}"
-              </p>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
-              >
-                <Filter className="w-4 h-4" />
-                Filters
-                {showFilters ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-              </button>
-              
-              <div className="flex bg-gray-700 rounded-lg p-1">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded ${viewMode === 'grid' ? 'bg-gray-600' : ''}`}
-                >
-                  <Grid className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode('list')}
-                  className={`p-2 rounded ${viewMode === 'list' ? 'bg-gray-600' : ''}`}
-                >
-                  <List className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Search Header */}
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold mb-2">البحث المتقدم</h1>
+            <p className="text-gray-600 dark:text-gray-400">
+              ابحث في جميع أنواع المحتوى بسهولة وسرعة
+            </p>
+          </div>
+
+          {/* Search Bar */}
+          <div className="relative max-w-2xl">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Input
+              placeholder="ابحث عن أفلام، مسلسلات، موسيقى، بودكاست..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 pr-4 py-3 text-lg"
+            />
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Filters */}
-        {showFilters && (
-          <div className="bg-gray-800 rounded-lg p-6 mb-8">
-            <h3 className="text-lg font-semibold mb-4">Filters</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-              {Object.entries(filterOptions).map(([filterType, options]) => (
-                <div key={filterType}>
-                  <label className="block text-sm font-medium text-gray-300 mb-2 capitalize">
-                    {filterType}
-                  </label>
-                  <select
-                    value={filters[filterType as keyof typeof filters]}
-                    onChange={(e) => handleFilterChange(filterType, e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-red-500"
-                  >
-                    {options.map(option => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              ))}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+            {/* Type Filter */}
+            <div>
+              <Select value={selectedType} onValueChange={setSelectedType}>
+                <SelectTrigger>
+                  <SelectValue placeholder="النوع" />
+                </SelectTrigger>
+                <SelectContent>
+                  {types.map(type => (
+                    <SelectItem key={type} value={type}>
+                      {type === 'all' ? 'جميع الأنواع' : getTypeText(type)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Genre Filter */}
+            <div>
+              <Select value={selectedGenre} onValueChange={setSelectedGenre}>
+                <SelectTrigger>
+                  <SelectValue placeholder="التصنيف" />
+                </SelectTrigger>
+                <SelectContent>
+                  {genres.map(genre => (
+                    <SelectItem key={genre} value={genre}>
+                      {genre === 'all' ? 'جميع التصنيفات' : genre}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Year Filter */}
+            <div>
+              <Select value={selectedYear} onValueChange={setSelectedYear}>
+                <SelectTrigger>
+                  <SelectValue placeholder="السنة" />
+                </SelectTrigger>
+                <SelectContent>
+                  {years.map(year => (
+                    <SelectItem key={year} value={year}>
+                      {year === 'all' ? 'جميع السنوات' : year}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Quality Filter */}
+            <div>
+              <Select value={selectedQuality} onValueChange={setSelectedQuality}>
+                <SelectTrigger>
+                  <SelectValue placeholder="الجودة" />
+                </SelectTrigger>
+                <SelectContent>
+                  {qualities.map(quality => (
+                    <SelectItem key={quality} value={quality}>
+                      {quality === 'all' ? 'جميع الجودات' : quality}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Language Filter */}
+            <div>
+              <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
+                <SelectTrigger>
+                  <SelectValue placeholder="اللغة" />
+                </SelectTrigger>
+                <SelectContent>
+                  {languages.map(language => (
+                    <SelectItem key={language} value={language}>
+                      {language === 'all' ? 'جميع اللغات' : language}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Sort */}
+            <div>
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger>
+                  <SelectValue placeholder="الترتيب" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="relevance">الأكثر صلة</SelectItem>
+                  <SelectItem value="rating">التقييم</SelectItem>
+                  <SelectItem value="views">المشاهدات</SelectItem>
+                  <SelectItem value="year">السنة</SelectItem>
+                  <SelectItem value="title">العنوان</SelectItem>
+                  <SelectItem value="trending">رائج</SelectItem>
+                  <SelectItem value="new">جديد</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
-        )}
 
-        {/* Sort Options */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <span className="text-gray-400">Sort by:</span>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-red-500"
-            >
-              <option value="relevance">Relevance</option>
-              <option value="rating">Rating</option>
-              <option value="year">Year</option>
-              <option value="views">Views</option>
-              <option value="title">Title</option>
-            </select>
-          </div>
-          
-          <div className="text-gray-400">
-            Showing {results.length} of {searchResults.length} results
+          {/* View Mode Toggle */}
+          <div className="mt-4 flex items-center justify-between">
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              تم العثور على {filteredResults.length} نتيجة
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant={viewMode === 'grid' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setViewMode('grid')}
+              >
+                <Grid3X3 className="w-4 h-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setViewMode('list')}
+              >
+                <List className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </div>
 
-        {/* Results */}
-        {results.length === 0 ? (
-          <div className="text-center py-12">
-            <Search className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-2">No results found</h3>
-            <p className="text-gray-400">Try adjusting your search terms or filters</p>
+        {/* Loading State */}
+        {isLoading && (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
           </div>
-        ) : (
-          <>
-            {viewMode === 'grid' ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                {results.map(item => (
-                  <div key={item.id} className="bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-700 transition-colors">
-                    <div className="relative">
-                      <img 
-                        src={item.poster} 
-                        alt={item.title}
-                        className="w-full h-48 object-cover"
-                      />
-                      <div className="absolute top-2 right-2 flex gap-1">
-                        <button 
-                          onClick={() => toggleLike(item.id)}
-                          className={`p-1 rounded ${likedItems.includes(item.id) ? 'bg-red-600' : 'bg-black bg-opacity-50'}`}
-                        >
-                          <Heart className={`w-3 h-3 ${likedItems.includes(item.id) ? 'fill-current' : ''}`} />
-                        </button>
-                        <button 
-                          onClick={() => toggleBookmark(item.id)}
-                          className={`p-1 rounded ${bookmarkedItems.includes(item.id) ? 'bg-blue-600' : 'bg-black bg-opacity-50'}`}
-                        >
-                          <Bookmark className={`w-3 h-3 ${bookmarkedItems.includes(item.id) ? 'fill-current' : ''}`} />
-                        </button>
-                      </div>
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-2">
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="text-white font-medium">{item.quality}</span>
-                          <div className="flex items-center gap-1">
-                            <Star className="w-3 h-3 text-yellow-400" />
-                            <span className="text-white">{item.rating}</span>
-                          </div>
+        )}
+
+        {/* Results Tabs */}
+        {!isLoading && (
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-8">
+              <TabsTrigger value="all">الكل</TabsTrigger>
+              <TabsTrigger value="movie">أفلام</TabsTrigger>
+              <TabsTrigger value="series">مسلسلات</TabsTrigger>
+              <TabsTrigger value="show">برامج</TabsTrigger>
+              <TabsTrigger value="music">موسيقى</TabsTrigger>
+              <TabsTrigger value="podcast">بودكاست</TabsTrigger>
+              <TabsTrigger value="audiobook">كتب صوتية</TabsTrigger>
+              <TabsTrigger value="documentary">وثائقيات</TabsTrigger>
+            </TabsList>
+
+            {types.slice(1).map(type => (
+              <TabsContent key={type} value={type}>
+                <div className={viewMode === 'grid' 
+                  ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
+                  : 'space-y-4'
+                }>
+                  {getTabResults(type).map((result) => (
+                    <Card key={result.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                      <div className="relative">
+                        <img
+                          src={result.poster}
+                          alt={result.title}
+                          className={`w-full object-cover ${viewMode === 'grid' ? 'h-64' : 'h-32'}`}
+                        />
+                        <div className="absolute top-2 right-2">
+                          <Badge variant="secondary" className="bg-black bg-opacity-75 text-white">
+                            {result.quality}
+                          </Badge>
                         </div>
+                        <div className="absolute top-2 left-2 flex items-center gap-1">
+                          <Badge variant="outline" className="bg-white bg-opacity-90 text-black text-xs flex items-center gap-1">
+                            {getTypeIcon(result.type)}
+                            {getTypeText(result.type)}
+                          </Badge>
+                        </div>
+                        <div className="absolute bottom-2 left-2 flex items-center gap-1">
+                          <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                          <span className="text-white text-sm font-medium">{result.rating}</span>
+                        </div>
+                        {result.isTrending && (
+                          <div className="absolute bottom-2 right-2">
+                            <Badge className="bg-orange-500 text-white text-xs">
+                              <TrendingUp className="w-3 h-3 mr-1" />
+                              رائج
+                            </Badge>
+                          </div>
+                        )}
+                        {result.isNew && (
+                          <div className="absolute bottom-2 right-2">
+                            <Badge className="bg-green-500 text-white text-xs">
+                              <ClockIcon className="w-3 h-3 mr-1" />
+                              جديد
+                            </Badge>
+                          </div>
+                        )}
                       </div>
-                    </div>
-                    <div className="p-3">
-                      <h4 className="font-semibold text-sm mb-1 truncate">{item.title}</h4>
-                      <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
-                        <span>{item.year}</span>
-                        <span>{item.duration}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <button className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs py-1 px-2 rounded">
-                          <Play className="w-3 h-3 mr-1" />
-                          Watch
-                        </button>
-                        <button className="bg-gray-700 hover:bg-gray-600 text-white text-xs py-1 px-2 rounded">
-                          <Download className="w-3 h-3" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {results.map(item => (
-                  <div key={item.id} className="bg-gray-800 rounded-lg p-4">
-                    <div className="flex items-start gap-4">
-                      <img 
-                        src={item.poster} 
-                        alt={item.title}
-                        className="w-20 h-28 object-cover rounded"
-                      />
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <h4 className="font-semibold mb-1">{item.title}</h4>
-                            <p className="text-gray-400 text-sm mb-2 line-clamp-2">{item.description}</p>
-                            <div className="flex items-center gap-4 text-sm text-gray-400 mb-2">
-                              <span>{item.year}</span>
-                              <span>•</span>
-                              <span>{item.duration}</span>
-                              <span>•</span>
-                              <span>{item.quality}</span>
-                              <span>•</span>
+                      
+                      <CardContent className="p-4">
+                        <div className={viewMode === 'list' ? 'flex items-center gap-4' : ''}>
+                          {viewMode === 'list' && (
+                            <img
+                              src={result.poster}
+                              alt={result.title}
+                              className="w-16 h-24 object-cover rounded"
+                            />
+                          )}
+                          
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-lg mb-1 line-clamp-1">
+                              {result.arabicTitle}
+                            </h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">
+                              {result.description}
+                            </p>
+                            
+                            <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                               <div className="flex items-center gap-1">
-                                <Star className="w-3 h-3 text-yellow-400" />
-                                <span>{item.rating}</span>
+                                <Calendar className="w-4 h-4" />
+                                <span>{result.year}</span>
                               </div>
-                              <span>•</span>
                               <div className="flex items-center gap-1">
-                                <Eye className="w-3 h-3" />
-                                <span>{item.views.toLocaleString()}</span>
+                                <Clock className="w-4 h-4" />
+                                <span>{result.duration}</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <Eye className="w-4 h-4" />
+                                <span>{result.views.toLocaleString()}</span>
                               </div>
                             </div>
-                            <div className="flex flex-wrap gap-2">
-                              {item.genres.map(genre => (
-                                <span key={genre} className="px-2 py-1 bg-gray-700 rounded text-xs">
+                            
+                            <div className="mt-2 flex flex-wrap gap-1">
+                              {result.genre.slice(0, 2).map((genre, index) => (
+                                <Badge key={index} variant="outline" className="text-xs">
                                   {genre}
-                                </span>
+                                </Badge>
                               ))}
                             </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <button 
-                              onClick={() => toggleLike(item.id)}
-                              className={`p-2 rounded ${likedItems.includes(item.id) ? 'bg-red-600' : 'bg-gray-700 hover:bg-gray-600'}`}
-                            >
-                              <Heart className={`w-4 h-4 ${likedItems.includes(item.id) ? 'fill-current' : ''}`} />
-                            </button>
-                            <button 
-                              onClick={() => toggleBookmark(item.id)}
-                              className={`p-2 rounded ${bookmarkedItems.includes(item.id) ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'}`}
-                            >
-                              <Bookmark className={`w-4 h-4 ${bookmarkedItems.includes(item.id) ? 'fill-current' : ''}`} />
-                            </button>
-                            <button className="p-2 bg-red-600 hover:bg-red-700 rounded">
-                              <Play className="w-4 h-4" />
-                            </button>
-                            <button className="p-2 bg-gray-700 hover:bg-gray-600 rounded">
-                              <Download className="w-4 h-4" />
-                            </button>
-                            <button className="p-2 bg-gray-700 hover:bg-gray-600 rounded">
-                              <MoreHorizontal className="w-4 h-4" />
-                            </button>
+                            
+                            {viewMode === 'list' && result.director && (
+                              <div className="mt-2 text-sm text-gray-500">
+                                <span className="font-medium">المخرج:</span> {result.director}
+                              </div>
+                            )}
+                            
+                            {viewMode === 'list' && result.artist && (
+                              <div className="mt-2 text-sm text-gray-500">
+                                <span className="font-medium">الفنان:</span> {result.artist}
+                              </div>
+                            )}
+                            
+                            {viewMode === 'list' && result.author && (
+                              <div className="mt-2 text-sm text-gray-500">
+                                <span className="font-medium">المؤلف:</span> {result.author}
+                              </div>
+                            )}
                           </div>
                         </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </TabsContent>
+            ))}
+
+            <TabsContent value="all">
+              <div className={viewMode === 'grid' 
+                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
+                : 'space-y-4'
+              }>
+                {filteredResults.map((result) => (
+                  <Card key={result.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                    <div className="relative">
+                      <img
+                        src={result.poster}
+                        alt={result.title}
+                        className={`w-full object-cover ${viewMode === 'grid' ? 'h-64' : 'h-32'}`}
+                      />
+                      <div className="absolute top-2 right-2">
+                        <Badge variant="secondary" className="bg-black bg-opacity-75 text-white">
+                          {result.quality}
+                        </Badge>
                       </div>
+                      <div className="absolute top-2 left-2 flex items-center gap-1">
+                        <Badge variant="outline" className="bg-white bg-opacity-90 text-black text-xs flex items-center gap-1">
+                          {getTypeIcon(result.type)}
+                          {getTypeText(result.type)}
+                        </Badge>
+                      </div>
+                      <div className="absolute bottom-2 left-2 flex items-center gap-1">
+                        <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                        <span className="text-white text-sm font-medium">{result.rating}</span>
+                      </div>
+                      {result.isTrending && (
+                        <div className="absolute bottom-2 right-2">
+                          <Badge className="bg-orange-500 text-white text-xs">
+                            <TrendingUp className="w-3 h-3 mr-1" />
+                            رائج
+                          </Badge>
+                        </div>
+                      )}
+                      {result.isNew && (
+                        <div className="absolute bottom-2 right-2">
+                          <Badge className="bg-green-500 text-white text-xs">
+                            <ClockIcon className="w-3 h-3 mr-1" />
+                            جديد
+                          </Badge>
+                        </div>
+                      )}
                     </div>
-                  </div>
+                    
+                    <CardContent className="p-4">
+                      <div className={viewMode === 'list' ? 'flex items-center gap-4' : ''}>
+                        {viewMode === 'list' && (
+                          <img
+                            src={result.poster}
+                            alt={result.title}
+                            className="w-16 h-24 object-cover rounded"
+                          />
+                        )}
+                        
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-lg mb-1 line-clamp-1">
+                            {result.arabicTitle}
+                          </h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">
+                            {result.description}
+                          </p>
+                          
+                          <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                            <div className="flex items-center gap-1">
+                              <Calendar className="w-4 h-4" />
+                              <span>{result.year}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Clock className="w-4 h-4" />
+                              <span>{result.duration}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Eye className="w-4 h-4" />
+                              <span>{result.views.toLocaleString()}</span>
+                            </div>
+                          </div>
+                          
+                          <div className="mt-2 flex flex-wrap gap-1">
+                            {result.genre.slice(0, 2).map((genre, index) => (
+                              <Badge key={index} variant="outline" className="text-xs">
+                                {genre}
+                              </Badge>
+                            ))}
+                          </div>
+                          
+                          {viewMode === 'list' && result.director && (
+                            <div className="mt-2 text-sm text-gray-500">
+                              <span className="font-medium">المخرج:</span> {result.director}
+                            </div>
+                          )}
+                          
+                          {viewMode === 'list' && result.artist && (
+                            <div className="mt-2 text-sm text-gray-500">
+                              <span className="font-medium">الفنان:</span> {result.artist}
+                            </div>
+                          )}
+                          
+                          {viewMode === 'list' && result.author && (
+                            <div className="mt-2 text-sm text-gray-500">
+                              <span className="font-medium">المؤلف:</span> {result.author}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 ))}
               </div>
-            )}
-          </>
+            </TabsContent>
+          </Tabs>
+        )}
+
+        {/* No Results */}
+        {!isLoading && filteredResults.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-gray-400 mb-4">
+              <Search className="w-16 h-16 mx-auto" />
+            </div>
+            <h3 className="text-lg font-semibold mb-2">لم يتم العثور على نتائج</h3>
+            <p className="text-gray-600 dark:text-gray-400">
+              جرب تغيير معايير البحث أو الفلترة
+            </p>
+          </div>
         )}
       </div>
     </div>
