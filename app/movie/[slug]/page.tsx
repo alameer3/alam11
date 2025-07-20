@@ -1,6 +1,8 @@
 'use client'
 
 import { MovieDetailsHeader } from '@/components/akwam/MovieDetailsHeader'
+import { WatchServers } from '@/components/akwam/WatchServers'
+import { DownloadLinks } from '@/components/akwam/DownloadLinks'
 
 // temporary dataset
 const movies = [
@@ -34,6 +36,23 @@ export default function MoviePage({ params }: { params: { slug: string } }) {
 
       {/* Placeholder for watch servers, download links, description */}
       <div className="container mx-auto px-4 py-8 text-white">
+
+        <WatchServers
+          servers={[
+            { name: 'S1', quality: '4K', url: '#' },
+            { name: 'S2', quality: '1080p', url: '#' },
+            { name: 'S3', quality: '720p', url: '#' },
+          ]}
+        />
+
+        <DownloadLinks
+          downloads={[
+            { quality: '4K', size: '8 GB', url: '#' },
+            { quality: '1080p', size: '4 GB', url: '#' },
+            { quality: '720p', size: '2 GB', url: '#' },
+          ]}
+        />
+
         <h2 className="text-lg font-semibold mb-4">الوصف</h2>
         <p className="text-gray-300 leading-relaxed max-w-3xl">{movie.description}</p>
       </div>
