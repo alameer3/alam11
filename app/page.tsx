@@ -1,12 +1,12 @@
-import { Suspense } from 'react'
 import { MainHeader } from '@/components/layout/main-header'
 import { MainMenu } from '@/components/layout/main-menu'
 import { SearchBox } from '@/components/layout/search-box'
-import { AkwamLogo } from '@/components/ui/akwam-logo'
+import { Footer } from '@/components/layout/footer'
+import Link from 'next/link'
 
 export default function HomePage() {
   return (
-    <div dir="rtl" className="body-home header-fixed">
+    <div dir="rtl" className="header-fixed body-home min-h-screen">
       <span className="site-overlay"></span>
       
       {/* القائمة الجانبية */}
@@ -18,200 +18,193 @@ export default function HomePage() {
       {/* حاوي الموقع */}
       <div className="site-container">
         <div className="page-home">
-          {/* مساحة فارغة للهيدر */}
           <div className="main-header-top"></div>
           
           {/* رأس الموقع */}
           <MainHeader />
           
-          {/* مساحة فارغة للهيدر */}
           <div className="main-header-height"></div>
           
           {/* المحتوى الرئيسي */}
           <div className="container py-5 my-5">
-            {/* زر الموقع الرئيسي الدائري */}
+            {/* الزر الدائري المركزي مطابق للأصل */}
             <div className="home-site-btn-container mt-5">
               <h1>
-                <a href="/ones" className="link" style={{
+                <Link href="/ones" className="link" style={{
                   position: 'absolute',
                   top: 0,
                   right: 0,
                   width: '100%',
                   height: '100%',
                   zIndex: 10
-                }}></a>
+                }}>
+                  <span className="sr-only">الصفحة الرئيسية</span>
+                </Link>
               </h1>
               <div 
                 className="home-site-btn"
                 style={{
                   backgroundImage: "url('/images/site-new.webp')",
-                  transition: 'background-position 5s'
+                  transition: 'background-position 5s',
+                  width: '300px',
+                  height: '300px',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto',
+                  position: 'relative',
+                  cursor: 'pointer',
+                  backgroundColor: '#26baee',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  border: '4px solid rgba(255, 255, 255, 0.2)',
+                  boxShadow: '0 10px 30px rgba(38, 186, 238, 0.3)',
+                  overflow: 'hidden'
                 }}
               >
-                <span className="logo">
-                  <AkwamLogo />
+                {/* شعار اكوام */}
+                <span className="logo mb-3">
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    width="87px" 
+                    height="80px"
+                    viewBox="0 0 87 80"
+                    className="drop-shadow-lg"
+                  >
+                    <path 
+                      fillRule="evenodd" 
+                      fill="rgb(255, 255, 255)"
+                      d="M68.479,46.753 L55.101,55.064 L59.686,64.395 L26.302,64.395 L43.500,33.248 L48.558,41.524 L61.642,34.285 L43.500,-0.001 L0.000,80.001 L87.000,80.001 L68.479,46.753 Z"
+                    />
+                  </svg>
                 </span>
-                <span className="text font-size-20 font-weight-medium text-white">الصفحة الرئيسية</span>
+                
+                {/* النص */}
+                <span className="text text-white font-bold text-xl text-center leading-tight">
+                  الصفحة الرئيسية
+                </span>
+                
+                {/* تأثير الإضاءة */}
+                <div className="absolute inset-0 rounded-full shimmer-effect"></div>
               </div>
             </div>
             
             {/* شريط البحث الرئيسي */}
-            <div className="widget-2 widget mb-4">
-              <div className="widget-body row">
+            <div className="widget-2 widget mb-4 mt-8">
+              <div className="widget-body">
                 <div className="col-lg-8 mx-auto">
-                  <form className="form d-flex no-gutters mb-20" action="/search" method="get">
-                    <div className="col pl-12">
+                  <form 
+                    className="form d-flex no-gutters mb-20 max-w-4xl mx-auto" 
+                    action="/search" 
+                    method="get"
+                  >
+                    <div className="flex-1 relative">
                       <input 
                         type="text" 
-                        className="form-control bg-transparent border border-gray-600 text-white rounded-r-none" 
+                        className="form-control w-full px-6 py-4 text-lg bg-white/10 backdrop-blur-sm border border-white/20 rounded-r-lg text-white placeholder-gray-300 focus:outline-none focus:border-[#26baee] focus:bg-white/20 transition-all"
                         id="widget2SearchInput" 
                         name="q"
                         placeholder="ابحث عن فيلم او مسلسل او لعبة او برنامج ..."
+                        style={{ fontFamily: 'akoam, Inter, sans-serif' }}
                       />
                     </div>
-                    <div className="col-auto">
-                      <button type="submit" className="btn bg-[#26baee] hover:bg-[#0d82ab] text-white px-6 py-2 rounded-l-none border-0">
+                    <div>
+                      <button 
+                        type="submit" 
+                        className="btn btn-orange px-8 py-4 bg-[#26baee] hover:bg-[#1fa3d1] text-white font-bold rounded-l-lg transition-all duration-300 hover:shadow-lg"
+                        style={{ fontFamily: 'akoam, Inter, sans-serif' }}
+                      >
                         بحث
                       </button>
                     </div>
                   </form>
                   
-                  {/* الأقسام الرئيسية مطابقة للأصل */}
-                  <div className="main-categories-list">
-                    <div className="row grid grid-cols-4 gap-2">
-                      <div className="col-lg col-4">
-                        <a href="/movies" className="item d-block text-center text-white py-3 h-100 bg-[#1a1a1a] rounded border border-[#333] hover:border-[#26baee] transition-all">
-                          <div className="icn mb-2">
-                            <i className="icon-video-camera text-2xl">🎬</i>
-                          </div>
-                          <div className="font-size-16">أفلام</div>
-                        </a>
-                      </div>
-                      <div className="col-lg col-4">
-                        <a href="/series" className="item d-block text-center text-white py-3 h-100 bg-[#1a1a1a] rounded border border-[#333] hover:border-[#26baee] transition-all">
-                          <div className="icn mb-2">
-                            <i className="icon-monitor text-2xl">📺</i>
-                          </div>
-                          <div className="font-size-16">مسلسلات</div>
-                        </a>
-                      </div>
-                      <div className="col-lg col-4">
-                        <a href="/shows" className="item d-block text-center text-white py-3 h-100 bg-[#1a1a1a] rounded border border-[#333] hover:border-[#26baee] transition-all">
-                          <div className="icn mb-2">
-                            <i className="icon-tv text-2xl">📡</i>
-                          </div>
-                          <div className="font-size-16">تلفزيون</div>
-                        </a>
-                      </div>
-                      <div className="col-lg col-4">
-                        <a href="/mix" className="item d-block text-center text-white py-3 h-100 bg-[#1a1a1a] rounded border border-[#333] hover:border-[#26baee] transition-all">
-                          <div className="icn mb-2">
-                            <i className="icon-mix text-2xl">🎭</i>
-                          </div>
-                          <div className="font-size-16">منوعات</div>
-                        </a>
-                      </div>
+                  {/* الأقسام الرئيسية */}
+                  <div className="main-categories-list mt-8">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <Link 
+                        href="/movies" 
+                        className="item block text-center text-white py-6 px-4 h-full bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-[#26baee]/50 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg group"
+                      >
+                        <div className="icn mb-3 text-4xl group-hover:scale-110 transition-transform">
+                          🎬
+                        </div>
+                        <div className="text-lg font-bold" style={{ fontFamily: 'akoam, Inter, sans-serif' }}>
+                          أفلام
+                        </div>
+                      </Link>
+                      
+                      <Link 
+                        href="/series" 
+                        className="item block text-center text-white py-6 px-4 h-full bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-[#26baee]/50 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg group"
+                      >
+                        <div className="icn mb-3 text-4xl group-hover:scale-110 transition-transform">
+                          📺
+                        </div>
+                        <div className="text-lg font-bold" style={{ fontFamily: 'akoam, Inter, sans-serif' }}>
+                          مسلسلات
+                        </div>
+                      </Link>
+                      
+                      <Link 
+                        href="/shows" 
+                        className="item block text-center text-white py-6 px-4 h-full bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-[#26baee]/50 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg group"
+                      >
+                        <div className="icn mb-3 text-4xl group-hover:scale-110 transition-transform">
+                          📡
+                        </div>
+                        <div className="text-lg font-bold" style={{ fontFamily: 'akoam, Inter, sans-serif' }}>
+                          تلفزيون
+                        </div>
+                      </Link>
+                      
+                      <Link 
+                        href="/mix" 
+                        className="item block text-center text-white py-6 px-4 h-full bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-[#26baee]/50 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg group"
+                      >
+                        <div className="icn mb-3 text-4xl group-hover:scale-110 transition-transform">
+                          🎭
+                        </div>
+                        <div className="text-lg font-bold" style={{ fontFamily: 'akoam, Inter, sans-serif' }}>
+                          منوعات
+                        </div>
+                      </Link>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             
-            {/* إحصائيات الموقع */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-[#26baee] mb-2">15,000+</div>
-                <div className="text-gray-300 text-sm">فيلم</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-[#26baee] mb-2">8,500+</div>
-                <div className="text-gray-300 text-sm">مسلسل</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-[#26baee] mb-2">2,300+</div>
-                <div className="text-gray-300 text-sm">برنامج</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-[#26baee] mb-2">500K+</div>
-                <div className="text-gray-300 text-sm">مستخدم</div>
-              </div>
-            </div>
+            <div className="main-categories-list-end"></div>
             
-            {/* أقسام التصفح السريع */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
-              {[
-                { name: 'أفلام', href: '/movies', icon: '🎬', count: '15,000+' },
-                { name: 'مسلسلات', href: '/series', icon: '📺', count: '8,500+' },
-                { name: 'تلفزيون', href: '/shows', icon: '📡', count: '2,300+' },
-                { name: 'منوعات', href: '/mix', icon: '🎭', count: '3,200+' }
-              ].map((item) => (
-                <a 
-                  key={item.name}
-                  href={item.href}
-                  className="group bg-[#1a1a1a] border border-[#333] rounded-xl p-6 text-center hover:border-[#26baee] transition-all duration-300 hover:bg-[#26baee]/10"
-                >
-                  <div className="text-4xl mb-3">{item.icon}</div>
-                  <h3 className="text-white font-bold text-lg mb-2 group-hover:text-[#26baee] transition-colors">
-                    {item.name}
-                  </h3>
-                  <p className="text-gray-400 text-sm">{item.count}</p>
-                </a>
-              ))}
-            </div>
-            
-            {/* تحديثات حديثة */}
-            <div className="mt-12 text-center">
-              <a 
-                href="/recent" 
-                className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-[#26baee] to-[#0d82ab] text-white font-bold rounded-full hover:shadow-lg transition-all duration-300 hover:scale-105"
-              >
-                <span className="ml-2">أضيف حديثاً</span>
-                <span>✨</span>
-              </a>
+            {/* مساحة الإعلانات */}
+            <div className="ads mb-3">
+              <div className="text-center">
+                {/* إعلان الكمبيوتر */}
+                <div className="hidden md:block">
+                  <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-600 rounded-lg p-8 text-center">
+                    <p className="text-gray-400 text-sm">مساحة إعلانية - كمبيوتر</p>
+                    <p className="text-gray-500 text-xs">728x90</p>
+                  </div>
+                </div>
+                
+                {/* إعلان الجوال */}
+                <div className="md:hidden">
+                  <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-600 rounded-lg p-6 text-center">
+                    <p className="text-gray-400 text-sm">مساحة إعلانية - جوال</p>
+                    <p className="text-gray-500 text-xs">300x250</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Footer مطابق للموقع الأصلي */}
-      <footer className="main-footer py-5">
-        <nav className="social flex justify-center flex-wrap">
-          <a href="https://akw.to" target="_blank" className="mx-2 mb-2" title="الموقع الرئيسي" rel="noopener noreferrer">
-            <span className="text-xl">🏠</span>
-          </a>
-          <a href="https://www.facebook.com/akwamnet" target="_blank" className="mx-2 mb-2" title="فيسبوك" rel="noopener noreferrer">
-            <span className="text-xl">📘</span>
-          </a>
-          <a href="https://www.facebook.com/groups/AKOAMweb" target="_blank" className="mx-2 mb-2" title="مجموعة فيسبوك" rel="noopener noreferrer">
-            <span className="text-xl">👥</span>
-          </a>
-          <a href="https://akw.net.in/" target="_blank" className="mx-2 mb-2" title="التطبيق" rel="noopener noreferrer">
-            <span className="text-xl">📱</span>
-          </a>
-          <a href="https://www.youtube.com/c/AKWAMnetwork" target="_blank" className="mx-2 mb-2" title="يوتيوب" rel="noopener noreferrer">
-            <span className="text-xl">📺</span>
-          </a>
-          <a href="/AKWAM-Notifications" target="_self" className="mx-2 mb-2" title="الإشعارات">
-            <span className="text-xl">🔔</span>
-          </a>
-          <a href="/contactus" target="_self" className="mx-2 mb-2" title="اتصل بنا">
-            <span className="text-xl">✉️</span>
-          </a>
-        </nav>
-
-        <nav className="links flex justify-center mt-3 flex-wrap">
-          <a href="/" className="mx-2 text-gray-400 hover:text-white text-sm">اكوام</a>
-          <a href="/old" className="mx-2 text-gray-400 hover:text-white text-sm">الموقع القديم</a>
-          <a href="/dmca" className="mx-2 text-gray-400 hover:text-white text-sm">DMCA</a>
-          <a href="/ad-policy" className="mx-2 text-gray-400 hover:text-white text-sm">AD-P</a>
-          <a href="https://ak-news.com" target="_blank" className="mx-2 text-gray-400 hover:text-white text-sm">اكوام نيوز</a>
-          <a href="https://akw.net.co" target="_blank" className="mx-2 text-gray-400 hover:text-white text-sm">شبكة اكوام</a>
-        </nav>
-
-        <p className="copyright mb-0 text-xs text-center mt-3 text-gray-500">
-          جميع الحقوق محفوظة لـ شبكة اكوام © 2025
-        </p>
-      </footer>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

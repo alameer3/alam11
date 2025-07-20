@@ -52,6 +52,74 @@ export default function RootLayout({
     <html lang="ar" dir="rtl">
       <head>
         <link rel="canonical" href="https://ak.sv" />
+        <link rel="icon" href="/favicon.ico" />
+        
+        {/* خطوط اكوام الأصلية */}
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            @font-face {
+              font-family: 'akoam';
+              src: url('/fonts/STC-Bold.woff2') format('woff2'),
+                   url('/fonts/STC-Bold.woff') format('woff'),
+                   url('/fonts/STC-Bold.ttf') format('truetype');
+              font-weight: 700;
+              font-style: normal;
+              font-display: swap;
+            }
+            @font-face {
+              font-family: 'akoam';
+              src: url('/fonts/STC-Light.woff2') format('woff2'),
+                   url('/fonts/STC-Light.woff') format('woff'),
+                   url('/fonts/STC-Light.ttf') format('truetype');
+              font-weight: 400;
+              font-style: normal;
+              font-display: swap;
+            }
+            @font-face {
+              font-family: 'akoam';
+              src: url('/fonts/STC-Regular.woff2') format('woff2'),
+                   url('/fonts/STC-Regular.woff') format('woff'),
+                   url('/fonts/STC-Regular.ttf') format('truetype');
+              font-weight: 600;
+              font-style: normal;
+              font-display: swap;
+            }
+            
+            body {
+              font-family: 'akoam', 'Inter', sans-serif;
+              background: linear-gradient(to bottom, rgba(0, 0, 0, .55), #000 100%), url('/images/home-bg.webp');
+              background-size: cover;
+              background-attachment: fixed;
+              background-position: center;
+              color: white;
+              min-height: 100vh;
+            }
+            
+            /* تحسينات الأداء */
+            * {
+              box-sizing: border-box;
+            }
+            
+            img {
+              max-width: 100%;
+              height: auto;
+            }
+            
+            /* تحسينات RTL */
+            html[dir="rtl"] {
+              text-align: right;
+            }
+            
+            /* تحسينات الاستجابة */
+            @media (max-width: 768px) {
+              .container {
+                padding-left: 15px;
+                padding-right: 15px;
+              }
+            }
+          `
+        }} />
+        
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -73,6 +141,17 @@ export default function RootLayout({
             ])
           }}
         />
+        
+        {/* Google Analytics */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-LYBJP286GM"></script>
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-LYBJP286GM');
+          `
+        }} />
       </head>
       <body className={inter.className}>
         <Providers>
