@@ -1,0 +1,547 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String   @unique
+  name      String?
+  image     String?
+  role      Role     @default(USER)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  sessions    Session[]
+  accounts    Account[]
+  favorites   Favorite[]
+  watchHistory WatchHistory[]
+  ratings     Rating[]
+  comments    Comment[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verificationtokens")
+}
+
+model Movie {
+  id          String   @id @default(cuid())
+  title       String
+  originalTitle String?
+  slug        String   @unique
+  description String?
+  poster      String?
+  backdrop    String?
+  trailer     String?
+  rating      Float?
+  imdbRating  Float?
+  year        Int
+  duration    Int      // minutes
+  releaseDate DateTime?
+  country     String?
+  language    String?
+  budget      String?
+  boxOffice   String?
+  director    String?
+  cast        String[] // JSON array of cast names
+  awards      String[] // JSON array of awards
+  quality     Quality  @default(HD)
+  size        String?  // file size
+  views       Int      @default(0)
+  downloads   Int      @default(0)
+  likes       Int      @default(0)
+  dislikes    Int      @default(0)
+  isActive    Boolean  @default(true)
+  isFeatured  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  section    Section @relation(fields: [sectionId], references: [id])
+  sectionId  String
+  categories MovieCategory[]
+  servers    Server[]
+  favorites  Favorite[]
+  watchHistory WatchHistory[]
+  ratings    Rating[]
+  comments   Comment[]
+  files      File[]
+
+  @@map("movies")
+}
+
+model Series {
+  id          String   @id @default(cuid())
+  title       String
+  originalTitle String?
+  slug        String   @unique
+  description String?
+  poster      String?
+  backdrop    String?
+  trailer     String?
+  rating      Float?
+  imdbRating  Float?
+  year        Int
+  startYear   Int?
+  endYear     Int?
+  country     String?
+  language    String?
+  director    String?
+  cast        String[] // JSON array of cast names
+  awards      String[] // JSON array of awards
+  quality     Quality  @default(HD)
+  seasons     Int      @default(1)
+  totalEpisodes Int    @default(0)
+  status      SeriesStatus @default(ONGOING)
+  views       Int      @default(0)
+  downloads   Int      @default(0)
+  likes       Int      @default(0)
+  dislikes    Int      @default(0)
+  isActive    Boolean  @default(true)
+  isFeatured  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  section    Section @relation(fields: [sectionId], references: [id])
+  sectionId  String
+  categories SeriesCategory[]
+  episodes   Episode[]
+  favorites  Favorite[]
+  watchHistory WatchHistory[]
+  ratings    Rating[]
+  comments   Comment[]
+
+  @@map("series")
+}
+
+model Episode {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  episodeNumber Int
+  seasonNumber Int
+  duration    Int      // minutes
+  poster      String?
+  quality     Quality  @default(HD)
+  size        String?  // file size
+  views       Int      @default(0)
+  downloads   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  series   Series @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  seriesId String
+  servers  Server[]
+  files    File[]
+
+  @@unique([seriesId, seasonNumber, episodeNumber])
+  @@map("episodes")
+}
+
+model Show {
+  id          String   @id @default(cuid())
+  title       String
+  originalTitle String?
+  slug        String   @unique
+  description String?
+  poster      String?
+  backdrop    String?
+  rating      Float?
+  year        Int
+  duration    Int      // minutes per episode
+  host        String?
+  network     String?
+  episodes    Int      @default(1)
+  quality     Quality  @default(HD)
+  type        ShowType @default(TALK_SHOW)
+  views       Int      @default(0)
+  downloads   Int      @default(0)
+  likes       Int      @default(0)
+  dislikes    Int      @default(0)
+  isActive    Boolean  @default(true)
+  isFeatured  Boolean  @default(false)
+  isLive      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  section    Section @relation(fields: [sectionId], references: [id])
+  sectionId  String
+  categories ShowCategory[]
+  servers    Server[]
+  favorites  Favorite[]
+  watchHistory WatchHistory[]
+  ratings    Rating[]
+  comments   Comment[]
+  files      File[]
+
+  @@map("shows")
+}
+
+model Mix {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String?
+  poster      String?
+  rating      Float?
+  year        Int
+  duration    Int      // minutes or seconds
+  artist      String?
+  size        String?  // file size
+  format      String?  // MP4, MP3, etc.
+  quality     Quality  @default(HD)
+  type        MixType  @default(SONG)
+  views       Int      @default(0)
+  downloads   Int      @default(0)
+  likes       Int      @default(0)
+  dislikes    Int      @default(0)
+  isActive    Boolean  @default(true)
+  isFeatured  Boolean  @default(false)
+  isExclusive Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  section    Section @relation(fields: [sectionId], references: [id])
+  sectionId  String
+  categories MixCategory[]
+  servers    Server[]
+  favorites  Favorite[]
+  watchHistory WatchHistory[]
+  ratings    Rating[]
+  comments   Comment[]
+  files      File[]
+
+  @@map("mix")
+}
+
+model Section {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  movies Movie[]
+  series Series[]
+  shows  Show[]
+  mix    Mix[]
+
+  @@map("sections")
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  movies MovieCategory[]
+  series SeriesCategory[]
+  shows  ShowCategory[]
+  mix    MixCategory[]
+
+  @@map("categories")
+}
+
+model Server {
+  id        String      @id @default(cuid())
+  name      String
+  quality   Quality     @default(HD)
+  url       String
+  status    ServerStatus @default(ACTIVE)
+  priority  Int         @default(1)
+  isActive  Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  // Relations
+  movies   Movie[]
+  episodes Episode[]
+  shows    Show[]
+  mix      Mix[]
+
+  @@map("servers")
+}
+
+model File {
+  id        String   @id @default(cuid())
+  filename  String
+  originalName String
+  size      Int      // bytes
+  mimetype  String
+  path      String
+  url       String?
+  quality   Quality? @default(HD)
+  type      FileType @default(VIDEO)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  movieId   String?
+  movie     Movie?   @relation(fields: [movieId], references: [id])
+  episodeId String?
+  episode   Episode? @relation(fields: [episodeId], references: [id])
+  showId    String?
+  show      Show?    @relation(fields: [showId], references: [id])
+  mixId     String?
+  mix       Mix?     @relation(fields: [mixId], references: [id])
+
+  @@map("files")
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  createdAt DateTime @default(now())
+
+  // Relations
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movieId String?
+  movie   Movie? @relation(fields: [movieId], references: [id])
+  seriesId String?
+  series  Series? @relation(fields: [seriesId], references: [id])
+  showId  String?
+  show    Show?  @relation(fields: [showId], references: [id])
+  mixId   String?
+  mix     Mix?   @relation(fields: [mixId], references: [id])
+
+  @@unique([userId, movieId])
+  @@unique([userId, seriesId])
+  @@unique([userId, showId])
+  @@unique([userId, mixId])
+  @@map("favorites")
+}
+
+model WatchHistory {
+  id         String   @id @default(cuid())
+  userId     String
+  progress   Int      @default(0) // seconds
+  completed  Boolean  @default(false)
+  lastWatched DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movieId String?
+  movie   Movie? @relation(fields: [movieId], references: [id])
+  seriesId String?
+  series  Series? @relation(fields: [seriesId], references: [id])
+  showId  String?
+  show    Show?  @relation(fields: [showId], references: [id])
+  mixId   String?
+  mix     Mix?   @relation(fields: [mixId], references: [id])
+
+  @@unique([userId, movieId])
+  @@unique([userId, seriesId])
+  @@unique([userId, showId])
+  @@unique([userId, mixId])
+  @@map("watch_history")
+}
+
+model Rating {
+  id        String   @id @default(cuid())
+  userId    String
+  rating    Int      // 1-10
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movieId String?
+  movie   Movie? @relation(fields: [movieId], references: [id])
+  seriesId String?
+  series  Series? @relation(fields: [seriesId], references: [id])
+  showId  String?
+  show    Show?  @relation(fields: [showId], references: [id])
+  mixId   String?
+  mix     Mix?   @relation(fields: [mixId], references: [id])
+
+  @@unique([userId, movieId])
+  @@unique([userId, seriesId])
+  @@unique([userId, showId])
+  @@unique([userId, mixId])
+  @@map("ratings")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  userId    String
+  content   String
+  isApproved Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movieId String?
+  movie   Movie? @relation(fields: [movieId], references: [id])
+  seriesId String?
+  series  Series? @relation(fields: [seriesId], references: [id])
+  showId  String?
+  show    Show?  @relation(fields: [showId], references: [id])
+  mixId   String?
+  mix     Mix?   @relation(fields: [mixId], references: [id])
+
+  @@map("comments")
+}
+
+// Junction tables
+model MovieCategory {
+  movieId    String
+  categoryId String
+  movie      Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([movieId, categoryId])
+  @@map("movie_categories")
+}
+
+model SeriesCategory {
+  seriesId   String
+  categoryId String
+  series     Series   @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([seriesId, categoryId])
+  @@map("series_categories")
+}
+
+model ShowCategory {
+  showId     String
+  categoryId String
+  show       Show     @relation(fields: [showId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([showId, categoryId])
+  @@map("show_categories")
+}
+
+model MixCategory {
+  mixId      String
+  categoryId String
+  mix        Mix      @relation(fields: [mixId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([mixId, categoryId])
+  @@map("mix_categories")
+}
+
+// Enums
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+}
+
+enum Quality {
+  SD
+  HD
+  FHD
+  UHD_4K
+}
+
+enum SeriesStatus {
+  ONGOING
+  COMPLETED
+  PAUSED
+  CANCELLED
+  COMING_SOON
+}
+
+enum ShowType {
+  TALK_SHOW
+  GAME_SHOW
+  NEWS
+  DOCUMENTARY
+  COOKING
+  TRAVEL
+  SPORTS
+  WRESTLING
+  MUSIC
+  VARIETY
+}
+
+enum MixType {
+  SONG
+  ALBUM
+  CONCERT
+  GAME
+  APP
+  AUDIOBOOK
+  PODCAST
+  THEATER
+  PERFORMANCE
+}
+
+enum ServerStatus {
+  ACTIVE
+  MAINTENANCE
+  OFFLINE
+}
+
+enum FileType {
+  VIDEO
+  AUDIO
+  IMAGE
+  SUBTITLE
+  DOCUMENT
+}

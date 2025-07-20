@@ -1,31 +1,58 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'image.tmdb.org',
-        port: '',
-        pathname: '/t/p/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'via.placeholder.com',
-        port: '',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'utfs.io',
-        port: '',
-        pathname: '/**',
-      },
-    ],
-  },
   experimental: {
-    serverActions: {
-      allowedOrigins: ['localhost:3000', '*.vercel.app'],
-    },
+    appDir: true,
+  },
+  images: {
+    domains: [
+      'localhost',
+      'img.downet.net',
+      'via.placeholder.com',
+      'i.imgur.com',
+      'images.unsplash.com',
+      'cdn.jsdelivr.net'
+    ],
+    formats: ['image/webp', 'image/avif'],
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/api/placeholder/:path*',
+        destination: 'https://via.placeholder.com/:path*',
+      },
+    ]
+  },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'origin-when-cross-origin',
+          },
+        ],
+      },
+    ]
+  },
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        path: false,
+        os: false,
+      }
+    }
+    return config
   },
 }
 
