@@ -172,6 +172,46 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+
+      {/* Footer مطابق للموقع الأصلي */}
+      <footer className="main-footer py-5">
+        <nav className="social flex justify-center flex-wrap">
+          <a href="https://akw.to" target="_blank" className="mx-2 mb-2" title="الموقع الرئيسي" rel="noopener noreferrer">
+            <span className="text-xl">🏠</span>
+          </a>
+          <a href="https://www.facebook.com/akwamnet" target="_blank" className="mx-2 mb-2" title="فيسبوك" rel="noopener noreferrer">
+            <span className="text-xl">📘</span>
+          </a>
+          <a href="https://www.facebook.com/groups/AKOAMweb" target="_blank" className="mx-2 mb-2" title="مجموعة فيسبوك" rel="noopener noreferrer">
+            <span className="text-xl">👥</span>
+          </a>
+          <a href="https://akw.net.in/" target="_blank" className="mx-2 mb-2" title="التطبيق" rel="noopener noreferrer">
+            <span className="text-xl">📱</span>
+          </a>
+          <a href="https://www.youtube.com/c/AKWAMnetwork" target="_blank" className="mx-2 mb-2" title="يوتيوب" rel="noopener noreferrer">
+            <span className="text-xl">📺</span>
+          </a>
+          <a href="/AKWAM-Notifications" target="_self" className="mx-2 mb-2" title="الإشعارات">
+            <span className="text-xl">🔔</span>
+          </a>
+          <a href="/contactus" target="_self" className="mx-2 mb-2" title="اتصل بنا">
+            <span className="text-xl">✉️</span>
+          </a>
+        </nav>
+
+        <nav className="links flex justify-center mt-3 flex-wrap">
+          <a href="/" className="mx-2 text-gray-400 hover:text-white text-sm">اكوام</a>
+          <a href="/old" className="mx-2 text-gray-400 hover:text-white text-sm">الموقع القديم</a>
+          <a href="/dmca" className="mx-2 text-gray-400 hover:text-white text-sm">DMCA</a>
+          <a href="/ad-policy" className="mx-2 text-gray-400 hover:text-white text-sm">AD-P</a>
+          <a href="https://ak-news.com" target="_blank" className="mx-2 text-gray-400 hover:text-white text-sm">اكوام نيوز</a>
+          <a href="https://akw.net.co" target="_blank" className="mx-2 text-gray-400 hover:text-white text-sm">شبكة اكوام</a>
+        </nav>
+
+        <p className="copyright mb-0 text-xs text-center mt-3 text-gray-500">
+          جميع الحقوق محفوظة لـ شبكة اكوام © 2025
+        </p>
+      </footer>
     </div>
   )
 }
