@@ -1,616 +1,470 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   Users, 
   Film, 
-  Tv, 
-  Eye, 
-  Download, 
-  Star, 
   TrendingUp, 
-  TrendingDown,
-  Activity,
-  AlertCircle,
-  CheckCircle,
-  Clock,
-  Calendar,
-  BarChart3,
+  DollarSign, 
+  AlertTriangle, 
   Settings,
-  UserPlus,
-  Upload,
+  Plus,
   Edit,
   Trash2,
-  MoreHorizontal,
-  Search,
-  Filter,
-  ChevronDown,
-  MessageSquare,
-  CreditCard,
-  Bell,
-  FileText
-} from 'lucide-react'
-import AnalyticsSystem from '@/components/ui/AnalyticsSystem';
-import DownloadSystem from '@/components/ui/DownloadSystem';
-import SiteSettings from '@/components/ui/SiteSettings';
-import ReportingSystem from '@/components/ui/ReportingSystem';
-import SupportSystem from '@/components/ui/SupportSystem';
-import UserProfile from '@/components/ui/UserProfile';
-import ContentManagement from '@/components/ui/ContentManagement';
-import SubscriptionSystem from '@/components/ui/SubscriptionSystem';
-import NotificationSystem from '@/components/ui/NotificationSystem';
+  Eye,
+  CheckCircle,
+  XCircle
+} from 'lucide-react';
 
-// Mock admin data
-const adminData = {
-  stats: {
-    totalUsers: 15420,
-    totalMovies: 2847,
-    totalSeries: 1256,
-    totalShows: 892,
-    totalViews: 2847500,
-    totalDownloads: 456200,
-    avgRating: 8.4,
-    activeUsers: 3240
-  },
-  recentActivity: [
-    {
-      id: 1,
-      type: 'user',
-      action: 'New user registered',
-      user: 'john.doe@example.com',
-      time: '2 minutes ago',
-      status: 'success'
-    },
-    {
-      id: 2,
-      type: 'content',
-      action: 'New movie uploaded',
-      user: 'admin@example.com',
-      time: '15 minutes ago',
-      status: 'success'
-    },
-    {
-      id: 3,
-      type: 'system',
-      action: 'Server maintenance completed',
-      user: 'system',
-      time: '1 hour ago',
-      status: 'info'
-    },
-    {
-      id: 4,
-      type: 'error',
-      action: 'Upload failed',
-      user: 'content@example.com',
-      time: '2 hours ago',
-      status: 'error'
-    }
-  ],
-  topContent: [
-    {
-      id: 1,
-      title: 'Breaking Bad',
-      type: 'series',
-      views: 2500000,
-      rating: 9.5,
-      uploadDate: '2024-01-15'
-    },
-    {
-      id: 2,
-      title: 'The Dark Knight',
-      type: 'movie',
-      views: 1800000,
-      rating: 9.0,
-      uploadDate: '2024-01-10'
-    },
-    {
-      id: 3,
-      title: 'Game of Thrones',
-      type: 'series',
-      views: 3200000,
-      rating: 9.3,
-      uploadDate: '2024-01-08'
-    }
-  ],
-  systemStatus: {
-    server: 'Online',
-    database: 'Online',
-    storage: 'Online',
-    cdn: 'Online',
-    uptime: '99.9%',
-    lastBackup: '2 hours ago'
-  }
+interface AdminStats {
+  totalUsers: number;
+  totalVideos: number;
+  totalRevenue: number;
+  activeSubscriptions: number;
+  pendingReports: number;
+  uploadsToday: number;
+}
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  avatar: string;
+  role: 'admin' | 'moderator' | 'user';
+  status: 'active' | 'suspended' | 'pending';
+  joinDate: string;
+  lastLogin: string;
+}
+
+interface Video {
+  id: string;
+  title: string;
+  thumbnail: string;
+  duration: string;
+  views: number;
+  likes: number;
+  status: 'published' | 'pending' | 'rejected';
+  uploadDate: string;
+  uploader: string;
 }
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState('overview')
-  const [selectedPeriod, setSelectedPeriod] = useState('7d')
+  const [stats, setStats] = useState<AdminStats>({
+    totalUsers: 0,
+    totalVideos: 0,
+    totalRevenue: 0,
+    activeSubscriptions: 0,
+    pendingReports: 0,
+    uploadsToday: 0
+  });
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'success': return 'text-green-400'
-      case 'error': return 'text-red-400'
-      case 'info': return 'text-blue-400'
-      default: return 'text-gray-400'
-    }
-  }
+  const [users, setUsers] = useState<User[]>([]);
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [selectedTab, setSelectedTab] = useState('overview');
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'success': return <CheckCircle className="w-4 h-4 text-green-400" />
-      case 'error': return <AlertCircle className="w-4 h-4 text-red-400" />
-      case 'info': return <Activity className="w-4 h-4 text-blue-400" />
-      default: return <Clock className="w-4 h-4 text-gray-400" />
-    }
-  }
+  useEffect(() => {
+    // Simulate loading admin data
+    setStats({
+      totalUsers: 15420,
+      totalVideos: 8920,
+      totalRevenue: 45678.90,
+      activeSubscriptions: 3420,
+      pendingReports: 23,
+      uploadsToday: 156
+    });
+
+    setUsers([
+      {
+        id: '1',
+        name: 'أحمد محمد',
+        email: 'ahmed@example.com',
+        avatar: '/avatars/ahmed.jpg',
+        role: 'user',
+        status: 'active',
+        joinDate: '2024-01-15',
+        lastLogin: '2024-01-20'
+      },
+      {
+        id: '2',
+        name: 'سارة أحمد',
+        email: 'sara@example.com',
+        avatar: '/avatars/sara.jpg',
+        role: 'moderator',
+        status: 'active',
+        joinDate: '2023-12-10',
+        lastLogin: '2024-01-20'
+      }
+    ]);
+
+    setVideos([
+      {
+        id: '1',
+        title: 'فيلم أكشن جديد 2024',
+        thumbnail: '/thumbnails/movie1.jpg',
+        duration: '2:15:30',
+        views: 15420,
+        likes: 892,
+        status: 'published',
+        uploadDate: '2024-01-20',
+        uploader: 'أحمد محمد'
+      },
+      {
+        id: '2',
+        title: 'مسلسل درامي حصري',
+        thumbnail: '/thumbnails/series1.jpg',
+        duration: '45:20',
+        views: 8920,
+        likes: 456,
+        status: 'pending',
+        uploadDate: '2024-01-19',
+        uploader: 'سارة أحمد'
+      }
+    ]);
+  }, []);
+
+  const handleUserAction = (userId: string, action: 'suspend' | 'activate' | 'delete') => {
+    // Handle user management actions
+    console.log(`User ${userId} action: ${action}`);
+  };
+
+  const handleVideoAction = (videoId: string, action: 'approve' | 'reject' | 'delete') => {
+    // Handle video moderation actions
+    console.log(`Video ${videoId} action: ${action}`);
+  };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      {/* Header */}
-      <div className="bg-gray-800 border-b border-gray-700">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold mb-2">Admin Dashboard</h1>
-              <p className="text-gray-400">Manage your streaming platform</p>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <select
-                value={selectedPeriod}
-                onChange={(e) => setSelectedPeriod(e.target.value)}
-                className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-red-500"
-              >
-                <option value="7d">Last 7 days</option>
-                <option value="30d">Last 30 days</option>
-                <option value="90d">Last 90 days</option>
-                <option value="1y">Last year</option>
-              </select>
-              
-              <button className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg font-medium transition-colors">
-                <Settings className="w-4 h-4 mr-2" />
-                Settings
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Navigation Tabs */}
-        <div className="border-b border-gray-700 mb-8">
-          <nav className="flex space-x-8">
-            {[
-              { id: 'overview', label: 'Overview', icon: BarChart3 },
-              { id: 'users', label: 'Users', icon: Users },
-              { id: 'content', label: 'Content', icon: Film },
-              { id: 'analytics', label: 'Analytics', icon: TrendingUp },
-              { id: 'downloads', label: 'Downloads', icon: Download },
-              { id: 'reports', label: 'Reports', icon: FileText },
-              { id: 'settings', label: 'Settings', icon: Settings },
-              { id: 'system', label: 'System', icon: Activity },
-              { id: 'support', label: 'Support', icon: MessageSquare },
-              { id: 'subscriptions', label: 'Subscriptions', icon: CreditCard },
-              { id: 'notifications', label: 'Notifications', icon: Bell }
-            ].map(tab => {
-              const Icon = tab.icon
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                    activeTab === tab.id
-                      ? 'border-red-600 text-red-600'
-                      : 'border-transparent text-gray-300 hover:text-white'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  {tab.label}
-                </button>
-              )
-            })}
-          </nav>
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">لوحة تحكم المشرف</h1>
+          <p className="text-gray-600 mt-2">إدارة المحتوى والمستخدمين والإحصائيات</p>
         </div>
 
-        {/* Tab Content */}
-        <div className="min-h-[600px]">
-          {activeTab === 'overview' && (
-            <div className="space-y-8">
-              {/* Stats Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-gray-400 text-sm">Total Users</p>
-                      <p className="text-2xl font-bold">{adminData.stats.totalUsers.toLocaleString()}</p>
-                    </div>
-                    <div className="p-3 bg-blue-600 rounded-lg">
-                      <Users className="w-6 h-6" />
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 mt-4 text-sm">
-                    <TrendingUp className="w-4 h-4 text-green-400" />
-                    <span className="text-green-400">+12.5%</span>
-                    <span className="text-gray-400">from last month</span>
-                  </div>
-                </div>
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-8">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">إجمالي المستخدمين</CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.totalUsers.toLocaleString()}</div>
+              <p className="text-xs text-muted-foreground">+12% من الشهر الماضي</p>
+            </CardContent>
+          </Card>
 
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-gray-400 text-sm">Total Views</p>
-                      <p className="text-2xl font-bold">{adminData.stats.totalViews.toLocaleString()}</p>
-                    </div>
-                    <div className="p-3 bg-green-600 rounded-lg">
-                      <Eye className="w-6 h-6" />
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 mt-4 text-sm">
-                    <TrendingUp className="w-4 h-4 text-green-400" />
-                    <span className="text-green-400">+8.3%</span>
-                    <span className="text-gray-400">from last month</span>
-                  </div>
-                </div>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">إجمالي الفيديوهات</CardTitle>
+              <Film className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.totalVideos.toLocaleString()}</div>
+              <p className="text-xs text-muted-foreground">+8% من الشهر الماضي</p>
+            </CardContent>
+          </Card>
 
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-gray-400 text-sm">Total Content</p>
-                      <p className="text-2xl font-bold">{adminData.stats.totalMovies + adminData.stats.totalSeries + adminData.stats.totalShows}</p>
-                    </div>
-                    <div className="p-3 bg-purple-600 rounded-lg">
-                      <Film className="w-6 h-6" />
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 mt-4 text-sm">
-                    <TrendingUp className="w-4 h-4 text-green-400" />
-                    <span className="text-green-400">+5.2%</span>
-                    <span className="text-gray-400">from last month</span>
-                  </div>
-                </div>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">إجمالي الإيرادات</CardTitle>
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">${stats.totalRevenue.toLocaleString()}</div>
+              <p className="text-xs text-muted-foreground">+15% من الشهر الماضي</p>
+            </CardContent>
+          </Card>
 
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-gray-400 text-sm">Avg Rating</p>
-                      <p className="text-2xl font-bold">{adminData.stats.avgRating}</p>
-                    </div>
-                    <div className="p-3 bg-yellow-600 rounded-lg">
-                      <Star className="w-6 h-6" />
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 mt-4 text-sm">
-                    <TrendingUp className="w-4 h-4 text-green-400" />
-                    <span className="text-green-400">+0.2</span>
-                    <span className="text-gray-400">from last month</span>
-                  </div>
-                </div>
-              </div>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">الاشتراكات النشطة</CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.activeSubscriptions.toLocaleString()}</div>
+              <p className="text-xs text-muted-foreground">+5% من الشهر الماضي</p>
+            </CardContent>
+          </Card>
 
-              {/* Content Breakdown */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold mb-4">Content Breakdown</h3>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">التقارير المعلقة</CardTitle>
+              <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.pendingReports}</div>
+              <p className="text-xs text-muted-foreground">تتطلب مراجعة</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">الرفوعات اليوم</CardTitle>
+              <Plus className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.uploadsToday}</div>
+              <p className="text-xs text-muted-foreground">+23% من أمس</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Main Content Tabs */}
+        <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-5">
+            <TabsTrigger value="overview">نظرة عامة</TabsTrigger>
+            <TabsTrigger value="users">المستخدمين</TabsTrigger>
+            <TabsTrigger value="content">المحتوى</TabsTrigger>
+            <TabsTrigger value="reports">التقارير</TabsTrigger>
+            <TabsTrigger value="settings">الإعدادات</TabsTrigger>
+          </TabsList>
+
+          {/* Overview Tab */}
+          <TabsContent value="overview" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>النشاط الأخير</CardTitle>
+                  <CardDescription>آخر الأنشطة في النظام</CardDescription>
+                </CardHeader>
+                <CardContent>
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                        <span>Movies</span>
-                      </div>
-                      <span className="font-semibold">{adminData.stats.totalMovies}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                        <span>Series</span>
-                      </div>
-                      <span className="font-semibold">{adminData.stats.totalSeries}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                        <span>Shows</span>
-                      </div>
-                      <span className="font-semibold">{adminData.stats.totalShows}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold mb-4">System Status</h3>
-                  <div className="space-y-3">
-                    {Object.entries(adminData.systemStatus).map(([key, value]) => (
-                      <div key={key} className="flex items-center justify-between">
-                        <span className="capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
-                        <div className="flex items-center gap-2">
-                          <div className={`w-2 h-2 rounded-full ${value === 'Online' ? 'bg-green-400' : 'bg-red-400'}`}></div>
-                          <span className={value === 'Online' ? 'text-green-400' : 'text-red-400'}>{value}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
-                  <div className="space-y-3">
-                    <button className="w-full flex items-center gap-3 p-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors">
-                      <UserPlus className="w-4 h-4" />
-                      <span>Add User</span>
-                    </button>
-                    <button className="w-full flex items-center gap-3 p-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors">
-                      <Upload className="w-4 h-4" />
-                      <span>Upload Content</span>
-                    </button>
-                    <button className="w-full flex items-center gap-3 p-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors">
-                      <Settings className="w-4 h-4" />
-                      <span>System Settings</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Recent Activity & Top Content */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
-                  <div className="space-y-4">
-                    {adminData.recentActivity.map(activity => (
-                      <div key={activity.id} className="flex items-start gap-3">
-                        {getStatusIcon(activity.status)}
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <div key={i} className="flex items-center space-x-4">
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage src={`/avatars/user${i}.jpg`} />
+                          <AvatarFallback>U{i}</AvatarFallback>
+                        </Avatar>
                         <div className="flex-1">
-                          <p className="text-sm font-medium">{activity.action}</p>
-                          <p className="text-xs text-gray-400">{activity.user} • {activity.time}</p>
+                          <p className="text-sm font-medium">مستخدم جديد انضم للنظام</p>
+                          <p className="text-xs text-muted-foreground">منذ {i} دقائق</p>
                         </div>
                       </div>
                     ))}
                   </div>
-                </div>
+                </CardContent>
+              </Card>
 
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold mb-4">Top Content</h3>
+              <Card>
+                <CardHeader>
+                  <CardTitle>إحصائيات سريعة</CardTitle>
+                  <CardDescription>أداء النظام الحالي</CardDescription>
+                </CardHeader>
+                <CardContent>
                   <div className="space-y-4">
-                    {adminData.topContent.map(content => (
-                      <div key={content.id} className="flex items-center justify-between">
-                        <div>
-                          <p className="font-medium">{content.title}</p>
-                          <p className="text-sm text-gray-400">{content.type} • {content.views.toLocaleString()} views</p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Star className="w-4 h-4 text-yellow-400" />
-                          <span className="text-sm">{content.rating}</span>
-                        </div>
-                      </div>
-                    ))}
+                    <div className="flex justify-between">
+                      <span>معدل المشاهدة</span>
+                      <span className="font-medium">89%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>معدل الإشتراك</span>
+                      <span className="font-medium">12.5%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>وقت الاستجابة</span>
+                      <span className="font-medium">1.2s</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>معدل الخطأ</span>
+                      <span className="font-medium">0.1%</span>
+                    </div>
                   </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             </div>
-          )}
+          </TabsContent>
 
-          {activeTab === 'users' && (
-            <div>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold">User Management</h2>
-                <button className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg font-medium transition-colors">
-                  <UserPlus className="w-4 h-4 mr-2" />
-                  Add User
-                </button>
-              </div>
-
-              <div className="bg-gray-800 rounded-lg p-6">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <input
-                      type="text"
-                      placeholder="Search users..."
-                      className="w-full pl-10 pr-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-red-500"
-                    />
+          {/* Users Tab */}
+          <TabsContent value="users" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <CardTitle>إدارة المستخدمين</CardTitle>
+                    <CardDescription>عرض وإدارة جميع المستخدمين</CardDescription>
                   </div>
-                  <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors">
-                    <Filter className="w-4 h-4 mr-2" />
-                    Filter
-                  </button>
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    إضافة مستخدم
+                  </Button>
                 </div>
-
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-gray-700">
-                        <th className="text-left py-3 px-4">User</th>
-                        <th className="text-left py-3 px-4">Email</th>
-                        <th className="text-left py-3 px-4">Status</th>
-                        <th className="text-left py-3 px-4">Joined</th>
-                        <th className="text-left py-3 px-4">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {[1, 2, 3, 4, 5].map(user => (
-                        <tr key={user} className="border-b border-gray-700 hover:bg-gray-700">
-                          <td className="py-3 px-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 bg-gray-600 rounded-full"></div>
-                              <span>User {user}</span>
-                            </div>
-                          </td>
-                          <td className="py-3 px-4">user{user}@example.com</td>
-                          <td className="py-3 px-4">
-                            <span className="px-2 py-1 bg-green-900 text-green-400 rounded text-xs">Active</span>
-                          </td>
-                          <td className="py-3 px-4">2024-01-{user.toString().padStart(2, '0')}</td>
-                          <td className="py-3 px-4">
-                            <div className="flex items-center gap-2">
-                              <button className="p-1 hover:bg-gray-600 rounded">
-                                <Edit className="w-4 h-4" />
-                              </button>
-                              <button className="p-1 hover:bg-gray-600 rounded">
-                                <Trash2 className="w-4 h-4 text-red-400" />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'content' && (
-            <div>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold">Content Management</h2>
-                <button className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg font-medium transition-colors">
-                  <Upload className="w-4 h-4 mr-2" />
-                  Upload Content
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <Film className="w-6 h-6 text-blue-400" />
-                    <h3 className="text-lg font-semibold">Movies</h3>
-                  </div>
-                  <p className="text-3xl font-bold mb-2">{adminData.stats.totalMovies}</p>
-                  <p className="text-gray-400 text-sm">Total movies uploaded</p>
-                </div>
-
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <Tv className="w-6 h-6 text-green-400" />
-                    <h3 className="text-lg font-semibold">Series</h3>
-                  </div>
-                  <p className="text-3xl font-bold mb-2">{adminData.stats.totalSeries}</p>
-                  <p className="text-gray-400 text-sm">Total series uploaded</p>
-                </div>
-
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <Tv className="w-6 h-6 text-purple-400" />
-                    <h3 className="text-lg font-semibold">Shows</h3>
-                  </div>
-                  <p className="text-3xl font-bold mb-2">{adminData.stats.totalShows}</p>
-                  <p className="text-gray-400 text-sm">Total shows uploaded</p>
-                </div>
-              </div>
-
-              <div className="bg-gray-800 rounded-lg p-6">
-                <h3 className="text-lg font-semibold mb-4">Recent Uploads</h3>
+              </CardHeader>
+              <CardContent>
                 <div className="space-y-4">
-                  {adminData.topContent.map(content => (
-                    <div key={content.id} className="flex items-center justify-between p-4 bg-gray-700 rounded-lg">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-gray-600 rounded"></div>
+                  {users.map((user) => (
+                    <div key={user.id} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex items-center space-x-4">
+                        <Avatar>
+                          <AvatarImage src={user.avatar} />
+                          <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
                         <div>
-                          <p className="font-medium">{content.title}</p>
-                          <p className="text-sm text-gray-400">{content.type} • {content.views.toLocaleString()} views</p>
+                          <p className="font-medium">{user.name}</p>
+                          <p className="text-sm text-muted-foreground">{user.email}</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <button className="p-2 hover:bg-gray-600 rounded">
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button className="p-2 hover:bg-gray-600 rounded">
-                          <Trash2 className="w-4 h-4 text-red-400" />
-                        </button>
+                      <div className="flex items-center space-x-2">
+                        <Badge variant={user.status === 'active' ? 'default' : 'secondary'}>
+                          {user.status === 'active' ? 'نشط' : user.status === 'suspended' ? 'معلق' : 'معلق'}
+                        </Badge>
+                        <Badge variant="outline">{user.role}</Badge>
+                        <Button size="sm" variant="outline">
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => handleUserAction(user.id, 'suspend')}>
+                          <XCircle className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
                   ))}
                 </div>
-              </div>
-            </div>
-          )}
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-          {activeTab === 'analytics' && (
-            <div className="bg-gray-50 dark:bg-gray-900">
-              <AnalyticsSystem />
-            </div>
-          )}
-
-          {activeTab === 'downloads' && (
-            <div className="bg-gray-50 dark:bg-gray-900">
-              <DownloadSystem />
-            </div>
-          )}
-
-          {activeTab === 'settings' && (
-            <div className="bg-gray-50 dark:bg-gray-900">
-              <SiteSettings />
-            </div>
-          )}
-
-          {activeTab === 'reports' && (
-            <div className="bg-gray-50 dark:bg-gray-900">
-              <ReportingSystem />
-            </div>
-          )}
-
-          {activeTab === 'system' && (
-            <div>
-              <h2 className="text-xl font-semibold mb-6">System Monitoring</h2>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold mb-4">System Status</h3>
-                  <div className="space-y-4">
-                    {Object.entries(adminData.systemStatus).map(([key, value]) => (
-                      <div key={key} className="flex items-center justify-between">
-                        <span className="capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
-                        <div className="flex items-center gap-2">
-                          <div className={`w-3 h-3 rounded-full ${value === 'Online' ? 'bg-green-400' : 'bg-red-400'}`}></div>
-                          <span className={value === 'Online' ? 'text-green-400' : 'text-red-400'}>{value}</span>
+          {/* Content Tab */}
+          <TabsContent value="content" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <CardTitle>إدارة المحتوى</CardTitle>
+                    <CardDescription>مراجعة وإدارة الفيديوهات المرفوعة</CardDescription>
+                  </div>
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    إضافة محتوى
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {videos.map((video) => (
+                    <div key={video.id} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex items-center space-x-4">
+                        <img src={video.thumbnail} alt={video.title} className="w-16 h-12 object-cover rounded" />
+                        <div>
+                          <p className="font-medium">{video.title}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {video.views.toLocaleString()} مشاهدة • {video.likes} إعجاب
+                          </p>
+                          <p className="text-xs text-muted-foreground">بواسطة {video.uploader}</p>
                         </div>
                       </div>
-                    ))}
+                      <div className="flex items-center space-x-2">
+                        <Badge variant={video.status === 'published' ? 'default' : video.status === 'pending' ? 'secondary' : 'destructive'}>
+                          {video.status === 'published' ? 'منشور' : video.status === 'pending' ? 'معلق' : 'مرفوض'}
+                        </Badge>
+                        <Button size="sm" variant="outline">
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => handleVideoAction(video.id, 'approve')}>
+                          <CheckCircle className="h-4 w-4" />
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => handleVideoAction(video.id, 'reject')}>
+                          <XCircle className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Reports Tab */}
+          <TabsContent value="reports" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>التقارير والبلاغات</CardTitle>
+                <CardDescription>مراجعة البلاغات المرفوعة من المستخدمين</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="p-4 border rounded-lg">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="font-medium">بلاغ على فيديو #{i}</p>
+                          <p className="text-sm text-muted-foreground">محتوى غير مناسب</p>
+                          <p className="text-xs text-muted-foreground">منذ {i} ساعة</p>
+                        </div>
+                        <div className="flex space-x-2">
+                          <Button size="sm" variant="outline">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button size="sm" variant="outline">
+                            <CheckCircle className="h-4 w-4" />
+                          </Button>
+                          <Button size="sm" variant="outline">
+                            <XCircle className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Settings Tab */}
+          <TabsContent value="settings" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>إعدادات النظام</CardTitle>
+                <CardDescription>تكوين إعدادات النظام العامة</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label>تفعيل التسجيل الجديد</Label>
+                      <p className="text-sm text-muted-foreground">السماح للمستخدمين الجدد بالتسجيل</p>
+                    </div>
+                    <Switch defaultChecked />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label>مراجعة المحتوى</Label>
+                      <p className="text-sm text-muted-foreground">مراجعة المحتوى قبل النشر</p>
+                    </div>
+                    <Switch defaultChecked />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label>إشعارات البريد الإلكتروني</Label>
+                      <p className="text-sm text-muted-foreground">إرسال إشعارات عبر البريد الإلكتروني</p>
+                    </div>
+                    <Switch defaultChecked />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label>وضع الصيانة</Label>
+                      <p className="text-sm text-muted-foreground">إيقاف الموقع للصيانة</p>
+                    </div>
+                    <Switch />
                   </div>
                 </div>
-
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold mb-4">Performance Metrics</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span>CPU Usage</span>
-                      <span className="font-semibold">45%</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Memory Usage</span>
-                      <span className="font-semibold">62%</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Disk Usage</span>
-                      <span className="font-semibold">78%</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Network Load</span>
-                      <span className="font-semibold">34%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'support' && (
-            <div className="bg-gray-50 dark:bg-gray-900">
-              <SupportSystem />
-            </div>
-          )}
-
-          {activeTab === 'subscriptions' && (
-            <div className="bg-gray-50 dark:bg-gray-900">
-              <SubscriptionSystem />
-            </div>
-          )}
-
-          {activeTab === 'notifications' && (
-            <div className="bg-gray-50 dark:bg-gray-900">
-              <NotificationSystem />
-            </div>
-          )}
-        </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
-  )
+  );
 }
