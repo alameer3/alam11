@@ -5,65 +5,93 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatDuration(minutes: number): string {
-  const hours = Math.floor(minutes / 60)
-  const mins = minutes % 60
-  return hours > 0 ? `${hours}س ${mins}د` : `${mins}د`
+export function formatDate(date: Date | string | number) {
+  return new Intl.DateTimeFormat("ar-SA", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(date))
 }
 
-export function formatRating(rating: number): string {
-  return rating.toFixed(1)
+export function formatNumber(num: number) {
+  return new Intl.NumberFormat("ar-SA").format(num)
 }
 
-export function createSlug(title: string): string {
-  return title
+export function formatFileSize(bytes: number) {
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
+  if (bytes === 0) return '0 Bytes'
+  const i = Math.floor(Math.log(bytes) / Math.log(1024))
+  return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i]
+}
+
+export function generateSlug(text: string): string {
+  return text
     .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_-]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
-
-export function getImageUrl(path: string | null, size: string = 'w500'): string {
-  if (!path) return '/placeholder-movie.jpg'
-  return `https://image.tmdb.org/t/p/${size}${path}`
-}
-
-export function formatDate(date: string | Date): string {
-  const d = new Date(date)
-  return d.toLocaleDateString('ar-SA', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
-}
-
-export function getQualityColor(quality: string): string {
-  switch (quality.toLowerCase()) {
-    case 'hd':
-      return 'quality-hd'
-    case 'fhd':
-    case '1080p':
-      return 'quality-fhd'
-    case '4k':
-    case '2160p':
-      return 'quality-4k'
-    default:
-      return 'bg-gray-600'
-  }
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/[\s_-]+/g, '-') // Replace spaces and underscores with hyphens
+    .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
 }
 
 export function truncateText(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text
-  return text.substring(0, maxLength) + '...'
+  return text.substring(0, maxLength).trim() + '...'
 }
 
-export function debounce<T extends (...args: any[]) => void>(
+export function getInitials(name: string): string {
+  return name
+    .split(' ')
+    .map(n => n[0])
+    .join('')
+    .toUpperCase()
+    .substring(0, 2)
+}
+
+export function validateEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(email)
+}
+
+export function isValidUrl(url: string): boolean {
+  try {
+    new URL(url)
+    return true
+  } catch {
+    return false
+  }
+}
+
+export function formatDuration(seconds: number): string {
+  const hours = Math.floor(seconds / 3600)
+  const minutes = Math.floor((seconds % 3600) / 60)
+  const secs = seconds % 60
+
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+  }
+  return `${minutes}:${secs.toString().padStart(2, '0')}`
+}
+
+export function debounce<T extends (...args: any[]) => any>(
   func: T,
-  delay: number
+  wait: number
 ): (...args: Parameters<T>) => void {
-  let timeoutId: NodeJS.Timeout
+  let timeout: NodeJS.Timeout
   return (...args: Parameters<T>) => {
-    clearTimeout(timeoutId)
-    timeoutId = setTimeout(() => func(...args), delay)
+    clearTimeout(timeout)
+    timeout = setTimeout(() => func(...args), wait)
+  }
+}
+
+export function throttle<T extends (...args: any[]) => any>(
+  func: T,
+  limit: number
+): (...args: Parameters<T>) => void {
+  let inThrottle: boolean
+  return (...args: Parameters<T>) => {
+    if (!inThrottle) {
+      func(...args)
+      inThrottle = true
+      setTimeout(() => (inThrottle = false), limit)
+    }
   }
 }
