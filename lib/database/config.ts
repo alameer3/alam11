@@ -87,7 +87,7 @@ export const ENV_CONFIG = {
   
   production: {
     ...DATABASE_CONFIG,
-    DATABASE_PATH: process.env.DATABASE_PATH || path.join('/app', 'serverdata', 'database.db'),
+    DATABASE_PATH: process.env.DATABASE_PATH || path.join(process.cwd(), 'serverdata', 'database.db'),
     ADVANCED: {
       ...DATABASE_CONFIG.ADVANCED,
       verboseLogging: false,
