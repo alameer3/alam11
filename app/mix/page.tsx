@@ -1,637 +1,483 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { 
-  Play, 
-  Star, 
-  Calendar, 
-  Clock,
-  Eye,
-  Filter,
-  Grid,
-  List,
-  ChevronDown,
-  Search,
-  SlidersHorizontal,
-  ArrowUpDown,
-  Flame,
-  Award,
-  Zap,
-  TrendingUp,
-  Sparkles,
-  Music,
-  GamepadIcon,
-  Book,
-  Palette,
-  Gift
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Input } from '@/components/ui/input'
+import { Search, Filter, Star, Play, Eye, Download, Heart, Grid, List, Sliders, Calendar, Users, Tv, Mic, Video, Music, Camera, Film } from 'lucide-react'
 
-// البيانات المخصصة للمنوعات
-const sections = [
-  { id: 0, name: 'جميع الأقسام' },
-  { id: 29, name: 'عربي' },
-  { id: 30, name: 'أجنبي' },
-  { id: 31, name: 'محلي' },
-  { id: 32, name: 'عالمي' }
+// بيانات تجريبية للمنوعات
+const mixData = [
+  {
+    id: 1,
+    title: "أفضل مشاهد الأكشن 2024",
+    originalTitle: "Best Action Scenes 2024",
+    slug: "best-action-scenes-2024",
+    description: "مجموعة من أفضل مشاهد الأكشن والإثارة من أفلام 2024",
+    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
+    rating: 9.2,
+    year: 2024,
+    duration: 45,
+    quality: "4K",
+    views: 3500000,
+    downloads: 1200000,
+    likes: 75000,
+    isFeatured: true,
+    type: "مشاهد مختارة",
+    categories: ["Action", "Thriller", "Compilation"]
+  },
+  {
+    id: 2,
+    title: "أجمل أغاني الأفلام",
+    originalTitle: "Beautiful Movie Songs",
+    slug: "beautiful-movie-songs",
+    description: "أجمل الأغاني والموسيقى التصويرية من الأفلام العالمية",
+    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
+    rating: 8.8,
+    year: 2024,
+    duration: 60,
+    quality: "FHD",
+    views: 2800000,
+    downloads: 800000,
+    likes: 55000,
+    isFeatured: true,
+    type: "موسيقى",
+    categories: ["Music", "Soundtrack", "Compilation"]
+  },
+  {
+    id: 3,
+    title: "أفضل النكات في السينما",
+    originalTitle: "Best Movie Jokes",
+    slug: "best-movie-jokes",
+    description: "أطرف النكات والمشاهد الكوميدية من الأفلام والمسلسلات",
+    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
+    rating: 8.5,
+    year: 2024,
+    duration: 30,
+    quality: "HD",
+    views: 2200000,
+    downloads: 600000,
+    likes: 45000,
+    isFeatured: true,
+    type: "كوميديا",
+    categories: ["Comedy", "Funny", "Compilation"]
+  },
+  {
+    id: 4,
+    title: "أجمل مشاهد الرومانسية",
+    originalTitle: "Beautiful Romantic Scenes",
+    slug: "beautiful-romantic-scenes",
+    description: "أجمل مشاهد الحب والرومانسية من الأفلام العالمية",
+    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
+    rating: 8.7,
+    year: 2024,
+    duration: 40,
+    quality: "FHD",
+    views: 1800000,
+    downloads: 500000,
+    likes: 35000,
+    isFeatured: false,
+    type: "رومانسية",
+    categories: ["Romance", "Drama", "Compilation"]
+  },
+  {
+    id: 5,
+    title: "أفضل مشاهد الرعب",
+    originalTitle: "Best Horror Scenes",
+    slug: "best-horror-scenes",
+    description: "أكثر مشاهد الرعب إثارة من أفلام الرعب العالمية",
+    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
+    rating: 8.3,
+    year: 2024,
+    duration: 35,
+    quality: "4K",
+    views: 1500000,
+    downloads: 400000,
+    likes: 25000,
+    isFeatured: false,
+    type: "رعب",
+    categories: ["Horror", "Thriller", "Compilation"]
+  },
+  {
+    id: 6,
+    title: "أجمل مشاهد الطبيعة",
+    originalTitle: "Beautiful Nature Scenes",
+    slug: "beautiful-nature-scenes",
+    description: "أجمل مشاهد الطبيعة والمناظر الخلابة من الأفلام الوثائقية",
+    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
+    rating: 9.0,
+    year: 2024,
+    duration: 50,
+    quality: "4K",
+    views: 1200000,
+    downloads: 300000,
+    likes: 20000,
+    isFeatured: false,
+    type: "وثائقي",
+    categories: ["Documentary", "Nature", "Travel"]
+  }
 ]
 
-const categories = [
-  { id: 0, name: 'جميع التصنيفات' },
-  { id: 18, name: 'موسيقى' },
-  { id: 20, name: 'ألعاب' },
-  { id: 21, name: 'تطبيقات' },
-  { id: 22, name: 'كتب صوتية' },
-  { id: 23, name: 'بودكاست' },
-  { id: 24, name: 'أغاني' },
-  { id: 25, name: 'حفلات' },
-  { id: 26, name: 'مقاطع قصيرة' },
-  { id: 27, name: 'فيديوهات موسيقية' },
-  { id: 28, name: 'ألبومات' },
-  { id: 29, name: 'مسرحيات' },
-  { id: 30, name: 'عروض' },
-  { id: 31, name: 'تجارب' },
-  { id: 32, name: 'تقييمات' },
-  { id: 33, name: 'دروس' }
-]
+const categories = ["All", "Action", "Comedy", "Romance", "Horror", "Music", "Documentary", "Compilation", "Thriller", "Drama"]
+const qualities = ["All", "HD", "FHD", "4K"]
+const years = ["All", "2024", "2023", "2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015", "2014", "2013", "2012", "2011", "2010", "2009", "2008", "2007", "2006", "2005", "2004", "2003", "2002", "2001", "2000", "1999", "1998", "1997", "1996", "1995", "1994", "1993", "1992", "1991", "1990"]
+const types = ["All", "مشاهد مختارة", "موسيقى", "كوميديا", "رومانسية", "رعب", "وثائقي", "مقابلات", "خلف الكواليس"]
 
-const contentTypes = [
-  { id: 0, name: 'جميع الأنواع' },
-  { id: 1, name: 'أغنية' },
-  { id: 2, name: 'ألبوم' },
-  { id: 3, name: 'حفلة' },
-  { id: 4, name: 'لعبة' },
-  { id: 5, name: 'تطبيق' },
-  { id: 6, name: 'كتاب صوتي' },
-  { id: 7, name: 'بودكاست' },
-  { id: 8, name: 'مسرحية' },
-  { id: 9, name: 'عرض' }
-]
-
-const languages = [
-  { id: 0, name: 'جميع اللغات' },
-  { id: 1, name: 'عربي' },
-  { id: 2, name: 'إنجليزي' },
-  { id: 3, name: 'فرنسي' },
-  { id: 4, name: 'إسباني' },
-  { id: 5, name: 'إيطالي' },
-  { id: 6, name: 'ألماني' }
-]
-
-const years = Array.from({ length: 25 }, (_, i) => {
-  const year = 2024 - i
-  return { id: year, name: year.toString() }
-})
-
-const qualities = [
-  { id: 0, name: 'جميع الجودات' },
-  { id: 1, name: '4K' },
-  { id: 2, name: 'FHD' },
-  { id: 3, name: 'HD' },
-  { id: 4, name: 'SD' },
-  { id: 5, name: 'HQ Audio' },
-  { id: 6, name: 'MP3' }
-]
-
-const sortOptions = [
-  { id: 'latest', name: 'الأحدث' },
-  { id: 'popular', name: 'الأكثر شعبية' },
-  { id: 'rating', name: 'الأعلى تقييماً' },
-  { id: 'views', name: 'الأكثر مشاهدة' },
-  { id: 'duration', name: 'المدة' },
-  { id: 'title', name: 'حسب العنوان' },
-  { id: 'year', name: 'حسب السنة' }
-]
-
-// محاكاة بيانات المنوعات
-const mockMixContent = Array.from({ length: 24 }, (_, i) => ({
-  id: i + 1,
-  title: `محتوى منوع ${i + 1}`,
-  poster: `/api/placeholder/250/375`,
-  backdrop: `/api/placeholder/400/225`,
-  rating: (7.0 + Math.random() * 3).toFixed(1),
-  year: 2024 - Math.floor(Math.random() * 5),
-  duration: `${3 + Math.floor(Math.random() * 120)}دقيقة`,
-  views: `${Math.floor(Math.random() * 200)}K`,
-  quality: ['4K', 'FHD', 'HD', 'HQ Audio', 'MP3'][Math.floor(Math.random() * 5)],
-  type: contentTypes.slice(1)[Math.floor(Math.random() * (contentTypes.length - 1))].name,
-  artist: `فنان/منشئ ${i + 1}`,
-  size: `${50 + Math.floor(Math.random() * 500)}MB`,
-  format: ['MP4', 'MP3', 'AAC', 'FLAC', 'WAV'][Math.floor(Math.random() * 5)],
-  genres: categories.slice(1, 4).map(c => c.name),
-  isNew: Math.random() > 0.7,
-  isTrending: Math.random() > 0.8,
-  hasAward: Math.random() > 0.9,
-  isExclusive: Math.random() > 0.85,
-  downloadCount: Math.floor(Math.random() * 50000) + 1000
-}))
-
-const MixPage: React.FC = () => {
-  const [mixContent, setMixContent] = useState(mockMixContent)
-  const [loading, setLoading] = useState(false)
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+export default function MixPage() {
+  const [mixes, setMixes] = useState(mixData)
+  const [filteredMixes, setFilteredMixes] = useState(mixData)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('All')
+  const [selectedQuality, setSelectedQuality] = useState('All')
+  const [selectedYear, setSelectedYear] = useState('All')
+  const [selectedType, setSelectedType] = useState('All')
+  const [sortBy, setSortBy] = useState('rating')
+  const [viewMode, setViewMode] = useState('grid')
   const [showFilters, setShowFilters] = useState(false)
-  
-  // فلاتر البحث
-  const [filters, setFilters] = useState({
-    search: '',
-    section: 0,
-    category: 0,
-    contentType: 0,
-    language: 0,
-    year: 0,
-    quality: 0,
-    sort: 'latest'
-  })
 
-  // تطبيق الفلاتر
-  const applyFilters = () => {
-    setLoading(true)
-    setTimeout(() => {
-      let filtered = [...mockMixContent]
+  // فلترة وبحث المنوعات
+  useEffect(() => {
+    let filtered = mixes.filter(mix => {
+      const matchesSearch = mix.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          mix.description.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesCategory = selectedCategory === 'All' || mix.categories.includes(selectedCategory)
+      const matchesQuality = selectedQuality === 'All' || mix.quality === selectedQuality
+      const matchesYear = selectedYear === 'All' || mix.year.toString() === selectedYear
+      const matchesType = selectedType === 'All' || mix.type === selectedType
       
-      if (filters.search) {
-        filtered = filtered.filter(content => 
-          content.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-          content.artist.toLowerCase().includes(filters.search.toLowerCase())
-        )
-      }
-      
-      // ترتيب النتائج
-      switch (filters.sort) {
+      return matchesSearch && matchesCategory && matchesQuality && matchesYear && matchesType
+    })
+
+    // ترتيب النتائج
+    filtered.sort((a, b) => {
+      switch (sortBy) {
         case 'rating':
-          filtered.sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating))
-          break
+          return b.rating - a.rating
         case 'year':
-          filtered.sort((a, b) => b.year - a.year)
-          break
-        case 'popular':
-          filtered.sort((a, b) => parseInt(b.views) - parseInt(a.views))
-          break
-        case 'duration':
-          filtered.sort((a, b) => parseInt(b.duration) - parseInt(a.duration))
-          break
+          return b.year - a.year
+        case 'views':
+          return b.views - a.views
         case 'title':
-          filtered.sort((a, b) => a.title.localeCompare(b.title, 'ar'))
-          break
+          return a.title.localeCompare(b.title)
+        case 'duration':
+          return b.duration - a.duration
         default:
-          break
+          return 0
       }
-      
-      setMixContent(filtered)
-      setLoading(false)
-    }, 1000)
+    })
+
+    setFilteredMixes(filtered)
+  }, [mixes, searchTerm, selectedCategory, selectedQuality, selectedYear, selectedType, sortBy])
+
+  const formatDuration = (minutes: number) => {
+    const hours = Math.floor(minutes / 60)
+    const mins = minutes % 60
+    return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`
   }
 
-  useEffect(() => {
-    applyFilters()
-  }, [filters])
+  const formatNumber = (num: number) => {
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(1) + 'M'
+    }
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1) + 'K'
+    }
+    return num.toString()
+  }
+
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'مشاهد مختارة':
+        return <Film className="w-4 h-4" />
+      case 'موسيقى':
+        return <Music className="w-4 h-4" />
+      case 'كوميديا':
+        return <Tv className="w-4 h-4" />
+      case 'رومانسية':
+        return <Heart className="w-4 h-4" />
+      case 'رعب':
+        return <Camera className="w-4 h-4" />
+      case 'وثائقي':
+        return <Video className="w-4 h-4" />
+      default:
+        return <Tv className="w-4 h-4" />
+    }
+  }
+
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case 'مشاهد مختارة':
+        return 'bg-red-600'
+      case 'موسيقى':
+        return 'bg-purple-600'
+      case 'كوميديا':
+        return 'bg-yellow-600'
+      case 'رومانسية':
+        return 'bg-pink-600'
+      case 'رعب':
+        return 'bg-gray-800'
+      case 'وثائقي':
+        return 'bg-green-600'
+      default:
+        return 'bg-blue-600'
+    }
+  }
 
   return (
-    <div className="min-h-screen bg-gray-950 pt-20">
-      
-      {/* Hero Section للمنوعات */}
-      <section className="relative h-80 lg:h-96 overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: 'url(/api/placeholder/1200/600)' }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-black/30" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-        </div>
-
-        <div className="relative z-10 container mx-auto px-4 h-full flex items-center">
-          <div className="max-w-2xl">
-            <div className="flex items-center space-x-2 rtl:space-x-reverse mb-4">
-              <Badge className="bg-pink-600 hover:bg-pink-700 text-white border-0">
-                <Sparkles className="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" />
-                منوعات
-              </Badge>
-              <Badge variant="outline" className="border-gray-600 text-gray-300">
-                {mixContent.length} عنصر
-              </Badge>
-            </div>
-
-            <h1 className="text-4xl lg:text-5xl font-bold text-white mb-4">
-              عالم المنوعات
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-orange-600 to-red-600 py-16">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
+              المنوعات
             </h1>
-            <p className="text-lg text-gray-300 mb-6">
-              اكتشف مجموعة متنوعة من المحتوى الترفيهي والتعليمي والفني
+            <p className="text-xl text-white/90 max-w-2xl mx-auto">
+              اكتشف مجموعة متنوعة من المشاهد المختارة والموسيقى والكوميديا
             </p>
+          </div>
+        </div>
+      </div>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="bg-pink-600 hover:bg-pink-700">
-                <TrendingUp className="w-5 h-5 mr-2 rtl:ml-2 rtl:mr-0" />
-                المحتوى الرائج
-              </Button>
-              <Button size="lg" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
-                <Gift className="w-5 h-5 mr-2 rtl:ml-2 rtl:mr-0" />
-                المحتوى الحصري
-              </Button>
+      {/* Search and Filters */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="bg-gray-800 rounded-xl p-6 mb-8">
+          {/* Search Bar */}
+          <div className="relative mb-6">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="ابحث في المنوعات..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            />
+          </div>
+
+          {/* Filters */}
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+            >
+              {categories.map(category => (
+                <option key={category} value={category}>
+                  {category === 'All' ? 'جميع التصنيفات' : category}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={selectedType}
+              onChange={(e) => setSelectedType(e.target.value)}
+              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+            >
+              {types.map(type => (
+                <option key={type} value={type}>
+                  {type === 'All' ? 'جميع الأنواع' : type}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={selectedQuality}
+              onChange={(e) => setSelectedQuality(e.target.value)}
+              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+            >
+              {qualities.map(quality => (
+                <option key={quality} value={quality}>
+                  {quality === 'All' ? 'جميع الجودات' : quality}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+            >
+              {years.map(year => (
+                <option key={year} value={year}>
+                  {year === 'All' ? 'جميع السنوات' : year}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+            >
+              <option value="rating">الأعلى تقييماً</option>
+              <option value="year">الأحدث</option>
+              <option value="views">الأكثر مشاهدة</option>
+              <option value="duration">الأطول مدة</option>
+              <option value="title">حسب العنوان</option>
+            </select>
+          </div>
+
+          {/* View Mode Toggle */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-orange-600 text-white' : 'bg-gray-700 text-gray-400'}`}
+              >
+                <Grid className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                className={`p-2 rounded ${viewMode === 'list' ? 'bg-orange-600 text-white' : 'bg-gray-700 text-gray-400'}`}
+              >
+                <List className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="text-gray-400">
+              {filteredMixes.length} منوع
             </div>
           </div>
         </div>
-      </section>
 
-      {/* شريط الفلاتر والبحث */}
-      <section className="py-6 bg-gray-900/50 border-b border-gray-800 sticky top-20 z-40">
-        <div className="container mx-auto px-4">
-          
-          {/* شريط البحث والأدوات الرئيسية */}
-          <div className="flex flex-col lg:flex-row gap-4 mb-4">
-            
-            {/* البحث */}
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 rtl:right-3 rtl:left-auto top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                type="text"
-                placeholder="البحث في المحتوى والفنانين..."
-                value={filters.search}
-                onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-                className="pl-10 rtl:pr-10 rtl:pl-3 bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-pink-500"
-              />
-            </div>
-
-            {/* أدوات التحكم */}
-            <div className="flex items-center space-x-3 rtl:space-x-reverse">
-              
-              {/* الترتيب */}
-              <Select value={filters.sort} onValueChange={(value) => setFilters({ ...filters, sort: value })}>
-                <SelectTrigger className="w-40 bg-gray-800 border-gray-700 text-white">
-                  <ArrowUpDown className="w-4 h-4 mr-2 rtl:ml-2 rtl:mr-0" />
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-700">
-                  {sortOptions.map((option) => (
-                    <SelectItem key={option.id} value={option.id}>
-                      {option.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              {/* عرض الفلاتر */}
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setShowFilters(!showFilters)}
-                className="border-gray-700 text-gray-400 hover:text-white"
+        {/* Mixes Grid/List */}
+        {viewMode === 'grid' ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+            {filteredMixes.map((mix) => (
+              <Link 
+                key={mix.id}
+                href={`/mix/${mix.slug}`}
+                className="group relative overflow-hidden rounded-xl bg-gray-800 hover:bg-gray-700 transition-all duration-300 transform hover:scale-105"
               >
-                <SlidersHorizontal className="w-4 h-4" />
-              </Button>
+                <div className="relative aspect-[2/3] overflow-hidden">
+                  <img
+                    src={mix.poster}
+                    alt={mix.title}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                  
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                  
+                  {/* Rating Badge */}
+                  <div className="absolute top-2 right-2 bg-yellow-500 text-black px-2 py-1 rounded text-xs font-bold">
+                    {mix.rating}
+                  </div>
 
-              {/* تغيير العرض */}
-              <div className="flex border border-gray-700 rounded-md">
-                <Button
-                  variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setViewMode('grid')}
-                  className="rounded-r-none border-r border-gray-700"
-                >
-                  <Grid className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant={viewMode === 'list' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setViewMode('list')}
-                  className="rounded-l-none"
-                >
-                  <List className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
+                  {/* Quality Badge */}
+                  <div className="absolute bottom-2 left-2 bg-white/90 text-black px-2 py-1 rounded text-xs font-bold">
+                    {mix.quality}
+                  </div>
+
+                  {/* Type Badge */}
+                  <div className={`absolute top-2 left-2 ${getTypeColor(mix.type)} text-white px-2 py-1 rounded text-xs font-bold`}>
+                    {getTypeIcon(mix.type)}
+                  </div>
+
+                  {/* Play Button */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                      <Play className="w-6 h-6 text-white" fill="white" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-3">
+                  <h3 className="text-white font-semibold text-sm mb-1 line-clamp-2">
+                    {mix.title}
+                  </h3>
+                  <div className="flex items-center justify-between text-gray-400 text-xs mb-2">
+                    <span>{mix.year}</span>
+                    <span>{formatDuration(mix.duration)}</span>
+                  </div>
+                  
+                  {/* Type */}
+                  <div className="flex items-center text-gray-400 text-xs mb-2">
+                    <span>{mix.type}</span>
+                  </div>
+                  
+                  {/* Stats */}
+                  <div className="flex items-center space-x-2 text-xs text-gray-500">
+                    <div className="flex items-center">
+                      <Eye className="w-3 h-3 mr-1" />
+                      {formatNumber(mix.views)}
+                    </div>
+                    <div className="flex items-center">
+                      <Download className="w-3 h-3 mr-1" />
+                      {formatNumber(mix.downloads)}
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
-
-          {/* الفلاتر المتقدمة */}
-          {showFilters && (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4 p-4 bg-gray-800/50 rounded-lg border border-gray-700">
-              
-              <Select value={filters.section.toString()} onValueChange={(value) => setFilters({ ...filters, section: parseInt(value) })}>
-                <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
-                  <SelectValue placeholder="القسم" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-700">
-                  {sections.map((section) => (
-                    <SelectItem key={section.id} value={section.id.toString()}>
-                      {section.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.category.toString()} onValueChange={(value) => setFilters({ ...filters, category: parseInt(value) })}>
-                <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
-                  <SelectValue placeholder="التصنيف" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-700">
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id.toString()}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.contentType.toString()} onValueChange={(value) => setFilters({ ...filters, contentType: parseInt(value) })}>
-                <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
-                  <SelectValue placeholder="نوع المحتوى" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-700">
-                  {contentTypes.map((type) => (
-                    <SelectItem key={type.id} value={type.id.toString()}>
-                      {type.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.language.toString()} onValueChange={(value) => setFilters({ ...filters, language: parseInt(value) })}>
-                <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
-                  <SelectValue placeholder="اللغة" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-700">
-                  {languages.map((language) => (
-                    <SelectItem key={language.id} value={language.id.toString()}>
-                      {language.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.year.toString()} onValueChange={(value) => setFilters({ ...filters, year: parseInt(value) })}>
-                <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
-                  <SelectValue placeholder="السنة" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-700">
-                  <SelectItem value="0">جميع السنوات</SelectItem>
-                  {years.map((year) => (
-                    <SelectItem key={year.id} value={year.id.toString()}>
-                      {year.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.quality.toString()} onValueChange={(value) => setFilters({ ...filters, quality: parseInt(value) })}>
-                <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
-                  <SelectValue placeholder="الجودة" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-700">
-                  {qualities.map((quality) => (
-                    <SelectItem key={quality.id} value={quality.id.toString()}>
-                      {quality.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Button 
-                onClick={() => setFilters({
-                  search: '',
-                  section: 0,
-                  category: 0,
-                  contentType: 0,
-                  language: 0,
-                  year: 0,
-                  quality: 0,
-                  sort: 'latest'
-                })}
-                variant="outline"
-                className="border-gray-700 text-gray-400 hover:text-white"
+        ) : (
+          <div className="space-y-4">
+            {filteredMixes.map((mix) => (
+              <Link 
+                key={mix.id}
+                href={`/mix/${mix.slug}`}
+                className="group flex items-center space-x-4 bg-gray-800 rounded-xl p-4 hover:bg-gray-700 transition-all duration-300"
               >
-                مسح الفلاتر
-              </Button>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* المحتوى الرئيسي */}
-      <section className="py-8">
-        <div className="container mx-auto px-4">
-          
-          {loading ? (
-            <div className="flex justify-center items-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
-            </div>
-          ) : (
-            <>
-              {/* عرض الشبكة */}
-              {viewMode === 'grid' && (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-                  {mixContent.map((content) => (
-                    <Link key={content.id} href={`/mix/${content.id}`}>
-                      <Card className="group bg-gray-900/30 border-gray-800 hover:border-gray-700 transition-all duration-300 overflow-hidden hover:scale-105">
-                        <CardContent className="p-0">
-                          
-                          {/* صورة البوستر */}
-                          <div className="relative aspect-[2/3] overflow-hidden">
-                            <img 
-                              src={content.poster}
-                              alt={content.title}
-                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                            />
-
-                            {/* التراكبات والشارات */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            
-                            {/* شارات المحتوى */}
-                            <div className="absolute top-2 right-2 rtl:left-2 rtl:right-auto space-y-1">
-                              {content.isNew && (
-                                <Badge className="bg-red-600 hover:bg-red-600 text-white border-0 text-xs">
-                                  <Zap className="w-2 h-2 mr-1 rtl:ml-1 rtl:mr-0" />
-                                  جديد
-                                </Badge>
-                              )}
-                              {content.isTrending && (
-                                <Badge className="bg-pink-600 hover:bg-pink-600 text-white border-0 text-xs">
-                                  <Flame className="w-2 h-2 mr-1 rtl:ml-1 rtl:mr-0" />
-                                  رائج
-                                </Badge>
-                              )}
-                              {content.isExclusive && (
-                                <Badge className="bg-purple-600 hover:bg-purple-600 text-white border-0 text-xs">
-                                  <Gift className="w-2 h-2 mr-1 rtl:ml-1 rtl:mr-0" />
-                                  حصري
-                                </Badge>
-                              )}
-                              {content.hasAward && (
-                                <Badge className="bg-yellow-600 hover:bg-yellow-600 text-white border-0 text-xs">
-                                  <Award className="w-2 h-2 mr-1 rtl:ml-1 rtl:mr-0" />
-                                  جائزة
-                                </Badge>
-                              )}
-                            </div>
-
-                            {/* التقييم */}
-                            <div className="absolute top-2 left-2 rtl:right-2 rtl:left-auto">
-                              <Badge className="bg-black/70 hover:bg-black/70 text-yellow-500 border-0 text-xs">
-                                <Star className="w-2 h-2 mr-1 rtl:ml-1 rtl:mr-0" />
-                                {content.rating}
-                              </Badge>
-                            </div>
-
-                            {/* الجودة والحجم */}
-                            <div className="absolute bottom-2 left-2 rtl:right-2 rtl:left-auto space-y-1">
-                              <Badge variant="secondary" className="bg-white/90 text-gray-900 hover:bg-white text-xs block">
-                                {content.quality}
-                              </Badge>
-                              <Badge className="bg-gray-600 hover:bg-gray-600 text-white border-0 text-xs block">
-                                {content.size}
-                              </Badge>
-                            </div>
-
-                            {/* زر التشغيل */}
-                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                              <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-full flex items-center justify-center">
-                                <Play className="w-6 h-6 text-white" />
-                              </div>
-                            </div>
-
-                            {/* معلومات إضافية عند التفاعل */}
-                            <div className="absolute bottom-0 left-0 right-0 p-3 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                              <h3 className="text-white font-semibold text-sm mb-1 line-clamp-2">
-                                {content.title}
-                              </h3>
-                              <div className="flex items-center justify-between text-xs text-gray-300 mb-1">
-                                <span>{content.year}</span>
-                                <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                                  <Eye className="w-3 h-3" />
-                                  <span>{content.views}</span>
-                                </div>
-                              </div>
-                              <div className="text-xs text-gray-400">
-                                {content.artist} • {content.duration}
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* معلومات المحتوى */}
-                          <div className="p-3">
-                            <h3 className="font-medium text-white text-sm mb-1 line-clamp-2 group-hover:text-pink-400 transition-colors">
-                              {content.title}
-                            </h3>
-                            <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
-                              <span>{content.year}</span>
-                              <span>{content.duration}</span>
-                            </div>
-                            <div className="text-xs text-gray-500 line-clamp-1">
-                              {content.artist}
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  ))}
+                <div className="relative w-20 h-28 flex-shrink-0">
+                  <img
+                    src={mix.poster}
+                    alt={mix.title}
+                    className="w-full h-full object-cover rounded"
+                  />
+                  <div className="absolute top-1 right-1 bg-yellow-500 text-black px-1 py-0.5 rounded text-xs font-bold">
+                    {mix.rating}
+                  </div>
+                  <div className={`absolute bottom-1 left-1 ${getTypeColor(mix.type)} text-white px-1 py-0.5 rounded text-xs font-bold`}>
+                    {getTypeIcon(mix.type)}
+                  </div>
                 </div>
-              )}
 
-              {/* عرض القائمة */}
-              {viewMode === 'list' && (
-                <div className="space-y-4">
-                  {mixContent.map((content) => (
-                    <Link key={content.id} href={`/mix/${content.id}`}>
-                      <Card className="group bg-gray-900/30 border-gray-800 hover:border-gray-700 transition-all duration-300 overflow-hidden">
-                        <CardContent className="p-0">
-                          <div className="flex">
-                            {/* صورة صغيرة */}
-                            <div className="relative w-24 h-36 flex-shrink-0">
-                              <img 
-                                src={content.poster}
-                                alt={content.title}
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                            
-                            {/* المحتوى */}
-                            <div className="flex-1 p-4">
-                              <div className="flex items-start justify-between">
-                                <div className="flex-1">
-                                  <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-pink-400 transition-colors">
-                                    {content.title}
-                                  </h3>
-                                  
-                                  <div className="flex items-center space-x-4 rtl:space-x-reverse text-sm text-gray-400 mb-2">
-                                    <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                                      <Calendar className="w-4 h-4" />
-                                      <span>{content.year}</span>
-                                    </div>
-                                    <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                                      <Clock className="w-4 h-4" />
-                                      <span>{content.duration}</span>
-                                    </div>
-                                    <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                                      <Eye className="w-4 h-4" />
-                                      <span>{content.views}</span>
-                                    </div>
-                                  </div>
-                                  
-                                  <div className="flex items-center space-x-2 rtl:space-x-reverse mb-2">
-                                    <Badge className="bg-black/70 text-yellow-500 border-0">
-                                      <Star className="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" />
-                                      {content.rating}
-                                    </Badge>
-                                    <Badge className="bg-pink-600 text-white border-0">
-                                      {content.type}
-                                    </Badge>
-                                    <Badge variant="secondary" className="bg-white/90 text-gray-900">
-                                      {content.quality}
-                                    </Badge>
-                                  </div>
-                                  
-                                  <div className="text-sm text-gray-400">
-                                    <div className="flex items-center justify-between">
-                                      <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                                        <Palette className="w-4 h-4" />
-                                        <span>{content.artist}</span>
-                                      </div>
-                                      <span className="text-xs">{content.size} • {content.format}</span>
-                                    </div>
-                                  </div>
-                                </div>
-                                
-                                <Button size="sm" className="bg-pink-600 hover:bg-pink-700">
-                                  <Play className="w-4 h-4 mr-1 rtl:ml-1 rtl:mr-0" />
-                                  تشغيل
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  ))}
+                <div className="flex-1">
+                  <h3 className="text-white font-semibold text-lg mb-1">{mix.title}</h3>
+                  <p className="text-gray-400 text-sm mb-2 line-clamp-2">{mix.description}</p>
+                  
+                  <div className="flex items-center space-x-4 text-sm text-gray-400 mb-2">
+                    <span>{mix.year}</span>
+                    <span>{formatDuration(mix.duration)}</span>
+                    <span className="bg-gray-700 px-2 py-1 rounded">{mix.quality}</span>
+                    <span>{mix.type}</span>
+                    <span>{mix.categories.join(', ')}</span>
+                  </div>
                 </div>
-              )}
 
-              {/* زر تحميل المزيد */}
-              <div className="text-center mt-12">
-                <Button 
-                  variant="outline" 
-                  size="lg"
-                  className="border-gray-700 text-white hover:bg-gray-800"
-                >
-                  تحميل المزيد
-                  <ChevronDown className="w-4 h-4 mr-2 rtl:ml-2 rtl:mr-0" />
-                </Button>
-              </div>
-            </>
-          )}
-        </div>
-      </section>
+                <div className="flex flex-col items-end space-y-2">
+                  <div className="flex items-center space-x-2 text-xs text-gray-500">
+                    <div className="flex items-center">
+                      <Eye className="w-3 h-3 mr-1" />
+                      {formatNumber(mix.views)}
+                    </div>
+                    <div className="flex items-center">
+                      <Download className="w-3 h-3 mr-1" />
+                      {formatNumber(mix.downloads)}
+                    </div>
+                    <div className="flex items-center">
+                      <Heart className="w-3 h-3 mr-1" />
+                      {formatNumber(mix.likes)}
+                    </div>
+                  </div>
+                  
+                  <button className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm transition-colors">
+                    مشاهدة
+                  </button>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+
+        {/* No Results */}
+        {filteredMixes.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-gray-400 text-6xl mb-4">🎬</div>
+            <h3 className="text-xl font-semibold text-white mb-2">لا توجد نتائج</h3>
+            <p className="text-gray-400">جرب تغيير معايير البحث</p>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
-
-export default MixPage

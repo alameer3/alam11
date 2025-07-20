@@ -1,194 +1,498 @@
-import { Suspense } from 'react'
-import { Header } from '@/components/layout/header'
-import { Footer } from '@/components/layout/footer'
-import { VideoPlayer } from '@/components/video/video-player'
-import { RelatedMovies } from '@/components/movies/related-movies'
-import { LoadingSpinner } from '@/components/ui/loading-spinner'
-import { Button } from '@/components/ui/button'
+'use client'
+
+import { useState, useEffect, useRef } from 'react'
+import Link from 'next/link'
 import { 
-  Download, 
-  Share2, 
-  Flag, 
-  Star,
-  Eye,
-  Calendar,
-  Play
+  Play, 
+  Pause, 
+  Volume2, 
+  VolumeX, 
+  Maximize2, 
+  Minimize2,
+  Settings,
+  Subtitles,
+  Download,
+  Share2,
+  Heart,
+  Bookmark,
+  Flag,
+  ArrowLeft,
+  SkipBack,
+  SkipForward,
+  RotateCcw,
+  RotateCw,
+  Monitor,
+  Smartphone,
+  Tablet
 } from 'lucide-react'
 
-// Mock data - في التطبيق الحقيقي، سيتم جلب البيانات من قاعدة البيانات
-const movie = {
-  id: '1',
-  title: 'فيلم الأكشن الملحمي',
-  slug: 'epic-action-movie',
-  description: 'قصة مشوقة مليئة بالأحداث المثيرة والمفاجآت',
-  videoUrl: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
-  poster: 'https://via.placeholder.com/300x450/1e293b/ffffff?text=Movie+Poster',
-  year: 2024,
-  duration: 145,
-  rating: 8.7,
-  views: 12540,
-  genre: ['أكشن', 'إثارة', 'مغامرة']
+// بيانات تجريبية للفيديو
+const videoData = {
+  id: 1,
+  title: "The Dark Knight",
+  slug: "the-dark-knight",
+  poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
+  duration: 9120, // بالثواني
+  currentTime: 0,
+  quality: "4K",
+  sources: [
+    { quality: "4K", url: "#", size: "8.5 GB" },
+    { quality: "FHD", url: "#", size: "4.2 GB" },
+    { quality: "HD", url: "#", size: "2.1 GB" },
+    { quality: "SD", url: "#", size: "1.1 GB" }
+  ],
+  subtitles: [
+    { language: "العربية", code: "ar", url: "#" },
+    { language: "الإنجليزية", code: "en", url: "#" },
+    { language: "الفرنسية", code: "fr", url: "#" },
+    { language: "الإسبانية", code: "es", url: "#" }
+  ],
+  audio: [
+    { language: "الإنجليزية", code: "en" },
+    { language: "العربية", code: "ar" }
+  ],
+  relatedEpisodes: [
+    {
+      id: 2,
+      title: "الحلقة 2",
+      duration: 45,
+      thumbnail: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=200&h=120&fit=crop"
+    },
+    {
+      id: 3,
+      title: "الحلقة 3",
+      duration: 42,
+      thumbnail: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=200&h=120&fit=crop"
+    }
+  ]
 }
 
-interface WatchPageProps {
-  params: {
-    slug: string
-  }
-  searchParams: {
-    quality?: string
-    episode?: string
-  }
-}
+export default function WatchPage({ params }: { params: { slug: string } }) {
+  const [video, setVideo] = useState(videoData)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [isMuted, setIsMuted] = useState(false)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const [showControls, setShowControls] = useState(true)
+  const [showSettings, setShowSettings] = useState(false)
+  const [showSubtitles, setShowSubtitles] = useState(false)
+  const [currentQuality, setCurrentQuality] = useState("4K")
+  const [currentSubtitle, setCurrentSubtitle] = useState("العربية")
+  const [currentAudio, setCurrentAudio] = useState("الإنجليزية")
+  const [volume, setVolume] = useState(100)
+  const [progress, setProgress] = useState(0)
+  const [isLiked, setIsLiked] = useState(false)
+  const [isBookmarked, setIsBookmarked] = useState(false)
+  const [showRelated, setShowRelated] = useState(false)
 
-export default function WatchPage({ params, searchParams }: WatchPageProps) {
-  const quality = searchParams.quality || 'hd'
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const controlsTimeoutRef = useRef<NodeJS.Timeout>()
+
+  // إخفاء الضوابط تلقائياً
+  useEffect(() => {
+    if (showControls) {
+      controlsTimeoutRef.current = setTimeout(() => {
+        setShowControls(false)
+      }, 3000)
+    }
+
+    return () => {
+      if (controlsTimeoutRef.current) {
+        clearTimeout(controlsTimeoutRef.current)
+      }
+    }
+  }, [showControls])
+
+  // تنسيق الوقت
+  const formatTime = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600)
+    const minutes = Math.floor((seconds % 3600) / 60)
+    const secs = seconds % 60
+    
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+    }
+    return `${minutes}:${secs.toString().padStart(2, '0')}`
+  }
+
+  // تبديل التشغيل/الإيقاف
+  const togglePlay = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause()
+      } else {
+        videoRef.current.play()
+      }
+      setIsPlaying(!isPlaying)
+    }
+  }
+
+  // تبديل الكتم
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted
+      setIsMuted(!isMuted)
+    }
+  }
+
+  // تبديل ملء الشاشة
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen()
+      setIsFullscreen(true)
+    } else {
+      document.exitFullscreen()
+      setIsFullscreen(false)
+    }
+  }
+
+  // تحديث التقدم
+  const handleTimeUpdate = () => {
+    if (videoRef.current) {
+      const progress = (videoRef.current.currentTime / videoRef.current.duration) * 100
+      setProgress(progress)
+      setVideo(prev => ({ ...prev, currentTime: videoRef.current?.currentTime || 0 }))
+    }
+  }
+
+  // تغيير التقدم
+  const handleProgressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newProgress = parseFloat(e.target.value)
+    setProgress(newProgress)
+    
+    if (videoRef.current) {
+      const newTime = (newProgress / 100) * videoRef.current.duration
+      videoRef.current.currentTime = newTime
+    }
+  }
+
+  // تغيير مستوى الصوت
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseFloat(e.target.value)
+    setVolume(newVolume)
+    
+    if (videoRef.current) {
+      videoRef.current.volume = newVolume / 100
+    }
+  }
+
+  // التخطي للأمام/الخلف
+  const skip = (seconds: number) => {
+    if (videoRef.current) {
+      videoRef.current.currentTime += seconds
+    }
+  }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      <main className="container mx-auto px-4 py-6">
-        {/* Movie Info Header */}
-        <div className="mb-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold mb-2">{movie.title}</h1>
-              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                  <span>{movie.rating}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Calendar className="h-4 w-4" />
-                  <span>{movie.year}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Eye className="h-4 w-4" />
-                  <span>{movie.views.toLocaleString('ar')} مشاهدة</span>
-                </div>
-              </div>
-            </div>
+    <div className="min-h-screen bg-black">
+      {/* Video Container */}
+      <div className="relative w-full h-screen">
+        {/* Video Element */}
+        <video
+          ref={videoRef}
+          className="w-full h-full object-cover"
+          poster={video.poster}
+          onTimeUpdate={handleTimeUpdate}
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          onMouseMove={() => setShowControls(true)}
+          onMouseLeave={() => setShowControls(false)}
+        >
+          <source src="#" type="video/mp4" />
+          متصفحك لا يدعم تشغيل الفيديو.
+        </video>
+
+        {/* Overlay */}
+        <div 
+          className={`absolute inset-0 bg-black/20 transition-opacity duration-300 ${
+            showControls ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+
+        {/* Top Controls */}
+        <div 
+          className={`absolute top-0 left-0 right-0 p-4 transition-opacity duration-300 ${
+            showControls ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <Link 
+              href={`/movie/${video.slug}`}
+              className="flex items-center text-white hover:text-gray-300 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              العودة
+            </Link>
             
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm">
-                <Download className="h-4 w-4 ml-1" />
-                تحميل
-              </Button>
-              <Button variant="outline" size="sm">
-                <Share2 className="h-4 w-4 ml-1" />
-                مشاركة
-              </Button>
-              <Button variant="outline" size="sm">
-                <Flag className="h-4 w-4 ml-1" />
-                إبلاغ
-              </Button>
+            <div className="flex items-center gap-4">
+              <button className="text-white hover:text-gray-300 transition-colors">
+                <Download className="w-5 h-5" />
+              </button>
+              <button className="text-white hover:text-gray-300 transition-colors">
+                <Share2 className="w-5 h-5" />
+              </button>
+              <button 
+                onClick={() => setIsLiked(!isLiked)}
+                className={`transition-colors ${isLiked ? 'text-red-500' : 'text-white hover:text-gray-300'}`}
+              >
+                <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
+              </button>
+              <button 
+                onClick={() => setIsBookmarked(!isBookmarked)}
+                className={`transition-colors ${isBookmarked ? 'text-blue-500' : 'text-white hover:text-gray-300'}`}
+              >
+                <Bookmark className={`w-5 h-5 ${isBookmarked ? 'fill-current' : ''}`} />
+              </button>
+              <button className="text-white hover:text-gray-300 transition-colors">
+                <Flag className="w-5 h-5" />
+              </button>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Main Video Player */}
-          <div className="lg:col-span-3">
-            <div className="mb-4">
-              {/* Quality Selector */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">الجودة:</span>
-                  <div className="flex gap-2">
-                    {['480p', 'HD', 'FHD', '4K'].map((q) => (
-                      <Button
-                        key={q}
-                        variant={quality === q.toLowerCase() ? 'default' : 'outline'}
-                        size="sm"
-                      >
-                        {q}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">السيرفر:</span>
-                  <select className="bg-background border border-input rounded px-2 py-1 text-sm">
-                    <option value="server1">السيرفر الأول</option>
-                    <option value="server2">السيرفر الثاني</option>
-                    <option value="server3">السيرفر الثالث</option>
-                  </select>
-                </div>
+        {/* Center Play Button */}
+        {!isPlaying && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <button
+              onClick={togglePlay}
+              className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
+            >
+              <Play className="w-8 h-8 text-white fill-white" />
+            </button>
+          </div>
+        )}
+
+        {/* Bottom Controls */}
+        <div 
+          className={`absolute bottom-0 left-0 right-0 p-4 transition-opacity duration-300 ${
+            showControls ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          {/* Progress Bar */}
+          <div className="mb-4">
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={progress}
+              onChange={handleProgressChange}
+              className="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
+            />
+          </div>
+
+          {/* Main Controls */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={togglePlay}
+                className="text-white hover:text-gray-300 transition-colors"
+              >
+                {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
+              </button>
+              
+              <button
+                onClick={() => skip(-10)}
+                className="text-white hover:text-gray-300 transition-colors"
+              >
+                <SkipBack className="w-5 h-5" />
+              </button>
+              
+              <button
+                onClick={() => skip(10)}
+                className="text-white hover:text-gray-300 transition-colors"
+              >
+                <SkipForward className="w-5 h-5" />
+              </button>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={toggleMute}
+                  className="text-white hover:text-gray-300 transition-colors"
+                >
+                  {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                </button>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={volume}
+                  onChange={handleVolumeChange}
+                  className="w-20 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
+                />
               </div>
 
-              {/* Video Player */}
-              <div className="aspect-video bg-black rounded-lg overflow-hidden">
-                <Suspense fallback={<LoadingSpinner />}>
-                  <VideoPlayer 
-                    url={movie.videoUrl}
-                    poster={movie.poster}
-                    className="w-full h-full"
-                  />
-                </Suspense>
+              <div className="text-white text-sm">
+                {formatTime(video.currentTime)} / {formatTime(video.duration)}
               </div>
             </div>
 
-            {/* Movie Description */}
-            <div className="bg-card rounded-lg border p-6 mb-6">
-              <h3 className="text-lg font-semibold mb-3">نبذة عن الفيلم</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                {movie.description}
-              </p>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setShowSubtitles(!showSubtitles)}
+                className={`transition-colors ${showSubtitles ? 'text-blue-400' : 'text-white hover:text-gray-300'}`}
+              >
+                <Subtitles className="w-5 h-5" />
+              </button>
               
-              <div className="mt-4">
-                <div className="flex flex-wrap gap-2">
-                  {movie.genre.map((genre) => (
-                    <span key={genre} className="genre-badge">
-                      {genre}
-                    </span>
+              <button
+                onClick={() => setShowSettings(!showSettings)}
+                className="text-white hover:text-gray-300 transition-colors"
+              >
+                <Settings className="w-5 h-5" />
+              </button>
+              
+              <button
+                onClick={toggleFullscreen}
+                className="text-white hover:text-gray-300 transition-colors"
+              >
+                {isFullscreen ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Settings Panel */}
+        {showSettings && (
+          <div className="absolute bottom-20 right-4 bg-gray-900 rounded-lg p-4 min-w-48">
+            <div className="space-y-4">
+              <div>
+                <h4 className="text-white font-semibold mb-2">الجودة</h4>
+                <div className="space-y-1">
+                  {video.sources.map((source) => (
+                    <button
+                      key={source.quality}
+                      onClick={() => setCurrentQuality(source.quality)}
+                      className={`w-full text-left px-2 py-1 rounded text-sm transition-colors ${
+                        currentQuality === source.quality
+                          ? 'text-blue-400 bg-blue-400/20'
+                          : 'text-gray-300 hover:text-white'
+                      }`}
+                    >
+                      {source.quality} ({source.size})
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-white font-semibold mb-2">الترجمة</h4>
+                <div className="space-y-1">
+                  {video.subtitles.map((subtitle) => (
+                    <button
+                      key={subtitle.code}
+                      onClick={() => setCurrentSubtitle(subtitle.language)}
+                      className={`w-full text-left px-2 py-1 rounded text-sm transition-colors ${
+                        currentSubtitle === subtitle.language
+                          ? 'text-blue-400 bg-blue-400/20'
+                          : 'text-gray-300 hover:text-white'
+                      }`}
+                    >
+                      {subtitle.language}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-white font-semibold mb-2">الصوت</h4>
+                <div className="space-y-1">
+                  {video.audio.map((audio) => (
+                    <button
+                      key={audio.code}
+                      onClick={() => setCurrentAudio(audio.language)}
+                      className={`w-full text-left px-2 py-1 rounded text-sm transition-colors ${
+                        currentAudio === audio.language
+                          ? 'text-blue-400 bg-blue-400/20'
+                          : 'text-gray-300 hover:text-white'
+                      }`}
+                    >
+                      {audio.language}
+                    </button>
                   ))}
                 </div>
               </div>
             </div>
+          </div>
+        )}
 
-            {/* Alternative Servers */}
-            <div className="bg-card rounded-lg border p-6">
-              <h3 className="text-lg font-semibold mb-4">سيرفرات بديلة</h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {[1, 2, 3, 4, 5, 6].map((server) => (
-                  <Button
-                    key={server}
-                    variant="outline"
-                    className="flex items-center justify-center gap-2"
-                  >
-                    <Play className="h-4 w-4" />
-                    السيرفر {server}
-                  </Button>
-                ))}
-              </div>
+        {/* Subtitles Panel */}
+        {showSubtitles && (
+          <div className="absolute bottom-20 left-4 bg-gray-900 rounded-lg p-4 min-w-48">
+            <h4 className="text-white font-semibold mb-2">الترجمة</h4>
+            <div className="space-y-1">
+              {video.subtitles.map((subtitle) => (
+                <button
+                  key={subtitle.code}
+                  onClick={() => setCurrentSubtitle(subtitle.language)}
+                  className={`w-full text-left px-2 py-1 rounded text-sm transition-colors ${
+                    currentSubtitle === subtitle.language
+                      ? 'text-blue-400 bg-blue-400/20'
+                      : 'text-gray-300 hover:text-white'
+                  }`}
+                >
+                  {subtitle.language}
+                </button>
+              ))}
             </div>
           </div>
+        )}
+      </div>
 
-          {/* Sidebar */}
-          <div className="lg:col-span-1">
-            <Suspense fallback={<LoadingSpinner />}>
-              <RelatedMovies currentMovieId={movie.id} />
-            </Suspense>
-          </div>
-        </div>
-
-        {/* Warning Notice */}
-        <div className="mt-8 p-4 bg-yellow-50 dark:bg-yellow-950/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
-          <div className="flex items-start gap-3">
-            <Flag className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
-            <div className="text-sm text-yellow-800 dark:text-yellow-200">
-              <p className="font-medium mb-1">تنبيه مهم:</p>
-              <p>
-                يُرجى عدم مشاركة روابط الموقع على وسائل التواصل الاجتماعي للحفاظ على استمرارية الخدمة.
-                في حالة عدم عمل أي رابط، يُرجى التبليغ عنه لنتمكن من إصلاحه.
-              </p>
+      {/* Related Episodes */}
+      {showRelated && (
+        <div className="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 p-4">
+          <div className="max-w-7xl mx-auto">
+            <h3 className="text-white font-semibold mb-4">الحلقات ذات الصلة</h3>
+            <div className="flex gap-4 overflow-x-auto">
+              {video.relatedEpisodes.map((episode) => (
+                <div key={episode.id} className="flex-shrink-0">
+                  <div className="relative w-48 h-28 rounded-lg overflow-hidden">
+                    <img
+                      src={episode.thumbnail}
+                      alt={episode.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                      <Play className="w-8 h-8 text-white" />
+                    </div>
+                    <div className="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
+                      {formatTime(episode.duration * 60)}
+                    </div>
+                  </div>
+                  <p className="text-white text-sm mt-2">{episode.title}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
-      </main>
+      )}
 
-      <Footer />
+      {/* Keyboard Shortcuts Info */}
+      <div className="fixed top-4 right-4 bg-black/80 text-white text-xs p-2 rounded opacity-0 hover:opacity-100 transition-opacity">
+        <div>Space: تشغيل/إيقاف</div>
+        <div>← →: تخطي 10 ثواني</div>
+        <div>M: كتم الصوت</div>
+        <div>F: ملء الشاشة</div>
+      </div>
+
+      <style jsx>{`
+        .slider::-webkit-slider-thumb {
+          appearance: none;
+          height: 16px;
+          width: 16px;
+          border-radius: 50%;
+          background: #ffffff;
+          cursor: pointer;
+        }
+        
+        .slider::-moz-range-thumb {
+          height: 16px;
+          width: 16px;
+          border-radius: 50%;
+          background: #ffffff;
+          cursor: pointer;
+          border: none;
+        }
+      `}</style>
     </div>
   )
 }

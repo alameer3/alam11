@@ -2,128 +2,159 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Search, Filter, Star, Play, Eye, Download, Heart } from 'lucide-react'
-import { IMAGES, optimizeImage } from '@/lib/images'
+import { Search, Filter, Star, Play, Eye, Download, Heart, Grid, List, Sliders } from 'lucide-react'
 
-interface Movie {
-  id: string
-  title: string
-  originalTitle?: string
-  slug: string
-  description?: string
-  poster?: string
-  rating?: number
-  year: number
-  duration: number
-  quality: string
-  views: number
-  downloads: number
-  likes: number
-  isFeatured: boolean
-  section: {
-    name: string
-    slug: string
+// بيانات تجريبية للأفلام
+const moviesData = [
+  {
+    id: 1,
+    title: "The Dark Knight",
+    originalTitle: "The Dark Knight",
+    slug: "the-dark-knight",
+    description: "فيلم أكشن وإثارة من بطولة كريستيان بيل",
+    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
+    rating: 9.0,
+    year: 2008,
+    duration: 152,
+    quality: "HD",
+    views: 1500000,
+    downloads: 500000,
+    likes: 25000,
+    isFeatured: true,
+    categories: ["Action", "Drama", "Crime"]
+  },
+  {
+    id: 2,
+    title: "Inception",
+    originalTitle: "Inception",
+    slug: "inception",
+    description: "فيلم خيال علمي من إخراج كريستوفر نولان",
+    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
+    rating: 8.8,
+    year: 2010,
+    duration: 148,
+    quality: "FHD",
+    views: 1200000,
+    downloads: 400000,
+    likes: 20000,
+    isFeatured: true,
+    categories: ["Sci-Fi", "Action", "Thriller"]
+  },
+  {
+    id: 3,
+    title: "Interstellar",
+    originalTitle: "Interstellar",
+    slug: "interstellar",
+    description: "رحلة فضائية مذهلة من بطولة ماثيو ماكونهي",
+    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
+    rating: 8.6,
+    year: 2014,
+    duration: 169,
+    quality: "4K",
+    views: 1800000,
+    downloads: 600000,
+    likes: 30000,
+    isFeatured: true,
+    categories: ["Sci-Fi", "Adventure", "Drama"]
+  },
+  {
+    id: 4,
+    title: "The Matrix",
+    originalTitle: "The Matrix",
+    slug: "the-matrix",
+    description: "فيلم ثوري في عالم الخيال العلمي",
+    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
+    rating: 8.7,
+    year: 1999,
+    duration: 136,
+    quality: "HD",
+    views: 2000000,
+    downloads: 800000,
+    likes: 35000,
+    isFeatured: false,
+    categories: ["Sci-Fi", "Action"]
+  },
+  {
+    id: 5,
+    title: "Pulp Fiction",
+    originalTitle: "Pulp Fiction",
+    slug: "pulp-fiction",
+    description: "فيلم كلاسيكي من إخراج كوينتن تارانتينو",
+    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
+    rating: 8.9,
+    year: 1994,
+    duration: 154,
+    quality: "HD",
+    views: 900000,
+    downloads: 300000,
+    likes: 15000,
+    isFeatured: false,
+    categories: ["Crime", "Drama"]
+  },
+  {
+    id: 6,
+    title: "Fight Club",
+    originalTitle: "Fight Club",
+    slug: "fight-club",
+    description: "فيلم نفسي مثير من بطولة براد بيت",
+    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
+    rating: 8.8,
+    year: 1999,
+    duration: 139,
+    quality: "FHD",
+    views: 1100000,
+    downloads: 350000,
+    likes: 18000,
+    isFeatured: false,
+    categories: ["Drama", "Thriller"]
   }
-  categories: Array<{
-    category: {
-      name: string
-      slug: string
-    }
-  }>
-}
+]
 
-interface MoviesResponse {
-  success: boolean
-  data: Movie[]
-  pagination: {
-    page: number
-    limit: number
-    total: number
-    totalPages: number
-    hasNext: boolean
-    hasPrev: boolean
-  }
-  stats: {
-    totalMovies: number
-    averageRating: number
-    totalViews: number
-    totalDownloads: number
-    totalLikes: number
-  }
-}
+const categories = ["All", "Action", "Drama", "Comedy", "Thriller", "Sci-Fi", "Crime", "Adventure"]
+const qualities = ["All", "HD", "FHD", "4K"]
+const years = ["All", "2024", "2023", "2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015", "2014", "2013", "2012", "2011", "2010", "2009", "2008", "2007", "2006", "2005", "2004", "2003", "2002", "2001", "2000", "1999", "1998", "1997", "1996", "1995", "1994", "1993", "1992", "1991", "1990"]
 
 export default function MoviesPage() {
-  const [movies, setMovies] = useState<Movie[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [search, setSearch] = useState('')
-  const [filters, setFilters] = useState({
-    category: '',
-    quality: '',
-    year: '',
-    sortBy: 'createdAt',
-    sortOrder: 'desc'
-  })
-  const [pagination, setPagination] = useState({
-    page: 1,
-    total: 0,
-    totalPages: 0,
-    hasNext: false,
-    hasPrev: false
-  })
-  const [stats, setStats] = useState({
-    totalMovies: 0,
-    averageRating: 0,
-    totalViews: 0,
-    totalDownloads: 0,
-    totalLikes: 0
-  })
+  const [movies, setMovies] = useState(moviesData)
+  const [filteredMovies, setFilteredMovies] = useState(moviesData)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('All')
+  const [selectedQuality, setSelectedQuality] = useState('All')
+  const [selectedYear, setSelectedYear] = useState('All')
+  const [sortBy, setSortBy] = useState('rating')
+  const [viewMode, setViewMode] = useState('grid')
+  const [showFilters, setShowFilters] = useState(false)
 
-  const fetchMovies = async (page = 1, searchTerm = '', filterParams = filters) => {
-    try {
-      setLoading(true)
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: '12',
-        search: searchTerm,
-        ...filterParams
-      })
-
-      const response = await fetch(`/api/movies?${params}`)
-      const data: MoviesResponse = await response.json()
-
-      if (data.success) {
-        setMovies(data.data)
-        setPagination(data.pagination)
-        setStats(data.stats)
-      } else {
-        setError('فشل في جلب الأفلام')
-      }
-    } catch (err) {
-      setError('خطأ في الاتصال بالخادم')
-    } finally {
-      setLoading(false)
-    }
-  }
-
+  // فلترة وبحث الأفلام
   useEffect(() => {
-    fetchMovies()
-  }, [])
+    let filtered = movies.filter(movie => {
+      const matchesSearch = movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          movie.description.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesCategory = selectedCategory === 'All' || movie.categories.includes(selectedCategory)
+      const matchesQuality = selectedQuality === 'All' || movie.quality === selectedQuality
+      const matchesYear = selectedYear === 'All' || movie.year.toString() === selectedYear
+      
+      return matchesSearch && matchesCategory && matchesQuality && matchesYear
+    })
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    fetchMovies(1, search, filters)
-  }
+    // ترتيب النتائج
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'rating':
+          return b.rating - a.rating
+        case 'year':
+          return b.year - a.year
+        case 'views':
+          return b.views - a.views
+        case 'title':
+          return a.title.localeCompare(b.title)
+        default:
+          return 0
+      }
+    })
 
-  const handleFilterChange = (key: string, value: string) => {
-    const newFilters = { ...filters, [key]: value }
-    setFilters(newFilters)
-    fetchMovies(1, search, newFilters)
-  }
-
-  const handlePageChange = (page: number) => {
-    fetchMovies(page, search, filters)
-  }
+    setFilteredMovies(filtered)
+  }, [movies, searchTerm, selectedCategory, selectedQuality, selectedYear, sortBy])
 
   const formatDuration = (minutes: number) => {
     const hours = Math.floor(minutes / 60)
@@ -141,258 +172,236 @@ export default function MoviesPage() {
     return num.toString()
   }
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-red-500 text-6xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-white mb-2">خطأ في التحميل</h2>
-          <p className="text-gray-400 mb-4">{error}</p>
-          <button 
-            onClick={() => fetchMovies()}
-            className="btn-primary"
-          >
-            إعادة المحاولة
-          </button>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div className="min-h-screen bg-gray-950">
-      {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-r from-blue-900/20 to-purple-900/20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl lg:text-6xl font-bold text-white mb-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 py-16">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
               الأفلام
             </h1>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              اكتشف مجموعة ضخمة من أحدث الأفلام العربية والعالمية
+            <p className="text-xl text-white/90 max-w-2xl mx-auto">
+              اكتشف مجموعة ضخمة من أفضل الأفلام العربية والعالمية
             </p>
           </div>
+        </div>
+      </div>
 
-          {/* Search and Filters */}
-          <div className="max-w-4xl mx-auto mb-8">
-            <form onSubmit={handleSearch} className="mb-6">
-              <div className="relative">
-                <Search className="absolute left-3 rtl:right-3 rtl:left-auto top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="البحث في الأفلام..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-10 rtl:pr-10 rtl:pl-3 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none"
-                />
-              </div>
-            </form>
-
-            {/* Filters */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <select
-                value={filters.category}
-                onChange={(e) => handleFilterChange('category', e.target.value)}
-                className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-blue-500 focus:outline-none"
-              >
-                <option value="">جميع التصنيفات</option>
-                <option value="action">أكشن</option>
-                <option value="drama">دراما</option>
-                <option value="comedy">كوميدي</option>
-                <option value="thriller">إثارة</option>
-              </select>
-
-              <select
-                value={filters.quality}
-                onChange={(e) => handleFilterChange('quality', e.target.value)}
-                className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-blue-500 focus:outline-none"
-              >
-                <option value="">جميع الجودات</option>
-                <option value="HD">HD</option>
-                <option value="FHD">FHD</option>
-                <option value="4K">4K</option>
-              </select>
-
-              <select
-                value={filters.year}
-                onChange={(e) => handleFilterChange('year', e.target.value)}
-                className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-blue-500 focus:outline-none"
-              >
-                <option value="">جميع السنوات</option>
-                {Array.from({ length: 10 }, (_, i) => 2024 - i).map(year => (
-                  <option key={year} value={year}>{year}</option>
-                ))}
-              </select>
-
-              <select
-                value={`${filters.sortBy}-${filters.sortOrder}`}
-                onChange={(e) => {
-                  const [sortBy, sortOrder] = e.target.value.split('-')
-                  handleFilterChange('sortBy', sortBy)
-                  handleFilterChange('sortOrder', sortOrder)
-                }}
-                className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-blue-500 focus:outline-none"
-              >
-                <option value="createdAt-desc">الأحدث</option>
-                <option value="rating-desc">الأعلى تقييماً</option>
-                <option value="views-desc">الأكثر مشاهدة</option>
-                <option value="year-desc">الأحدث إنتاجاً</option>
-              </select>
-            </div>
+      {/* Search and Filters */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="bg-gray-800 rounded-xl p-6 mb-8">
+          {/* Search Bar */}
+          <div className="relative mb-6">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="ابحث عن فيلم..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-white">{stats.totalMovies}</div>
-              <div className="text-gray-400 text-sm">فيلم</div>
+          {/* Filters */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {categories.map(category => (
+                <option key={category} value={category}>
+                  {category === 'All' ? 'جميع التصنيفات' : category}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={selectedQuality}
+              onChange={(e) => setSelectedQuality(e.target.value)}
+              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {qualities.map(quality => (
+                <option key={quality} value={quality}>
+                  {quality === 'All' ? 'جميع الجودات' : quality}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {years.map(year => (
+                <option key={year} value={year}>
+                  {year === 'All' ? 'جميع السنوات' : year}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="rating">الأعلى تقييماً</option>
+              <option value="year">الأحدث</option>
+              <option value="views">الأكثر مشاهدة</option>
+              <option value="title">حسب العنوان</option>
+            </select>
+          </div>
+
+          {/* View Mode Toggle */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-400'}`}
+              >
+                <Grid className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                className={`p-2 rounded ${viewMode === 'list' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-400'}`}
+              >
+                <List className="w-5 h-5" />
+              </button>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-white">{stats.averageRating?.toFixed(1) || '0'}</div>
-              <div className="text-gray-400 text-sm">متوسط التقييم</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-white">{formatNumber(stats.totalViews)}</div>
-              <div className="text-gray-400 text-sm">مشاهدة</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-white">{formatNumber(stats.totalDownloads)}</div>
-              <div className="text-gray-400 text-sm">تحميل</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-white">{formatNumber(stats.totalLikes)}</div>
-              <div className="text-gray-400 text-sm">إعجاب</div>
+
+            <div className="text-gray-400">
+              {filteredMovies.length} فيلم
             </div>
           </div>
         </div>
-      </section>
 
-      {/* Movies Grid */}
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          {loading ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-              {Array.from({ length: 12 }).map((_, i) => (
-                <div key={i} className="animate-pulse">
-                  <div className="bg-gray-800 rounded-lg aspect-[2/3] mb-3"></div>
-                  <div className="h-4 bg-gray-800 rounded mb-2"></div>
-                  <div className="h-3 bg-gray-800 rounded w-1/2"></div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <>
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-                {movies.map((movie) => (
-                  <Link key={movie.id} href={`/movie/${movie.slug}`}>
-                    <div className="group card-hover">
-                      <div className="relative aspect-[2/3] overflow-hidden rounded-lg">
-                        <img
-                          src={movie.poster || optimizeImage(IMAGES.featured.movie1, 300, 450)}
-                          alt={movie.title}
-                          className="w-full h-full object-cover image-hover"
-                        />
-                        
-                        {/* Rating Badge */}
-                        {movie.rating && (
-                          <div className="absolute top-2 right-2 rtl:left-2 rtl:right-auto">
-                            <div className="inline-flex items-center rounded-md px-2 py-1 text-xs font-semibold bg-black/70 text-yellow-500">
-                              <Star className="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" />
-                              {movie.rating}
-                            </div>
-                          </div>
-                        )}
+        {/* Movies Grid/List */}
+        {viewMode === 'grid' ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+            {filteredMovies.map((movie) => (
+              <Link 
+                key={movie.id}
+                href={`/movie/${movie.slug}`}
+                className="group relative overflow-hidden rounded-xl bg-gray-800 hover:bg-gray-700 transition-all duration-300 transform hover:scale-105"
+              >
+                <div className="relative aspect-[2/3] overflow-hidden">
+                  <img
+                    src={movie.poster}
+                    alt={movie.title}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                  
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                  
+                  {/* Rating Badge */}
+                  <div className="absolute top-2 right-2 bg-yellow-500 text-black px-2 py-1 rounded text-xs font-bold">
+                    {movie.rating}
+                  </div>
 
-                        {/* Quality Badge */}
-                        <div className="absolute bottom-2 left-2 rtl:right-2 rtl:left-auto">
-                          <div className="inline-flex items-center rounded-md px-2 py-1 text-xs font-semibold bg-white/90 text-gray-900">
-                            {movie.quality}
-                          </div>
-                        </div>
+                  {/* Quality Badge */}
+                  <div className="absolute bottom-2 left-2 bg-white/90 text-black px-2 py-1 rounded text-xs font-bold">
+                    {movie.quality}
+                  </div>
 
-                        {/* Play Overlay */}
-                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                          <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-full flex items-center justify-center">
-                            <Play className="w-6 h-6 text-white" />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mt-3">
-                        <h3 className="font-semibold text-white mb-1 line-clamp-2 group-hover:text-blue-400 transition-colors">
-                          {movie.title}
-                        </h3>
-                        <div className="flex items-center justify-between text-sm text-gray-400">
-                          <span>{movie.year}</span>
-                          <span>{formatDuration(movie.duration)}</span>
-                        </div>
-                        
-                        {/* Stats */}
-                        <div className="flex items-center space-x-2 rtl:space-x-reverse mt-2 text-xs text-gray-500">
-                          <div className="flex items-center">
-                            <Eye className="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" />
-                            {formatNumber(movie.views)}
-                          </div>
-                          <div className="flex items-center">
-                            <Download className="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" />
-                            {formatNumber(movie.downloads)}
-                          </div>
-                          <div className="flex items-center">
-                            <Heart className="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" />
-                            {formatNumber(movie.likes)}
-                          </div>
-                        </div>
-                      </div>
+                  {/* Play Button */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                      <Play className="w-6 h-6 text-white" fill="white" />
                     </div>
-                  </Link>
-                ))}
-              </div>
-
-              {/* Pagination */}
-              {pagination.totalPages > 1 && (
-                <div className="flex justify-center mt-8">
-                  <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                    {pagination.hasPrev && (
-                      <button
-                        onClick={() => handlePageChange(pagination.page - 1)}
-                        className="px-3 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors"
-                      >
-                        السابق
-                      </button>
-                    )}
-                    
-                    {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
-                      const page = i + 1
-                      return (
-                        <button
-                          key={page}
-                          onClick={() => handlePageChange(page)}
-                          className={`px-3 py-2 rounded-lg transition-colors ${
-                            page === pagination.page
-                              ? 'bg-blue-600 text-white'
-                              : 'bg-gray-800 text-white hover:bg-gray-700'
-                          }`}
-                        >
-                          {page}
-                        </button>
-                      )
-                    })}
-                    
-                    {pagination.hasNext && (
-                      <button
-                        onClick={() => handlePageChange(pagination.page + 1)}
-                        className="px-3 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors"
-                      >
-                        التالي
-                      </button>
-                    )}
                   </div>
                 </div>
-              )}
-            </>
-          )}
-        </div>
-      </section>
+
+                <div className="p-3">
+                  <h3 className="text-white font-semibold text-sm mb-1 line-clamp-2">
+                    {movie.title}
+                  </h3>
+                  <div className="flex items-center justify-between text-gray-400 text-xs">
+                    <span>{movie.year}</span>
+                    <span>{formatDuration(movie.duration)}</span>
+                  </div>
+                  
+                  {/* Stats */}
+                  <div className="flex items-center space-x-2 mt-2 text-xs text-gray-500">
+                    <div className="flex items-center">
+                      <Eye className="w-3 h-3 mr-1" />
+                      {formatNumber(movie.views)}
+                    </div>
+                    <div className="flex items-center">
+                      <Download className="w-3 h-3 mr-1" />
+                      {formatNumber(movie.downloads)}
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {filteredMovies.map((movie) => (
+              <Link 
+                key={movie.id}
+                href={`/movie/${movie.slug}`}
+                className="group flex items-center space-x-4 bg-gray-800 rounded-xl p-4 hover:bg-gray-700 transition-all duration-300"
+              >
+                <div className="relative w-20 h-28 flex-shrink-0">
+                  <img
+                    src={movie.poster}
+                    alt={movie.title}
+                    className="w-full h-full object-cover rounded"
+                  />
+                  <div className="absolute top-1 right-1 bg-yellow-500 text-black px-1 py-0.5 rounded text-xs font-bold">
+                    {movie.rating}
+                  </div>
+                </div>
+
+                <div className="flex-1">
+                  <h3 className="text-white font-semibold text-lg mb-1">{movie.title}</h3>
+                  <p className="text-gray-400 text-sm mb-2 line-clamp-2">{movie.description}</p>
+                  
+                  <div className="flex items-center space-x-4 text-sm text-gray-400">
+                    <span>{movie.year}</span>
+                    <span>{formatDuration(movie.duration)}</span>
+                    <span className="bg-gray-700 px-2 py-1 rounded">{movie.quality}</span>
+                    <span>{movie.categories.join(', ')}</span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col items-end space-y-2">
+                  <div className="flex items-center space-x-2 text-xs text-gray-500">
+                    <div className="flex items-center">
+                      <Eye className="w-3 h-3 mr-1" />
+                      {formatNumber(movie.views)}
+                    </div>
+                    <div className="flex items-center">
+                      <Download className="w-3 h-3 mr-1" />
+                      {formatNumber(movie.downloads)}
+                    </div>
+                    <div className="flex items-center">
+                      <Heart className="w-3 h-3 mr-1" />
+                      {formatNumber(movie.likes)}
+                    </div>
+                  </div>
+                  
+                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition-colors">
+                    مشاهدة
+                  </button>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+
+        {/* No Results */}
+        {filteredMovies.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-gray-400 text-6xl mb-4">🎬</div>
+            <h3 className="text-xl font-semibold text-white mb-2">لا توجد نتائج</h3>
+            <p className="text-gray-400">جرب تغيير معايير البحث</p>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
