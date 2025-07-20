@@ -87,8 +87,8 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// GET /api/search/suggestions - اقتراحات البحث
-export async function getSearchSuggestions(query: string): Promise<string[]> {
+// اقتراحات البحث - دالة مساعدة داخلية
+async function getSearchSuggestions(query: string): Promise<string[]> {
   try {
     // يمكن تحسين هذا لاحقاً بناءً على تاريخ البحث والشعبية
     const popularSearches = await SearchModel.getPopularSearches(10)

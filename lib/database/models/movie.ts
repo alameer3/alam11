@@ -399,6 +399,63 @@ export class MovieModel extends BaseModel {
   }
 
   /**
+   * الحصول على أحدث الأفلام
+   */
+  static async getLatest(limit: number = 10): Promise<MovieWithDetails[]> {
+    const sql = `
+      SELECT 
+        m.*,
+        s.name as section_name, s.slug as section_slug,
+        c.name as country_name, c.code as country_code, c.flag as country_flag,
+        l.name as language_name, l.code as language_code,
+        q.name as quality_name, q.resolution as quality_resolution
+      FROM movies m
+      LEFT JOIN sections s ON m.section_id = s.id
+      LEFT JOIN countries c ON m.country_id = c.id
+      LEFT JOIN languages l ON m.language_id = l.id
+      LEFT JOIN qualities q ON m.quality_id = q.id
+      WHERE m.is_active = 1
+      ORDER BY m.created_at DESC, m.id DESC
+      LIMIT ?
+    `
+
+    const movies = await query<any>(sql, [limit])
+    
+    const moviesWithDetails: MovieWithDetails[] = []
+    for (const movie of movies) {
+      const movieWithDetails: MovieWithDetails = {
+        ...movie,
+        section: movie.section_name ? {
+          id: movie.section_id,
+          name: movie.section_name,
+          slug: movie.section_slug
+        } : undefined,
+        country: movie.country_name ? {
+          id: movie.country_id,
+          name: movie.country_name,
+          code: movie.country_code,
+          flag: movie.country_flag
+        } : undefined,
+        language: movie.language_name ? {
+          id: movie.language_id,
+          name: movie.language_name,
+          code: movie.language_code
+        } : undefined,
+        quality: movie.quality_name ? {
+          id: movie.quality_id,
+          name: movie.quality_name,
+          resolution: movie.quality_resolution
+        } : undefined
+      }
+
+      movieWithDetails.categories = await this.getMovieCategories(movie.id)
+      moviesWithDetails.push(movieWithDetails)
+    }
+
+    return moviesWithDetails
+  }
+
+  /**
    * الحصول على تصنيفات الفيلم
    */
   private static async getMovieCategories(movieId: number) {
