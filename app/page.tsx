@@ -2,11 +2,14 @@ import { MainHeader } from '@/components/layout/main-header'
 import { MainMenu } from '@/components/layout/main-menu'
 import { SearchBox } from '@/components/layout/search-box'
 import { Footer } from '@/components/layout/footer'
+import { AdSystem } from '@/components/ads/ad-system'
 import Link from 'next/link'
 
 export default function HomePage() {
   return (
-    <div dir="rtl" className="header-fixed body-home min-h-screen">
+    <div dir="rtl" className="header-fixed body-home min-h-screen" style={{ 
+      background: 'linear-gradient(to bottom, rgba(0, 0, 0, .55), #000 100%), url(/images/home-bg.webp)' 
+    }}>
       <span className="site-overlay"></span>
       
       {/* القائمة الجانبية */}
@@ -30,7 +33,7 @@ export default function HomePage() {
             {/* الزر الدائري المركزي مطابق للأصل */}
             <div className="home-site-btn-container mt-5">
               <h1>
-                <Link href="/ones" className="link" style={{
+                <Link href="/main" className="link" style={{
                   position: 'absolute',
                   top: 0,
                   right: 0,
@@ -48,163 +51,134 @@ export default function HomePage() {
                   transition: 'background-position 5s',
                   width: '300px',
                   height: '300px',
+                  margin: '0 auto',
                   borderRadius: '50%',
+                  position: 'relative',
                   display: 'flex',
-                  flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  margin: '0 auto',
-                  position: 'relative',
-                  cursor: 'pointer',
-                  backgroundColor: '#26baee',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  border: '4px solid rgba(255, 255, 255, 0.2)',
-                  boxShadow: '0 10px 30px rgba(38, 186, 238, 0.3)',
-                  overflow: 'hidden'
+                  flexDirection: 'column',
+                  backgroundColor: '#2a2a2a',
+                  border: '3px solid #ff6b35'
                 }}
               >
-                {/* شعار اكوام */}
-                <span className="logo mb-3">
-                  <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    width="87px" 
-                    height="80px"
-                    viewBox="0 0 87 80"
-                    className="drop-shadow-lg"
-                  >
-                    <path 
-                      fillRule="evenodd" 
-                      fill="rgb(255, 255, 255)"
-                      d="M68.479,46.753 L55.101,55.064 L59.686,64.395 L26.302,64.395 L43.500,33.248 L48.558,41.524 L61.642,34.285 L43.500,-0.001 L0.000,80.001 L87.000,80.001 L68.479,46.753 Z"
-                    />
+                <span className="logo mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="87px" height="80px">
+                    <path fillRule="evenodd" fill="rgb(255, 255, 255)"
+                      d="M68.479,46.753 L55.101,55.064 L59.686,64.395 L26.302,64.395 L43.500,33.248 L48.558,41.524 L61.642,34.285 L43.500,-0.001 L0.000,80.001 L87.000,80.001 L68.479,46.753 Z"/>
                   </svg>
                 </span>
-                
-                {/* النص */}
-                <span className="text text-white font-bold text-xl text-center leading-tight">
-                  الصفحة الرئيسية
-                </span>
-                
-                {/* تأثير الإضاءة */}
-                <div className="absolute inset-0 rounded-full shimmer-effect"></div>
+                <span className="text font-size-20 font-weight-medium text-white">الصفحة الرئيسية</span>
               </div>
             </div>
-            
-            {/* شريط البحث الرئيسي */}
-            <div className="widget-2 widget mb-4 mt-8">
-              <div className="widget-body">
+
+            {/* صندوق البحث والقوائم الرئيسية */}
+            <div className="widget-2 widget mb-4">
+              <div className="widget-body row">
                 <div className="col-lg-8 mx-auto">
-                  <form 
-                    className="form d-flex no-gutters mb-20 max-w-4xl mx-auto" 
-                    action="/search" 
-                    method="get"
-                  >
-                    <div className="flex-1 relative">
+                  <form className="form d-flex no-gutters mb-4" action="/search" method="get">
+                    <div className="col pr-3">
                       <input 
                         type="text" 
-                        className="form-control w-full px-6 py-4 text-lg bg-white/10 backdrop-blur-sm border border-white/20 rounded-r-lg text-white placeholder-gray-300 focus:outline-none focus:border-[#26baee] focus:bg-white/20 transition-all"
+                        className="form-control bg-gray-800 border-gray-600 text-white text-right"
                         id="widget2SearchInput" 
                         name="q"
                         placeholder="ابحث عن فيلم او مسلسل او لعبة او برنامج ..."
-                        style={{ fontFamily: 'akoam, Inter, sans-serif' }}
+                        style={{ 
+                          borderRadius: '6px 0 0 6px',
+                          padding: '12px 16px',
+                          fontSize: '16px',
+                          border: '1px solid #444'
+                        }}
                       />
                     </div>
-                    <div>
+                    <div className="col-auto">
                       <button 
                         type="submit" 
-                        className="btn btn-orange px-8 py-4 bg-[#26baee] hover:bg-[#1fa3d1] text-white font-bold rounded-l-lg transition-all duration-300 hover:shadow-lg"
-                        style={{ fontFamily: 'akoam, Inter, sans-serif' }}
+                        className="btn font-weight-bold text-white px-6 py-3"
+                        style={{ 
+                          backgroundColor: '#ff6b35',
+                          borderRadius: '0 6px 6px 0',
+                          border: 'none',
+                          fontSize: '16px'
+                        }}
                       >
                         بحث
                       </button>
                     </div>
                   </form>
-                  
-                  {/* الأقسام الرئيسية */}
-                  <div className="main-categories-list mt-8">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <Link 
-                        href="/movies" 
-                        className="item block text-center text-white py-6 px-4 h-full bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-[#26baee]/50 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg group"
-                      >
-                        <div className="icn mb-3 text-4xl group-hover:scale-110 transition-transform">
-                          🎬
-                        </div>
-                        <div className="text-lg font-bold" style={{ fontFamily: 'akoam, Inter, sans-serif' }}>
-                          أفلام
-                        </div>
-                      </Link>
-                      
-                      <Link 
-                        href="/series" 
-                        className="item block text-center text-white py-6 px-4 h-full bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-[#26baee]/50 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg group"
-                      >
-                        <div className="icn mb-3 text-4xl group-hover:scale-110 transition-transform">
-                          📺
-                        </div>
-                        <div className="text-lg font-bold" style={{ fontFamily: 'akoam, Inter, sans-serif' }}>
-                          مسلسلات
-                        </div>
-                      </Link>
-                      
-                      <Link 
-                        href="/shows" 
-                        className="item block text-center text-white py-6 px-4 h-full bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-[#26baee]/50 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg group"
-                      >
-                        <div className="icn mb-3 text-4xl group-hover:scale-110 transition-transform">
-                          📡
-                        </div>
-                        <div className="text-lg font-bold" style={{ fontFamily: 'akoam, Inter, sans-serif' }}>
-                          تلفزيون
-                        </div>
-                      </Link>
-                      
-                      <Link 
-                        href="/mix" 
-                        className="item block text-center text-white py-6 px-4 h-full bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-[#26baee]/50 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg group"
-                      >
-                        <div className="icn mb-3 text-4xl group-hover:scale-110 transition-transform">
-                          🎭
-                        </div>
-                        <div className="text-lg font-bold" style={{ fontFamily: 'akoam, Inter, sans-serif' }}>
-                          منوعات
-                        </div>
-                      </Link>
+
+                  {/* القوائم الرئيسية */}
+                  <div className="main-categories-list">
+                    <div className="row">
+                      <div className="col-lg col-4">
+                        <Link href="/movies" className="item d-block text-center text-white py-4 h-100 hover:bg-gray-700 transition-colors rounded">
+                          <div className="icn mb-2">
+                            <i className="text-4xl text-orange-500">🎬</i>
+                          </div>
+                          <div className="font-size-16 font-weight-medium">أفلام</div>
+                        </Link>
+                      </div>
+                      <div className="col-lg col-4">
+                        <Link href="/series" className="item d-block text-center text-white py-4 h-100 hover:bg-gray-700 transition-colors rounded">
+                          <div className="icn mb-2">
+                            <i className="text-4xl text-orange-500">📺</i>
+                          </div>
+                          <div className="font-size-16 font-weight-medium">مسلسلات</div>
+                        </Link>
+                      </div>
+                      <div className="col-lg col-4">
+                        <Link href="/shows" className="item d-block text-center text-white py-4 h-100 hover:bg-gray-700 transition-colors rounded">
+                          <div className="icn mb-2">
+                            <i className="text-4xl text-orange-500">📡</i>
+                          </div>
+                          <div className="font-size-16 font-weight-medium">تلفزيون</div>
+                        </Link>
+                      </div>
+                      <div className="col-lg col-4">
+                        <Link href="/mix" className="item d-block text-center text-white py-4 h-100 hover:bg-gray-700 transition-colors rounded">
+                          <div className="icn mb-2">
+                            <i className="text-4xl text-orange-500">🎭</i>
+                          </div>
+                          <div className="font-size-16 font-weight-medium">منوعات</div>
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            
-            <div className="main-categories-list-end"></div>
-            
-            {/* مساحة الإعلانات */}
+
+            {/* إعلانات الصفحة الرئيسية */}
             <div className="ads mb-3">
-              <div className="text-center">
-                {/* إعلان الكمبيوتر */}
-                <div className="hidden md:block">
-                  <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-600 rounded-lg p-8 text-center">
-                    <p className="text-gray-400 text-sm">مساحة إعلانية - كمبيوتر</p>
-                    <p className="text-gray-500 text-xs">728x90</p>
-                  </div>
+              <center>
+                {/* إعلان للكمبيوتر */}
+                <div className="d-none d-md-block">
+                  <AdSystem
+                    adType="banner"
+                    placement="homepage-desktop"
+                    dimensions={{ width: 728, height: 90 }}
+                    showCloseButton={false}
+                  />
                 </div>
-                
-                {/* إعلان الجوال */}
-                <div className="md:hidden">
-                  <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-600 rounded-lg p-6 text-center">
-                    <p className="text-gray-400 text-sm">مساحة إعلانية - جوال</p>
-                    <p className="text-gray-500 text-xs">300x250</p>
-                  </div>
+
+                {/* إعلان للجوال */}
+                <div className="d-md-none">
+                  <AdSystem
+                    adType="banner"
+                    placement="homepage-mobile"
+                    dimensions={{ width: 300, height: 250 }}
+                    showCloseButton={false}
+                  />
                 </div>
-              </div>
+              </center>
             </div>
           </div>
         </div>
+
+        {/* التذييل */}
+        <Footer />
       </div>
-      
-      {/* Footer */}
-      <Footer />
     </div>
   )
 }
