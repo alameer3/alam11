@@ -1,480 +1,580 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { Search, Filter, Star, Play, Eye, Download, Heart, Grid, List, Sliders, Calendar, Users, Tv, Mic, Video, Music, Camera, Film } from 'lucide-react'
+import { Search, Filter, Grid3X3, List, Star, Eye, Calendar, Clock, Music, Video, Mic, BookOpen } from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Badge } from '@/components/ui/badge'
 
-// بيانات تجريبية للمنوعات
-const mixData = [
+interface MixContent {
+  id: string
+  title: string
+  arabicTitle: string
+  description: string
+  year: number
+  rating: number
+  views: number
+  duration: string
+  genre: string[]
+  quality: string
+  status: 'available' | 'premium' | 'new'
+  poster: string
+  backdrop: string
+  language: string
+  country: string
+  artist?: string
+  album?: string
+  author?: string
+  synopsis: string
+  type: 'music' | 'podcast' | 'audiobook' | 'documentary' | 'lecture' | 'comedy'
+}
+
+const mockMixContent: MixContent[] = [
   {
-    id: 1,
-    title: "أفضل مشاهد الأكشن 2024",
-    originalTitle: "Best Action Scenes 2024",
-    slug: "best-action-scenes-2024",
-    description: "مجموعة من أفضل مشاهد الأكشن والإثارة من أفلام 2024",
-    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
-    rating: 9.2,
-    year: 2024,
-    duration: 45,
-    quality: "4K",
-    views: 3500000,
-    downloads: 1200000,
-    likes: 75000,
-    isFeatured: true,
-    type: "مشاهد مختارة",
-    categories: ["Action", "Thriller", "Compilation"]
+    id: '1',
+    title: 'Bohemian Rhapsody',
+    arabicTitle: 'رابسودي بوهيمي',
+    description: 'One of the most iconic songs in rock music history',
+    year: 1975,
+    rating: 9.8,
+    views: 2500000,
+    duration: '5:55',
+    genre: ['Rock', 'Progressive Rock', 'Opera'],
+    quality: 'Lossless',
+    status: 'available',
+    poster: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=450&fit=crop',
+    backdrop: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1200&h=400&fit=crop',
+    language: 'English',
+    country: 'UK',
+    artist: 'Queen',
+    album: 'A Night at the Opera',
+    synopsis: 'Bohemian Rhapsody is a song by the British rock band Queen.',
+    type: 'music'
   },
   {
-    id: 2,
-    title: "أجمل أغاني الأفلام",
-    originalTitle: "Beautiful Movie Songs",
-    slug: "beautiful-movie-songs",
-    description: "أجمل الأغاني والموسيقى التصويرية من الأفلام العالمية",
-    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
-    rating: 8.8,
-    year: 2024,
-    duration: 60,
-    quality: "FHD",
-    views: 2800000,
-    downloads: 800000,
-    likes: 55000,
-    isFeatured: true,
-    type: "موسيقى",
-    categories: ["Music", "Soundtrack", "Compilation"]
-  },
-  {
-    id: 3,
-    title: "أفضل النكات في السينما",
-    originalTitle: "Best Movie Jokes",
-    slug: "best-movie-jokes",
-    description: "أطرف النكات والمشاهد الكوميدية من الأفلام والمسلسلات",
-    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
-    rating: 8.5,
-    year: 2024,
-    duration: 30,
-    quality: "HD",
-    views: 2200000,
-    downloads: 600000,
-    likes: 45000,
-    isFeatured: true,
-    type: "كوميديا",
-    categories: ["Comedy", "Funny", "Compilation"]
-  },
-  {
-    id: 4,
-    title: "أجمل مشاهد الرومانسية",
-    originalTitle: "Beautiful Romantic Scenes",
-    slug: "beautiful-romantic-scenes",
-    description: "أجمل مشاهد الحب والرومانسية من الأفلام العالمية",
-    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
-    rating: 8.7,
-    year: 2024,
-    duration: 40,
-    quality: "FHD",
+    id: '2',
+    title: 'The Joe Rogan Experience',
+    arabicTitle: 'تجربة جو روغان',
+    description: 'The most popular podcast in the world',
+    year: 2009,
+    rating: 8.9,
     views: 1800000,
-    downloads: 500000,
-    likes: 35000,
-    isFeatured: false,
-    type: "رومانسية",
-    categories: ["Romance", "Drama", "Compilation"]
+    duration: '2:30:00',
+    genre: ['Podcast', 'Interview', 'Comedy'],
+    quality: 'HD',
+    status: 'premium',
+    poster: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=450&fit=crop',
+    backdrop: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&h=400&fit=crop',
+    language: 'English',
+    country: 'USA',
+    author: 'Joe Rogan',
+    synopsis: 'The Joe Rogan Experience is a podcast hosted by American comedian Joe Rogan.',
+    type: 'podcast'
   },
   {
-    id: 5,
-    title: "أفضل مشاهد الرعب",
-    originalTitle: "Best Horror Scenes",
-    slug: "best-horror-scenes",
-    description: "أكثر مشاهد الرعب إثارة من أفلام الرعب العالمية",
-    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
-    rating: 8.3,
-    year: 2024,
-    duration: 35,
-    quality: "4K",
-    views: 1500000,
-    downloads: 400000,
-    likes: 25000,
-    isFeatured: false,
-    type: "رعب",
-    categories: ["Horror", "Thriller", "Compilation"]
-  },
-  {
-    id: 6,
-    title: "أجمل مشاهد الطبيعة",
-    originalTitle: "Beautiful Nature Scenes",
-    slug: "beautiful-nature-scenes",
-    description: "أجمل مشاهد الطبيعة والمناظر الخلابة من الأفلام الوثائقية",
-    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
-    rating: 9.0,
-    year: 2024,
-    duration: 50,
-    quality: "4K",
+    id: '3',
+    title: 'The Great Gatsby',
+    arabicTitle: 'غاتسبي العظيم',
+    description: 'A classic American novel by F. Scott Fitzgerald',
+    year: 1925,
+    rating: 9.2,
     views: 1200000,
-    downloads: 300000,
-    likes: 20000,
-    isFeatured: false,
-    type: "وثائقي",
-    categories: ["Documentary", "Nature", "Travel"]
+    duration: '8:45:00',
+    genre: ['Fiction', 'Classic', 'Drama'],
+    quality: 'HD',
+    status: 'available',
+    poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=450&fit=crop',
+    backdrop: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1200&h=400&fit=crop',
+    language: 'English',
+    country: 'USA',
+    author: 'F. Scott Fitzgerald',
+    synopsis: 'The Great Gatsby is a 1925 novel by American writer F. Scott Fitzgerald.',
+    type: 'audiobook'
+  },
+  {
+    id: '4',
+    title: 'Cosmos: A Spacetime Odyssey',
+    arabicTitle: 'الكون: رحلة عبر الزمكان',
+    description: 'A documentary series about the universe',
+    year: 2014,
+    rating: 9.4,
+    views: 3500000,
+    duration: '45:00',
+    genre: ['Documentary', 'Science', 'Educational'],
+    quality: '4K',
+    status: 'premium',
+    poster: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=450&fit=crop',
+    backdrop: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=400&fit=crop',
+    language: 'English',
+    country: 'USA',
+    author: 'Neil deGrasse Tyson',
+    synopsis: 'Cosmos: A Spacetime Odyssey is an American science documentary television series.',
+    type: 'documentary'
+  },
+  {
+    id: '5',
+    title: 'The Art of War',
+    arabicTitle: 'فن الحرب',
+    description: 'Ancient Chinese text on military strategy',
+    year: -500,
+    rating: 8.7,
+    views: 800000,
+    duration: '3:20:00',
+    genre: ['Philosophy', 'Military', 'Classic'],
+    quality: 'HD',
+    status: 'available',
+    poster: 'https://images.unsplash.com/photo-1626814026160-2237a95fc5a9?w=300&h=450&fit=crop',
+    backdrop: 'https://images.unsplash.com/photo-1626814026160-2237a95fc5a9?w=1200&h=400&fit=crop',
+    language: 'Chinese',
+    country: 'China',
+    author: 'Sun Tzu',
+    synopsis: 'The Art of War is an ancient Chinese text on military strategy.',
+    type: 'audiobook'
+  },
+  {
+    id: '6',
+    title: 'Comedy Central Stand-Up',
+    arabicTitle: 'كوميدي سنترال ستاند أب',
+    description: 'The best stand-up comedy specials',
+    year: 2023,
+    rating: 8.5,
+    views: 1500000,
+    duration: '1:15:00',
+    genre: ['Comedy', 'Stand-Up', 'Entertainment'],
+    quality: '1080p',
+    status: 'new',
+    poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=450&fit=crop',
+    backdrop: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1200&h=400&fit=crop',
+    language: 'English',
+    country: 'USA',
+    author: 'Various Comedians',
+    synopsis: 'Comedy Central Stand-Up features the best stand-up comedy specials.',
+    type: 'comedy'
+  },
+  {
+    id: '7',
+    title: 'Harvard Business Review',
+    arabicTitle: 'هارفارد بيزنس ريفيو',
+    description: 'Insights from Harvard Business School',
+    year: 2024,
+    rating: 8.9,
+    views: 900000,
+    duration: '45:00',
+    genre: ['Business', 'Education', 'Leadership'],
+    quality: 'HD',
+    status: 'premium',
+    poster: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=450&fit=crop',
+    backdrop: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&h=400&fit=crop',
+    language: 'English',
+    country: 'USA',
+    author: 'Harvard Business School',
+    synopsis: 'Harvard Business Review provides insights from Harvard Business School.',
+    type: 'lecture'
+  },
+  {
+    id: '8',
+    title: 'Pink Floyd - Dark Side of the Moon',
+    arabicTitle: 'بينك فلويد - الجانب المظلم من القمر',
+    description: 'One of the greatest albums ever recorded',
+    year: 1973,
+    rating: 9.6,
+    views: 3200000,
+    duration: '42:50',
+    genre: ['Rock', 'Progressive Rock', 'Psychedelic'],
+    quality: 'Lossless',
+    status: 'available',
+    poster: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=450&fit=crop',
+    backdrop: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1200&h=400&fit=crop',
+    language: 'English',
+    country: 'UK',
+    artist: 'Pink Floyd',
+    album: 'The Dark Side of the Moon',
+    synopsis: 'The Dark Side of the Moon is the eighth studio album by English rock band Pink Floyd.',
+    type: 'music'
   }
 ]
 
-const categories = ["All", "Action", "Comedy", "Romance", "Horror", "Music", "Documentary", "Compilation", "Thriller", "Drama"]
-const qualities = ["All", "HD", "FHD", "4K"]
-const years = ["All", "2024", "2023", "2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015", "2014", "2013", "2012", "2011", "2010", "2009", "2008", "2007", "2006", "2005", "2004", "2003", "2002", "2001", "2000", "1999", "1998", "1997", "1996", "1995", "1994", "1993", "1992", "1991", "1990"]
-const types = ["All", "مشاهد مختارة", "موسيقى", "كوميديا", "رومانسية", "رعب", "وثائقي", "مقابلات", "خلف الكواليس"]
-
 export default function MixPage() {
-  const [mixes, setMixes] = useState(mixData)
-  const [filteredMixes, setFilteredMixes] = useState(mixData)
+  const [content, setContent] = useState<MixContent[]>(mockMixContent)
+  const [filteredContent, setFilteredContent] = useState<MixContent[]>(mockMixContent)
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('All')
-  const [selectedQuality, setSelectedQuality] = useState('All')
-  const [selectedYear, setSelectedYear] = useState('All')
-  const [selectedType, setSelectedType] = useState('All')
+  const [selectedGenre, setSelectedGenre] = useState('all')
+  const [selectedYear, setSelectedYear] = useState('all')
+  const [selectedQuality, setSelectedQuality] = useState('all')
+  const [selectedStatus, setSelectedStatus] = useState('all')
+  const [selectedType, setSelectedType] = useState('all')
   const [sortBy, setSortBy] = useState('rating')
-  const [viewMode, setViewMode] = useState('grid')
-  const [showFilters, setShowFilters] = useState(false)
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [isLoading, setIsLoading] = useState(false)
 
-  // فلترة وبحث المنوعات
+  const genres = ['all', ...Array.from(new Set(content.flatMap(c => c.genre)))]
+  const years = ['all', ...Array.from(new Set(content.map(c => c.year.toString())))]
+  const qualities = ['all', ...Array.from(new Set(content.map(c => c.quality)))]
+  const statuses = ['all', 'available', 'premium', 'new']
+  const types = ['all', 'music', 'podcast', 'audiobook', 'documentary', 'lecture', 'comedy']
+
   useEffect(() => {
-    let filtered = mixes.filter(mix => {
-      const matchesSearch = mix.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          mix.description.toLowerCase().includes(searchTerm.toLowerCase())
-      const matchesCategory = selectedCategory === 'All' || mix.categories.includes(selectedCategory)
-      const matchesQuality = selectedQuality === 'All' || mix.quality === selectedQuality
-      const matchesYear = selectedYear === 'All' || mix.year.toString() === selectedYear
-      const matchesType = selectedType === 'All' || mix.type === selectedType
+    setIsLoading(true)
+    
+    let filtered = content.filter(item => {
+      const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           item.arabicTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           item.description.toLowerCase().includes(searchTerm.toLowerCase())
       
-      return matchesSearch && matchesCategory && matchesQuality && matchesYear && matchesType
+      const matchesGenre = selectedGenre === 'all' || item.genre.includes(selectedGenre)
+      const matchesYear = selectedYear === 'all' || item.year.toString() === selectedYear
+      const matchesQuality = selectedQuality === 'all' || item.quality === selectedQuality
+      const matchesStatus = selectedStatus === 'all' || item.status === selectedStatus
+      const matchesType = selectedType === 'all' || item.type === selectedType
+      
+      return matchesSearch && matchesGenre && matchesYear && matchesQuality && matchesStatus && matchesType
     })
 
-    // ترتيب النتائج
+    // Sort filtered results
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'rating':
           return b.rating - a.rating
-        case 'year':
-          return b.year - a.year
         case 'views':
           return b.views - a.views
+        case 'year':
+          return b.year - a.year
         case 'title':
           return a.title.localeCompare(b.title)
-        case 'duration':
-          return b.duration - a.duration
         default:
           return 0
       }
     })
 
-    setFilteredMixes(filtered)
-  }, [mixes, searchTerm, selectedCategory, selectedQuality, selectedYear, selectedType, sortBy])
+    setFilteredContent(filtered)
+    
+    // Simulate loading delay
+    setTimeout(() => setIsLoading(false), 300)
+  }, [searchTerm, selectedGenre, selectedYear, selectedQuality, selectedStatus, selectedType, sortBy, content])
 
-  const formatDuration = (minutes: number) => {
-    const hours = Math.floor(minutes / 60)
-    const mins = minutes % 60
-    return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'available': return 'bg-green-100 text-green-800'
+      case 'premium': return 'bg-yellow-100 text-yellow-800'
+      case 'new': return 'bg-blue-100 text-blue-800'
+      default: return 'bg-gray-100 text-gray-800'
+    }
   }
 
-  const formatNumber = (num: number) => {
-    if (num >= 1000000) {
-      return (num / 1000000).toFixed(1) + 'M'
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'available': return 'متاح'
+      case 'premium': return 'مميز'
+      case 'new': return 'جديد'
+      default: return status
     }
-    if (num >= 1000) {
-      return (num / 1000).toFixed(1) + 'K'
+  }
+
+  const getTypeText = (type: string) => {
+    switch (type) {
+      case 'music': return 'موسيقى'
+      case 'podcast': return 'بودكاست'
+      case 'audiobook': return 'كتاب صوتي'
+      case 'documentary': return 'وثائقي'
+      case 'lecture': return 'محاضرة'
+      case 'comedy': return 'كوميدي'
+      default: return type
     }
-    return num.toString()
   }
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'مشاهد مختارة':
-        return <Film className="w-4 h-4" />
-      case 'موسيقى':
-        return <Music className="w-4 h-4" />
-      case 'كوميديا':
-        return <Tv className="w-4 h-4" />
-      case 'رومانسية':
-        return <Heart className="w-4 h-4" />
-      case 'رعب':
-        return <Camera className="w-4 h-4" />
-      case 'وثائقي':
-        return <Video className="w-4 h-4" />
-      default:
-        return <Tv className="w-4 h-4" />
-    }
-  }
-
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'مشاهد مختارة':
-        return 'bg-red-600'
-      case 'موسيقى':
-        return 'bg-purple-600'
-      case 'كوميديا':
-        return 'bg-yellow-600'
-      case 'رومانسية':
-        return 'bg-pink-600'
-      case 'رعب':
-        return 'bg-gray-800'
-      case 'وثائقي':
-        return 'bg-green-600'
-      default:
-        return 'bg-blue-600'
+      case 'music': return <Music className="w-4 h-4" />
+      case 'podcast': return <Mic className="w-4 h-4" />
+      case 'audiobook': return <BookOpen className="w-4 h-4" />
+      case 'documentary': return <Video className="w-4 h-4" />
+      case 'lecture': return <BookOpen className="w-4 h-4" />
+      case 'comedy': return <Mic className="w-4 h-4" />
+      default: return <Video className="w-4 h-4" />
     }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-orange-600 to-red-600 py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-              المنوعات
-            </h1>
-            <p className="text-xl text-white/90 max-w-2xl mx-auto">
-              اكتشف مجموعة متنوعة من المشاهد المختارة والموسيقى والكوميديا
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Hero Section */}
+      <div className="relative h-64 bg-gradient-to-r from-purple-600 to-pink-600">
+        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div className="relative z-10 max-w-7xl mx-auto px-6 h-full flex items-center">
+          <div className="text-white">
+            <h1 className="text-4xl font-bold mb-4">المنوعات</h1>
+            <p className="text-xl opacity-90">
+              اكتشف الموسيقى والبودكاست والكتب الصوتية والمحتوى المتنوع
             </p>
+            <div className="mt-6 flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Eye className="w-5 h-5" />
+                <span>{content.reduce((sum, c) => sum + c.views, 0).toLocaleString()}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Music className="w-5 h-5" />
+                <span>{content.length} محتوى</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Search and Filters */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="bg-gray-800 rounded-xl p-6 mb-8">
-          {/* Search Bar */}
-          <div className="relative mb-6">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              type="text"
-              placeholder="ابحث في المنوعات..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            />
-          </div>
-
-          {/* Filters */}
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-            >
-              {categories.map(category => (
-                <option key={category} value={category}>
-                  {category === 'All' ? 'جميع التصنيفات' : category}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={selectedType}
-              onChange={(e) => setSelectedType(e.target.value)}
-              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-            >
-              {types.map(type => (
-                <option key={type} value={type}>
-                  {type === 'All' ? 'جميع الأنواع' : type}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={selectedQuality}
-              onChange={(e) => setSelectedQuality(e.target.value)}
-              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-            >
-              {qualities.map(quality => (
-                <option key={quality} value={quality}>
-                  {quality === 'All' ? 'جميع الجودات' : quality}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-            >
-              {years.map(year => (
-                <option key={year} value={year}>
-                  {year === 'All' ? 'جميع السنوات' : year}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-            >
-              <option value="rating">الأعلى تقييماً</option>
-              <option value="year">الأحدث</option>
-              <option value="views">الأكثر مشاهدة</option>
-              <option value="duration">الأطول مدة</option>
-              <option value="title">حسب العنوان</option>
-            </select>
-          </div>
-
-          {/* View Mode Toggle */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-orange-600 text-white' : 'bg-gray-700 text-gray-400'}`}
-              >
-                <Grid className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => setViewMode('list')}
-                className={`p-2 rounded ${viewMode === 'list' ? 'bg-orange-600 text-white' : 'bg-gray-700 text-gray-400'}`}
-              >
-                <List className="w-5 h-5" />
-              </button>
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Search and Filters */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-4">
+            {/* Search */}
+            <div className="lg:col-span-2">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Input
+                  placeholder="البحث في المنوعات..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
             </div>
 
-            <div className="text-gray-400">
-              {filteredMixes.length} منوع
+            {/* Genre Filter */}
+            <div>
+              <Select value={selectedGenre} onValueChange={setSelectedGenre}>
+                <SelectTrigger>
+                  <SelectValue placeholder="التصنيف" />
+                </SelectTrigger>
+                <SelectContent>
+                  {genres.map(genre => (
+                    <SelectItem key={genre} value={genre}>
+                      {genre === 'all' ? 'جميع التصنيفات' : genre}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Type Filter */}
+            <div>
+              <Select value={selectedType} onValueChange={setSelectedType}>
+                <SelectTrigger>
+                  <SelectValue placeholder="النوع" />
+                </SelectTrigger>
+                <SelectContent>
+                  {types.map(type => (
+                    <SelectItem key={type} value={type}>
+                      {type === 'all' ? 'جميع الأنواع' : getTypeText(type)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Year Filter */}
+            <div>
+              <Select value={selectedYear} onValueChange={setSelectedYear}>
+                <SelectTrigger>
+                  <SelectValue placeholder="السنة" />
+                </SelectTrigger>
+                <SelectContent>
+                  {years.map(year => (
+                    <SelectItem key={year} value={year}>
+                      {year === 'all' ? 'جميع السنوات' : year}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Quality Filter */}
+            <div>
+              <Select value={selectedQuality} onValueChange={setSelectedQuality}>
+                <SelectTrigger>
+                  <SelectValue placeholder="الجودة" />
+                </SelectTrigger>
+                <SelectContent>
+                  {qualities.map(quality => (
+                    <SelectItem key={quality} value={quality}>
+                      {quality === 'all' ? 'جميع الجودات' : quality}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Sort */}
+            <div>
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger>
+                  <SelectValue placeholder="الترتيب" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="rating">التقييم</SelectItem>
+                  <SelectItem value="views">المشاهدات</SelectItem>
+                  <SelectItem value="year">السنة</SelectItem>
+                  <SelectItem value="title">العنوان</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Additional Filters */}
+          <div className="mt-4 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="الحالة" />
+                </SelectTrigger>
+                <SelectContent>
+                  {statuses.map(status => (
+                    <SelectItem key={status} value={status}>
+                      {status === 'all' ? 'جميع الحالات' : getStatusText(status)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* View Mode Toggle */}
+            <div className="flex items-center gap-2">
+              <Button
+                variant={viewMode === 'grid' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setViewMode('grid')}
+              >
+                <Grid3X3 className="w-4 h-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setViewMode('list')}
+              >
+                <List className="w-4 h-4" />
+              </Button>
             </div>
           </div>
         </div>
 
-        {/* Mixes Grid/List */}
-        {viewMode === 'grid' ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-            {filteredMixes.map((mix) => (
-              <Link 
-                key={mix.id}
-                href={`/mix/${mix.slug}`}
-                className="group relative overflow-hidden rounded-xl bg-gray-800 hover:bg-gray-700 transition-all duration-300 transform hover:scale-105"
-              >
-                <div className="relative aspect-[2/3] overflow-hidden">
-                  <img
-                    src={mix.poster}
-                    alt={mix.title}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                  />
-                  
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                  
-                  {/* Rating Badge */}
-                  <div className="absolute top-2 right-2 bg-yellow-500 text-black px-2 py-1 rounded text-xs font-bold">
-                    {mix.rating}
-                  </div>
+        {/* Results Count */}
+        <div className="mb-6">
+          <p className="text-gray-600 dark:text-gray-400">
+            تم العثور على {filteredContent.length} محتوى
+          </p>
+        </div>
 
-                  {/* Quality Badge */}
-                  <div className="absolute bottom-2 left-2 bg-white/90 text-black px-2 py-1 rounded text-xs font-bold">
-                    {mix.quality}
-                  </div>
-
-                  {/* Type Badge */}
-                  <div className={`absolute top-2 left-2 ${getTypeColor(mix.type)} text-white px-2 py-1 rounded text-xs font-bold`}>
-                    {getTypeIcon(mix.type)}
-                  </div>
-
-                  {/* Play Button */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                      <Play className="w-6 h-6 text-white" fill="white" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-3">
-                  <h3 className="text-white font-semibold text-sm mb-1 line-clamp-2">
-                    {mix.title}
-                  </h3>
-                  <div className="flex items-center justify-between text-gray-400 text-xs mb-2">
-                    <span>{mix.year}</span>
-                    <span>{formatDuration(mix.duration)}</span>
-                  </div>
-                  
-                  {/* Type */}
-                  <div className="flex items-center text-gray-400 text-xs mb-2">
-                    <span>{mix.type}</span>
-                  </div>
-                  
-                  {/* Stats */}
-                  <div className="flex items-center space-x-2 text-xs text-gray-500">
-                    <div className="flex items-center">
-                      <Eye className="w-3 h-3 mr-1" />
-                      {formatNumber(mix.views)}
-                    </div>
-                    <div className="flex items-center">
-                      <Download className="w-3 h-3 mr-1" />
-                      {formatNumber(mix.downloads)}
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
+        {/* Loading State */}
+        {isLoading && (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
           </div>
-        ) : (
-          <div className="space-y-4">
-            {filteredMixes.map((mix) => (
-              <Link 
-                key={mix.id}
-                href={`/mix/${mix.slug}`}
-                className="group flex items-center space-x-4 bg-gray-800 rounded-xl p-4 hover:bg-gray-700 transition-all duration-300"
-              >
-                <div className="relative w-20 h-28 flex-shrink-0">
+        )}
+
+        {/* Content Grid/List */}
+        {!isLoading && (
+          <div className={viewMode === 'grid' 
+            ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
+            : 'space-y-4'
+          }>
+            {filteredContent.map((item) => (
+              <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                <div className="relative">
                   <img
-                    src={mix.poster}
-                    alt={mix.title}
-                    className="w-full h-full object-cover rounded"
+                    src={item.poster}
+                    alt={item.title}
+                    className={`w-full object-cover ${viewMode === 'grid' ? 'h-64' : 'h-32'}`}
                   />
-                  <div className="absolute top-1 right-1 bg-yellow-500 text-black px-1 py-0.5 rounded text-xs font-bold">
-                    {mix.rating}
+                  <div className="absolute top-2 right-2">
+                    <Badge variant="secondary" className="bg-black bg-opacity-75 text-white">
+                      {item.quality}
+                    </Badge>
                   </div>
-                  <div className={`absolute bottom-1 left-1 ${getTypeColor(mix.type)} text-white px-1 py-0.5 rounded text-xs font-bold`}>
-                    {getTypeIcon(mix.type)}
+                  <div className="absolute top-2 left-2">
+                    <Badge className={getStatusColor(item.status)}>
+                      {getStatusText(item.status)}
+                    </Badge>
+                  </div>
+                  <div className="absolute bottom-2 left-2 flex items-center gap-1">
+                    <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                    <span className="text-white text-sm font-medium">{item.rating}</span>
+                  </div>
+                  <div className="absolute bottom-2 right-2">
+                    <Badge variant="outline" className="bg-white bg-opacity-90 text-black text-xs flex items-center gap-1">
+                      {getTypeIcon(item.type)}
+                      {getTypeText(item.type)}
+                    </Badge>
                   </div>
                 </div>
-
-                <div className="flex-1">
-                  <h3 className="text-white font-semibold text-lg mb-1">{mix.title}</h3>
-                  <p className="text-gray-400 text-sm mb-2 line-clamp-2">{mix.description}</p>
-                  
-                  <div className="flex items-center space-x-4 text-sm text-gray-400 mb-2">
-                    <span>{mix.year}</span>
-                    <span>{formatDuration(mix.duration)}</span>
-                    <span className="bg-gray-700 px-2 py-1 rounded">{mix.quality}</span>
-                    <span>{mix.type}</span>
-                    <span>{mix.categories.join(', ')}</span>
+                
+                <CardContent className="p-4">
+                  <div className={viewMode === 'list' ? 'flex items-center gap-4' : ''}>
+                    {viewMode === 'list' && (
+                      <img
+                        src={item.poster}
+                        alt={item.title}
+                        className="w-16 h-24 object-cover rounded"
+                      />
+                    )}
+                    
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-lg mb-1 line-clamp-1">
+                        {item.arabicTitle}
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">
+                        {item.description}
+                      </p>
+                      
+                      <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4" />
+                          <span>{item.year}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-4 h-4" />
+                          <span>{item.duration}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Eye className="w-4 h-4" />
+                          <span>{item.views.toLocaleString()}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        {item.genre.slice(0, 2).map((genre, index) => (
+                          <Badge key={index} variant="outline" className="text-xs">
+                            {genre}
+                          </Badge>
+                        ))}
+                      </div>
+                      
+                      {viewMode === 'list' && item.artist && (
+                        <div className="mt-2 text-sm text-gray-500">
+                          <span className="font-medium">الفنان:</span> {item.artist}
+                        </div>
+                      )}
+                      
+                      {viewMode === 'list' && item.author && (
+                        <div className="mt-2 text-sm text-gray-500">
+                          <span className="font-medium">المؤلف:</span> {item.author}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-
-                <div className="flex flex-col items-end space-y-2">
-                  <div className="flex items-center space-x-2 text-xs text-gray-500">
-                    <div className="flex items-center">
-                      <Eye className="w-3 h-3 mr-1" />
-                      {formatNumber(mix.views)}
-                    </div>
-                    <div className="flex items-center">
-                      <Download className="w-3 h-3 mr-1" />
-                      {formatNumber(mix.downloads)}
-                    </div>
-                    <div className="flex items-center">
-                      <Heart className="w-3 h-3 mr-1" />
-                      {formatNumber(mix.likes)}
-                    </div>
-                  </div>
-                  
-                  <button className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm transition-colors">
-                    مشاهدة
-                  </button>
-                </div>
-              </Link>
+                </CardContent>
+              </Card>
             ))}
           </div>
         )}
 
         {/* No Results */}
-        {filteredMixes.length === 0 && (
+        {!isLoading && filteredContent.length === 0 && (
           <div className="text-center py-12">
-            <div className="text-gray-400 text-6xl mb-4">🎬</div>
-            <h3 className="text-xl font-semibold text-white mb-2">لا توجد نتائج</h3>
-            <p className="text-gray-400">جرب تغيير معايير البحث</p>
+            <div className="text-gray-400 mb-4">
+              <Search className="w-16 h-16 mx-auto" />
+            </div>
+            <h3 className="text-lg font-semibold mb-2">لم يتم العثور على نتائج</h3>
+            <p className="text-gray-600 dark:text-gray-400">
+              جرب تغيير معايير البحث أو الفلترة
+            </p>
           </div>
         )}
       </div>
