@@ -121,13 +121,22 @@ const years = ["All", "2024", "2023", "2022", "2021", "2020", "2019", "2018", "2
 export default function MoviesPage() {
   const [movies, setMovies] = useState(moviesData)
   const [filtered, setFiltered] = useState(moviesData)
+  const [filters, setFilters] = useState({ category: 'all', quality: 'all', year: 'all' })
   const [page, setPage] = useState(1)
   const perPage = 18
 
   // فلترة وبحث الأفلام
   useEffect(() => {
-    setFiltered(movies)
-  }, [movies])
+    // apply filters whenever movies or filters change
+    let list = movies.filter((m) => {
+      const catOk = filters.category === 'all' || m.categories.includes(filters.category)
+      const qualOk = filters.quality === 'all' || m.quality === filters.quality
+      const yearOk = filters.year === 'all' || m.year.toString() === filters.year
+      return catOk && qualOk && yearOk
+    })
+    setFiltered(list)
+    setPage(1)
+  }, [movies, filters])
 
   // Filter options
   const categoryOptions = [{ label: 'الكل', value: 'all' }, ...categories.map((c) => ({ label: c, value: c }))]
@@ -151,7 +160,7 @@ export default function MoviesPage() {
           categories={categoryOptions}
           qualities={qualityOptions}
           years={yearOptions}
-          onChange={() => {}}
+          onChange={(state) => setFilters(state)}
         />
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">

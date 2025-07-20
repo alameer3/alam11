@@ -24,6 +24,7 @@ export function FilterBar({ categories, qualities, years, onChange }: FilterBarP
 
   return (
     <div className="filter-bar bg-dark p-4 rounded mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Category */}
       <select
         className="bg-gray-800 border border-gray-700 text-white rounded px-3 py-2 focus:outline-brand"
         value={category}
@@ -39,6 +40,7 @@ export function FilterBar({ categories, qualities, years, onChange }: FilterBarP
         ))}
       </select>
 
+      {/* Quality */}
       <select
         className="bg-gray-800 border border-gray-700 text-white rounded px-3 py-2 focus:outline-brand"
         value={quality}
@@ -54,6 +56,7 @@ export function FilterBar({ categories, qualities, years, onChange }: FilterBarP
         ))}
       </select>
 
+      {/* Year */}
       <select
         className="bg-gray-800 border border-gray-700 text-white rounded px-3 py-2 focus:outline-brand"
         value={year}
