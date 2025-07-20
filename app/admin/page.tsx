@@ -27,7 +27,8 @@ import {
   ChevronDown,
   MessageSquare,
   CreditCard,
-  Bell
+  Bell,
+  FileText
 } from 'lucide-react'
 import AnalyticsSystem from '@/components/ui/AnalyticsSystem';
 import DownloadSystem from '@/components/ui/DownloadSystem';
