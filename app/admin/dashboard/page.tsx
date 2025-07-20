@@ -26,7 +26,10 @@ import {
   TrendingUp,
   Server,
   Database,
-  Globe
+  Globe,
+  FileText,
+  Code,
+  Image
 } from 'lucide-react'
 
 export default function AdminDashboard() {
@@ -233,6 +236,7 @@ export default function AdminDashboard() {
             <TabsTrigger value="users" className="text-white data-[state=active]:bg-[#26baee]">إدارة المستخدمين</TabsTrigger>
             <TabsTrigger value="analytics" className="text-white data-[state=active]:bg-[#26baee]">التحليلات</TabsTrigger>
             <TabsTrigger value="settings" className="text-white data-[state=active]:bg-[#26baee]">الإعدادات</TabsTrigger>
+            <TabsTrigger value="files" className="text-white data-[state=active]:bg-[#26baee]">الملفات</TabsTrigger>
             <TabsTrigger value="backup" className="text-white data-[state=active]:bg-[#26baee]">النسخ الاحتياطي</TabsTrigger>
           </TabsList>
           
@@ -478,9 +482,70 @@ export default function AdminDashboard() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-8 text-gray-400">
-                  <Settings className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>إعدادات النظام قيد التطوير</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Button 
+                    onClick={() => window.open('/admin/settings', '_blank')}
+                    className="bg-[#26baee] hover:bg-[#1fa3d1] text-white p-6 h-auto"
+                  >
+                    <Settings className="h-8 w-8 mb-2" />
+                    <div>
+                      <div className="font-bold">إعدادات الموقع الشاملة</div>
+                      <div className="text-sm opacity-90">تخصيص كامل للموقع</div>
+                    </div>
+                  </Button>
+                  
+                  <Button 
+                    className="bg-green-600 hover:bg-green-700 text-white p-6 h-auto"
+                    onClick={() => window.open('/admin/files', '_blank')}
+                  >
+                    <FileText className="h-8 w-8 mb-2" />
+                    <div>
+                      <div className="font-bold">محرر الملفات</div>
+                      <div className="text-sm opacity-90">تحرير ملفات الكود</div>
+                    </div>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* الملفات */}
+          <TabsContent value="files" className="space-y-6">
+            <Card className="bg-[#1a1a1a] border-[#333]">
+              <CardHeader>
+                <CardTitle className="text-white">إدارة الملفات</CardTitle>
+                <CardDescription className="text-gray-400">
+                  تحرير وإدارة ملفات الموقع
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Button 
+                    onClick={() => window.open('/admin/files', '_blank')}
+                    className="bg-blue-600 hover:bg-blue-700 text-white p-6 h-auto"
+                  >
+                    <Code className="h-8 w-8 mb-2" />
+                    <div>
+                      <div className="font-bold">محرر الكود</div>
+                      <div className="text-sm opacity-90">تحرير ملفات React/CSS</div>
+                    </div>
+                  </Button>
+                  
+                  <Button className="bg-purple-600 hover:bg-purple-700 text-white p-6 h-auto">
+                    <Image className="h-8 w-8 mb-2" />
+                    <div>
+                      <div className="font-bold">إدارة الصور</div>
+                      <div className="text-sm opacity-90">رفع وتنظيم الصور</div>
+                    </div>
+                  </Button>
+                  
+                  <Button className="bg-orange-600 hover:bg-orange-700 text-white p-6 h-auto">
+                    <Upload className="h-8 w-8 mb-2" />
+                    <div>
+                      <div className="font-bold">رفع الملفات</div>
+                      <div className="text-sm opacity-90">استيراد ملفات جديدة</div>
+                    </div>
+                  </Button>
                 </div>
               </CardContent>
             </Card>
