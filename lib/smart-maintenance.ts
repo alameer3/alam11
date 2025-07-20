@@ -110,7 +110,7 @@ export class SmartMaintenanceSystem {
       console.error('❌ خطأ في فحص الصيانة:', error)
       
       this.addIssue({
-        type: 'system',
+        type: 'server',
         severity: 'high',
         title: 'فشل في فحص الصيانة',
         description: `خطأ في النظام: ${error}`
