@@ -1,23 +1,45 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    appDir: true,
+  },
   images: {
     domains: [
-      'localhost',
-      'img.downet.net',
-      'via.placeholder.com',
-      'i.imgur.com',
       'images.unsplash.com',
-      'cdn.jsdelivr.net'
+      'via.placeholder.com',
+      'picsum.photos',
+      'akw.to',
+      'localhost'
     ],
     formats: ['image/webp', 'image/avif'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60,
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
-  async rewrites() {
-    return [
-      {
-        source: '/api/placeholder/:path*',
-        destination: 'https://via.placeholder.com/:path*',
-      },
-    ]
+  compress: true,
+  poweredByHeader: false,
+  generateEtags: false,
+  onDemandEntries: {
+    maxInactiveAge: 25 * 1000,
+    pagesBufferLength: 2,
+  },
+  webpack: (config, { dev, isServer }) => {
+    // تحسين حجم الباندل
+    if (!dev && !isServer) {
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all',
+          },
+        },
+      }
+    }
+    return config
   },
   async headers() {
     return [
@@ -40,16 +62,13 @@ const nextConfig = {
       },
     ]
   },
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        path: false,
-        os: false,
-      }
-    }
-    return config
+  async rewrites() {
+    return [
+      {
+        source: '/api/placeholder/:width/:height',
+        destination: 'https://via.placeholder.com/:widthx:height/26baee/ffffff?text=AKWAM',
+      },
+    ]
   },
 }
 
