@@ -53,17 +53,17 @@ replit.nix
 .local/
 .upm/
 
-# Database
-*.db
-*.sqlite
+# Database (uncommented to include database in repo)
+# *.db
+# *.sqlite
 
 # Temporary files
 tmp/
 temp/
 
-# Uploads
-uploads/
-public/uploads/
+# Uploads (commented to include upload folders structure)
+# uploads/
+# public/uploads/
 
 # Backup files
 backups/
