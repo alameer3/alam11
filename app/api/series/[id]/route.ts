@@ -1,24 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { connectToDatabase } from '@/lib/database/connection'
-import { SeriesModel } from '@/lib/database/models/series'
+import { SeriesModel } from '@/lib/database/models'
 
-// GET /api/series/[id] - جلب مسلسل محدد
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase()
-    
-    const seriesId = parseInt(params.id)
-    if (isNaN(seriesId)) {
+    const seriesId = Number(params.id)
+
+    if (!params.id || isNaN(seriesId)) {
       return NextResponse.json(
         { error: 'معرف المسلسل غير صحيح' },
         { status: 400 }
       )
     }
 
-    const series = await SeriesModel.getWithDetails(seriesId)
+    const series = await SeriesModel.findById(seriesId)
     
     if (!series) {
       return NextResponse.json(
@@ -29,24 +26,22 @@ export async function GET(
 
     return NextResponse.json(series)
   } catch (error) {
-    console.error('Error fetching series:', error)
+    console.error('خطأ في جلب المسلسل:', error)
     return NextResponse.json(
-      { error: 'فشل في جلب المسلسل' },
+      { error: 'خطأ في الخادم' },
       { status: 500 }
     )
   }
 }
 
-// PUT /api/series/[id] - تحديث مسلسل كامل
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase()
-    
-    const seriesId = parseInt(params.id)
-    if (isNaN(seriesId)) {
+    const seriesId = Number(params.id)
+
+    if (!params.id || isNaN(seriesId)) {
       return NextResponse.json(
         { error: 'معرف المسلسل غير صحيح' },
         { status: 400 }
@@ -56,7 +51,7 @@ export async function PUT(
     const body = await request.json()
     
     // التحقق من وجود المسلسل
-    const existingSeries = await SeriesModel.getWithDetails(seriesId)
+    const existingSeries = await SeriesModel.findById(seriesId)
     if (!existingSeries) {
       return NextResponse.json(
         { error: 'المسلسل غير موجود' },
@@ -75,24 +70,22 @@ export async function PUT(
 
     return NextResponse.json(updatedSeries)
   } catch (error) {
-    console.error('Error updating series:', error)
+    console.error('خطأ في تحديث المسلسل:', error)
     return NextResponse.json(
-      { error: 'فشل في تحديث المسلسل' },
+      { error: 'خطأ في الخادم' },
       { status: 500 }
     )
   }
 }
 
-// PATCH /api/series/[id] - تحديث جزئي للمسلسل
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase()
-    
-    const seriesId = parseInt(params.id)
-    if (isNaN(seriesId)) {
+    const seriesId = Number(params.id)
+
+    if (!params.id || isNaN(seriesId)) {
       return NextResponse.json(
         { error: 'معرف المسلسل غير صحيح' },
         { status: 400 }
@@ -102,7 +95,7 @@ export async function PATCH(
     const body = await request.json()
     
     // التحقق من وجود المسلسل
-    const existingSeries = await SeriesModel.getWithDetails(seriesId)
+    const existingSeries = await SeriesModel.findById(seriesId)
     if (!existingSeries) {
       return NextResponse.json(
         { error: 'المسلسل غير موجود' },
@@ -112,41 +105,32 @@ export async function PATCH(
 
     const updatedSeries = await SeriesModel.update(seriesId, body)
     
-    if (!updatedSeries) {
-      return NextResponse.json(
-        { error: 'فشل في تحديث المسلسل' },
-        { status: 500 }
-      )
-    }
-
     return NextResponse.json(updatedSeries)
   } catch (error) {
-    console.error('Error updating series:', error)
+    console.error('خطأ في تعديل المسلسل:', error)
     return NextResponse.json(
-      { error: 'فشل في تحديث المسلسل' },
+      { error: 'خطأ في الخادم' },
       { status: 500 }
     )
   }
 }
 
-// DELETE /api/series/[id] - حذف مسلسل
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase()
-    
-    const seriesId = parseInt(params.id)
-    if (isNaN(seriesId)) {
+    const seriesId = Number(params.id)
+
+    if (!params.id || isNaN(seriesId)) {
       return NextResponse.json(
         { error: 'معرف المسلسل غير صحيح' },
         { status: 400 }
       )
     }
-
+    
     // التحقق من وجود المسلسل
-    const existingSeries = await SeriesModel.getWithDetails(seriesId)
+    const existingSeries = await SeriesModel.findById(seriesId)
     if (!existingSeries) {
       return NextResponse.json(
         { error: 'المسلسل غير موجود' },
@@ -154,9 +138,9 @@ export async function DELETE(
       )
     }
 
-    const deleted = await SeriesModel.delete(seriesId)
+    const success = await SeriesModel.delete(seriesId)
     
-    if (!deleted) {
+    if (!success) {
       return NextResponse.json(
         { error: 'فشل في حذف المسلسل' },
         { status: 500 }
@@ -165,12 +149,12 @@ export async function DELETE(
 
     return NextResponse.json({ 
       message: 'تم حذف المسلسل بنجاح',
-      id: seriesId 
+      success: true 
     })
   } catch (error) {
-    console.error('Error deleting series:', error)
+    console.error('خطأ في حذف المسلسل:', error)
     return NextResponse.json(
-      { error: 'فشل في حذف المسلسل' },
+      { error: 'خطأ في الخادم' },
       { status: 500 }
     )
   }

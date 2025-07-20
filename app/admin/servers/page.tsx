@@ -52,12 +52,22 @@ export default function ServersManagementPage() {
   const [editingServer, setEditingServer] = useState<Server | null>(null)
   const [refreshing, setRefreshing] = useState(false)
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string
+    hostname: string
+    ip_address: string
+    port: number
+    type: 'streaming' | 'database' | 'storage' | 'cdn' | 'cache'
+    location: string
+    capacity: string
+    bandwidth_limit: string
+    is_active: boolean
+  }>({
     name: '',
     hostname: '',
     ip_address: '',
     port: 80,
-    type: 'streaming' as const,
+    type: 'streaming',
     location: '',
     capacity: '',
     bandwidth_limit: '',

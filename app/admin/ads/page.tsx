@@ -48,13 +48,24 @@ export default function AdsManagementPage() {
   const [editingAd, setEditingAd] = useState<Ad | null>(null)
   const [isDeleting, setIsDeleting] = useState<number | null>(null)
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    title: string
+    description: string
+    image: string
+    url: string
+    position: 'header' | 'sidebar' | 'footer' | 'popup' | 'banner'
+    type: 'image' | 'text' | 'html'
+    is_active: boolean
+    priority: number
+    start_date: string
+    end_date: string
+  }>({
     title: '',
     description: '',
     image: '',
     url: '',
-    position: 'banner' as const,
-    type: 'image' as const,
+    position: 'banner',
+    type: 'image',
     is_active: true,
     priority: 1,
     start_date: '',

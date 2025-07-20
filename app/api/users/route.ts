@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    const result = await UserModel.getPaginated(page, perPage, filters)
+    const result = await UserModel.paginate(filters, page, perPage)
     
     return NextResponse.json(result)
   } catch (error) {

@@ -18,7 +18,7 @@ export async function GET(
       )
     }
 
-    const user = await UserModel.getById(userId)
+    const user = await UserModel.findById(userId)
     
     if (!user) {
       return NextResponse.json(
@@ -59,7 +59,7 @@ export async function PUT(
     const body = await request.json()
     
     // التحقق من وجود المستخدم
-    const existingUser = await UserModel.getById(userId)
+    const existingUser = await UserModel.findById(userId)
     if (!existingUser) {
       return NextResponse.json(
         { error: 'المستخدم غير موجود' },
@@ -69,8 +69,7 @@ export async function PUT(
 
     // التحقق من عدم تضارب اسم المستخدم أو البريد الإلكتروني
     if (body.username || body.email) {
-      const conflictUser = await UserModel.findByUsernameOrEmail(
-        body.username || existingUser.username,
+      const conflictUser = await UserModel.findByEmail(
         body.email || existingUser.email
       )
       
@@ -123,7 +122,7 @@ export async function PATCH(
     const body = await request.json()
     
     // التحقق من وجود المستخدم
-    const existingUser = await UserModel.getById(userId)
+    const existingUser = await UserModel.findById(userId)
     if (!existingUser) {
       return NextResponse.json(
         { error: 'المستخدم غير موجود' },
@@ -191,7 +190,7 @@ export async function DELETE(
     }
 
     // التحقق من وجود المستخدم
-    const existingUser = await UserModel.getById(userId)
+    const existingUser = await UserModel.findById(userId)
     if (!existingUser) {
       return NextResponse.json(
         { error: 'المستخدم غير موجود' },
