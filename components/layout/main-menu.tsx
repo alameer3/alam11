@@ -71,6 +71,10 @@ export function MainMenu() {
     
     if (overlay) overlay.classList.remove('show')
     if (menu) menu.classList.remove('show')
+
+    if (typeof document !== 'undefined') {
+      document.body.classList.remove('main-menu-active')
+    }
   }
 
   return (
@@ -89,7 +93,7 @@ export function MainMenu() {
                   onClick={closeMenu}
                 >
                   <div className="icn ml-3">
-                    <IconComponent className="w-5 h-5" />
+                    <IconComponent className="w-12 h-12" />
                   </div>
                   <div className="text">{item.text}</div>
                 </Link>
