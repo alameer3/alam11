@@ -1,481 +1,636 @@
-"use client"
+'use client'
 
 import { useState, useEffect } from 'react'
-import { Header } from '@/components/layout/header'
-import { AdminSidebar } from '@/components/admin/admin-sidebar'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { 
-  Activity, 
-  AlertTriangle, 
-  CheckCircle, 
-  XCircle, 
-  Clock,
-  Zap,
-  TrendingUp,
-  Server,
-  Database,
-  Globe,
-  RefreshCw,
-  Play,
-  Eye,
-  AlertCircle
-} from 'lucide-react'
+  EyeIcon,
+  CpuChipIcon,
+  CircleStackIcon,
+  WifiIcon,
+  ClockIcon,
+  ExclamationTriangleIcon,
+  CheckCircleIcon,
+  XMarkIcon,
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
+  BoltIcon,
+  ShieldCheckIcon
+} from '@heroicons/react/24/outline'
 
-interface SystemStatus {
-  timestamp: string
-  status: 'healthy' | 'warning' | 'critical' | 'offline'
-  components: {
-    database: ComponentStatus
-    api: ComponentStatus
-    frontend: ComponentStatus
-    cdn: ComponentStatus
-    streaming: ComponentStatus
+interface SystemMetrics {
+  cpu: {
+    usage: number
+    cores: number
+    temperature: number
+    load_average: number[]
   }
-  performance: PerformanceMetrics
-  errors: ErrorReport[]
-  suggestions: AISuggestion[]
+  memory: {
+    used: number
+    total: number
+    available: number
+    usage_percent: number
+  }
+  disk: {
+    used: number
+    total: number
+    available: number
+    usage_percent: number
+  }
+  network: {
+    upload_speed: number
+    download_speed: number
+    total_sent: number
+    total_received: number
+  }
 }
 
-interface ComponentStatus {
+interface ServiceStatus {
+  id: string
   name: string
-  status: 'online' | 'offline' | 'degraded'
-  responseTime: number
-  uptime: number
-  lastCheck: string
-  issues: string[]
-}
-
-interface PerformanceMetrics {
-  pageLoadTime: number
-  apiResponseTime: number
-  databaseQueryTime: number
-  memoryUsage: number
-  cpuUsage: number
-  diskUsage: number
-  bandwidthUsage: number
-}
-
-interface ErrorReport {
-  id: string
-  timestamp: string
-  severity: 'low' | 'medium' | 'high' | 'critical'
-  component: string
-  message: string
-  resolved: boolean
-  autoFixAttempted: boolean
-  autoFixSuccess?: boolean
-}
-
-interface AISuggestion {
-  id: string
-  type: 'performance' | 'security' | 'maintenance' | 'optimization'
-  priority: 'low' | 'medium' | 'high' | 'urgent'
-  title: string
+  status: 'running' | 'stopped' | 'error' | 'restarting'
+  uptime: string
+  memory_usage: number
+  cpu_usage: number
+  port?: number
   description: string
-  estimatedImpact: string
-  estimatedTime: string
-  autoImplementable: boolean
-  implemented: boolean
+  last_restart?: string
+}
+
+interface LogEntry {
+  id: number
+  level: 'info' | 'warning' | 'error' | 'critical'
+  message: string
+  service: string
+  timestamp: string
+  details?: string
+}
+
+interface Alert {
+  id: number
+  type: 'warning' | 'error' | 'critical'
+  title: string
+  message: string
+  timestamp: string
+  resolved: boolean
+  service?: string
 }
 
 export default function MonitoringPage() {
-  const [systemStatus, setSystemStatus] = useState<SystemStatus | null>(null)
+  const [metrics, setMetrics] = useState<SystemMetrics | null>(null)
+  const [services, setServices] = useState<ServiceStatus[]>([])
+  const [logs, setLogs] = useState<LogEntry[]>([])
+  const [alerts, setAlerts] = useState<Alert[]>([])
   const [loading, setLoading] = useState(true)
   const [autoRefresh, setAutoRefresh] = useState(true)
+  const [selectedTimeRange, setSelectedTimeRange] = useState('1h')
 
-  // جلب حالة النظام
-  const fetchSystemStatus = async () => {
-    try {
-      const response = await fetch('/api/monitoring/status')
-      const result = await response.json()
-      
-      if (result.success) {
-        setSystemStatus(result.data)
+  const fetchSystemMetrics = async () => {
+    // محاكاة بيانات النظام
+    const mockMetrics: SystemMetrics = {
+      cpu: {
+        usage: Math.floor(Math.random() * 40) + 30, // 30-70%
+        cores: 8,
+        temperature: Math.floor(Math.random() * 20) + 45, // 45-65°C
+        load_average: [1.2, 1.5, 1.8]
+      },
+      memory: {
+        used: 12.5,
+        total: 32,
+        available: 19.5,
+        usage_percent: Math.floor((12.5 / 32) * 100)
+      },
+      disk: {
+        used: 450,
+        total: 1000,
+        available: 550,
+        usage_percent: 45
+      },
+      network: {
+        upload_speed: Math.floor(Math.random() * 50) + 10,
+        download_speed: Math.floor(Math.random() * 100) + 50,
+        total_sent: 2.5,
+        total_received: 15.8
       }
-    } catch (error) {
-      console.error('خطأ في جلب حالة النظام:', error)
-    } finally {
-      setLoading(false)
     }
+    setMetrics(mockMetrics)
   }
 
-  // تطبيق اقتراح
-  const implementSuggestion = async (suggestionId: string) => {
-    try {
-      const response = await fetch('/api/monitoring/suggestions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ suggestionId, action: 'implement' })
-      })
-      
-      const result = await response.json()
-      
-      if (result.success) {
-        fetchSystemStatus() // تحديث البيانات
+  const fetchServices = async () => {
+    const mockServices: ServiceStatus[] = [
+      {
+        id: 'nginx',
+        name: 'خادم الويب (Nginx)',
+        status: 'running',
+        uptime: '15 يوم، 8 ساعات',
+        memory_usage: 85,
+        cpu_usage: 12,
+        port: 80,
+        description: 'خادم الويب الرئيسي'
+      },
+      {
+        id: 'mysql',
+        name: 'قاعدة البيانات (MySQL)',
+        status: 'running',
+        uptime: '30 يوم، 5 ساعات',
+        memory_usage: 1200,
+        cpu_usage: 25,
+        port: 3306,
+        description: 'قاعدة البيانات الرئيسية'
+      },
+      {
+        id: 'redis',
+        name: 'التخزين المؤقت (Redis)',
+        status: 'running',
+        uptime: '25 يوم، 12 ساعة',
+        memory_usage: 512,
+        cpu_usage: 8,
+        port: 6379,
+        description: 'خادم التخزين المؤقت'
+      },
+      {
+        id: 'nodejs',
+        name: 'تطبيق Node.js',
+        status: 'running',
+        uptime: '2 يوم، 3 ساعات',
+        memory_usage: 256,
+        cpu_usage: 15,
+        port: 3000,
+        description: 'تطبيق الواجهة الخلفية',
+        last_restart: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'ffmpeg',
+        name: 'معالج الفيديو (FFmpeg)',
+        status: 'restarting',
+        uptime: '0 دقيقة',
+        memory_usage: 0,
+        cpu_usage: 0,
+        description: 'محول تنسيقات الفيديو',
+        last_restart: new Date().toISOString()
       }
-    } catch (error) {
-      console.error('خطأ في تطبيق الاقتراح:', error)
-    }
+    ]
+    setServices(mockServices)
   }
 
-  // تشغيل فحص فوري
-  const runManualCheck = async () => {
+  const fetchLogs = async () => {
+    const mockLogs: LogEntry[] = [
+      {
+        id: 1,
+        level: 'info',
+        message: 'تم بدء تشغيل الخادم بنجاح',
+        service: 'nginx',
+        timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString()
+      },
+      {
+        id: 2,
+        level: 'warning',
+        message: 'استخدام الذاكرة مرتفع - 85%',
+        service: 'mysql',
+        timestamp: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
+        details: 'قد تحتاج إلى تحسين الاستعلامات أو زيادة الذاكرة'
+      },
+      {
+        id: 3,
+        level: 'error',
+        message: 'فشل في الاتصال بقاعدة البيانات',
+        service: 'nodejs',
+        timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+        details: 'Connection timeout after 30 seconds'
+      },
+      {
+        id: 4,
+        level: 'info',
+        message: 'تم تنفيذ النسخ الاحتياطي بنجاح',
+        service: 'system',
+        timestamp: new Date(Date.now() - 20 * 60 * 1000).toISOString()
+      },
+      {
+        id: 5,
+        level: 'critical',
+        message: 'مساحة القرص منخفضة جداً - أقل من 5%',
+        service: 'system',
+        timestamp: new Date(Date.now() - 25 * 60 * 1000).toISOString(),
+        details: 'المساحة المتاحة: 2.1GB من أصل 100GB'
+      }
+    ]
+    setLogs(mockLogs)
+  }
+
+  const fetchAlerts = async () => {
+    const mockAlerts: Alert[] = [
+      {
+        id: 1,
+        type: 'critical',
+        title: 'استخدام المعالج مرتفع جداً',
+        message: 'استخدام المعالج وصل إلى 95% لأكثر من 10 دقائق',
+        timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+        resolved: false,
+        service: 'system'
+      },
+      {
+        id: 2,
+        type: 'warning',
+        title: 'ذاكرة قاعدة البيانات مرتفعة',
+        message: 'MySQL تستخدم 1.2GB من الذاكرة',
+        timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+        resolved: false,
+        service: 'mysql'
+      },
+      {
+        id: 3,
+        type: 'error',
+        title: 'خطأ في معالج الفيديو',
+        message: 'FFmpeg توقف عن العمل بشكل غير متوقع',
+        timestamp: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+        resolved: true,
+        service: 'ffmpeg'
+      }
+    ]
+    setAlerts(mockAlerts)
+  }
+
+  const fetchAllData = async () => {
     setLoading(true)
-    await fetchSystemStatus()
+    await Promise.all([
+      fetchSystemMetrics(),
+      fetchServices(),
+      fetchLogs(),
+      fetchAlerts()
+    ])
+    setLoading(false)
   }
 
   useEffect(() => {
-    fetchSystemStatus()
-  }, [])
-
-  useEffect(() => {
+    fetchAllData()
+    
     if (autoRefresh) {
-      const interval = setInterval(fetchSystemStatus, 30000) // كل 30 ثانية
+      const interval = setInterval(fetchAllData, 30000) // تحديث كل 30 ثانية
       return () => clearInterval(interval)
     }
   }, [autoRefresh])
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'healthy':
-      case 'online':
-        return <CheckCircle className="h-5 w-5 text-green-500" />
-      case 'warning':
-      case 'degraded':
-        return <AlertTriangle className="h-5 w-5 text-yellow-500" />
-      case 'critical':
-      case 'offline':
-        return <XCircle className="h-5 w-5 text-red-500" />
+      case 'running':
+        return <CheckCircleIcon className="w-5 h-5 text-green-500" />
+      case 'stopped':
+        return <XMarkIcon className="w-5 h-5 text-red-500" />
+      case 'error':
+        return <ExclamationTriangleIcon className="w-5 h-5 text-red-500" />
+      case 'restarting':
+        return <ClockIcon className="w-5 h-5 text-yellow-500" />
       default:
-        return <Clock className="h-5 w-5 text-gray-500" />
+        return <ClockIcon className="w-5 h-5 text-gray-500" />
     }
   }
 
-  const getStatusColor = (status: string) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'healthy':
-      case 'online':
-        return 'bg-green-100 text-green-800 border-green-200'
+      case 'running':
+        return <Badge className="bg-green-600">يعمل</Badge>
+      case 'stopped':
+        return <Badge className="bg-red-600">متوقف</Badge>
+      case 'error':
+        return <Badge className="bg-red-600">خطأ</Badge>
+      case 'restarting':
+        return <Badge className="bg-yellow-600">إعادة تشغيل</Badge>
+      default:
+        return <Badge variant="secondary">{status}</Badge>
+    }
+  }
+
+  const getLevelIcon = (level: string) => {
+    switch (level) {
+      case 'info':
+        return <CheckCircleIcon className="w-4 h-4 text-blue-500" />
       case 'warning':
-      case 'degraded':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200'
+        return <ExclamationTriangleIcon className="w-4 h-4 text-yellow-500" />
+      case 'error':
+        return <XMarkIcon className="w-4 h-4 text-red-500" />
       case 'critical':
-      case 'offline':
-        return 'bg-red-100 text-red-800 border-red-200'
+        return <BoltIcon className="w-4 h-4 text-red-600" />
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200'
+        return <CheckCircleIcon className="w-4 h-4 text-gray-500" />
     }
   }
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'urgent':
-        return 'bg-red-100 text-red-800'
-      case 'high':
-        return 'bg-orange-100 text-orange-800'
-      case 'medium':
-        return 'bg-yellow-100 text-yellow-800'
-      case 'low':
-        return 'bg-blue-100 text-blue-800'
+  const getLevelBadge = (level: string) => {
+    switch (level) {
+      case 'info':
+        return <Badge className="bg-blue-600">معلومات</Badge>
+      case 'warning':
+        return <Badge className="bg-yellow-600">تحذير</Badge>
+      case 'error':
+        return <Badge className="bg-red-600">خطأ</Badge>
+      case 'critical':
+        return <Badge className="bg-red-700">حرج</Badge>
       default:
-        return 'bg-gray-100 text-gray-800'
+        return <Badge variant="secondary">{level}</Badge>
     }
   }
 
-  if (loading && !systemStatus) {
-    return (
-      <div className="min-h-screen bg-[#0a0a0a] text-white">
-        <Header />
-        <div className="flex">
-          <AdminSidebar />
-          <main className="flex-1 p-8">
-            <div className="flex items-center justify-center h-96">
-              <div className="text-center">
-                <RefreshCw className="h-12 w-12 text-red-500 animate-spin mx-auto mb-4" />
-                <p className="text-xl text-gray-300">جاري تحميل بيانات النظام...</p>
-              </div>
-            </div>
-          </main>
-        </div>
-      </div>
-    )
+  const getAlertIcon = (type: string) => {
+    switch (type) {
+      case 'warning':
+        return <ExclamationTriangleIcon className="w-5 h-5 text-yellow-500" />
+      case 'error':
+        return <XMarkIcon className="w-5 h-5 text-red-500" />
+      case 'critical':
+        return <BoltIcon className="w-5 h-5 text-red-600" />
+      default:
+        return <ExclamationTriangleIcon className="w-5 h-5 text-gray-500" />
+    }
+  }
+
+  const getUsageColor = (usage: number) => {
+    if (usage >= 90) return 'text-red-400'
+    if (usage >= 70) return 'text-yellow-400'
+    return 'text-green-400'
+  }
+
+  const formatBytes = (bytes: number) => {
+    if (bytes === 0) return '0 B'
+    const k = 1024
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+  }
+
+  const resolveAlert = (alertId: number) => {
+    setAlerts(alerts.map(alert => 
+      alert.id === alertId ? { ...alert, resolved: true } : alert
+    ))
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
-      <Header />
-      
-      <div className="flex">
-        <AdminSidebar />
+    <div className="container mx-auto p-6" dir="rtl">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h1 className="text-3xl font-bold text-white flex items-center gap-2">
+            <EyeIcon className="w-8 h-8 text-blue-500" />
+            مراقبة النظام
+          </h1>
+          <p className="text-gray-400 mt-1">
+            مراقبة الأداء والخدمات في الوقت الفعلي
+          </p>
+        </div>
         
-        <main className="flex-1 p-8">
-          {/* رأس الصفحة */}
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-                <Activity className="h-8 w-8 text-red-500" />
-                نظام المراقبة الذكي
-              </h1>
-              <p className="text-gray-400 mt-2">
-                مراقبة شاملة وذكية لجميع مكونات الموقع مع اقتراحات تلقائية للتحسين
-              </p>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-400">التحديث التلقائي:</span>
-                <Button
-                  size="sm"
-                  variant={autoRefresh ? "default" : "outline"}
-                  onClick={() => setAutoRefresh(!autoRefresh)}
-                  className={autoRefresh ? "bg-red-600 hover:bg-red-700" : ""}
-                >
-                  {autoRefresh ? <Play className="h-4 w-4" /> : <Zap className="h-4 w-4" />}
-                  {autoRefresh ? 'تشغيل' : 'متوقف'}
-                </Button>
+        <div className="flex gap-2">
+          <Button 
+            onClick={fetchAllData}
+            disabled={loading}
+            variant="outline" 
+            className="border-green-600 text-green-400 hover:bg-green-600"
+          >
+            {loading ? 'جاري التحديث...' : 'تحديث البيانات'}
+          </Button>
+          
+          <Button 
+            onClick={() => setAutoRefresh(!autoRefresh)}
+            variant={autoRefresh ? "default" : "outline"}
+            className={autoRefresh ? "bg-blue-600" : "border-blue-600 text-blue-400"}
+          >
+            التحديث التلقائي {autoRefresh ? 'مُفعل' : 'معطل'}
+          </Button>
+        </div>
+      </div>
+
+      {/* System Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        {/* CPU */}
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-400">المعالج</p>
+                <p className={`text-2xl font-bold ${getUsageColor(metrics?.cpu.usage || 0)}`}>
+                  {metrics?.cpu.usage || 0}%
+                </p>
+                <p className="text-xs text-gray-500">
+                  {metrics?.cpu.cores} نواة | {metrics?.cpu.temperature}°C
+                </p>
               </div>
-              
-              <Button
-                onClick={runManualCheck}
-                disabled={loading}
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                {loading ? (
-                  <RefreshCw className="h-4 w-4 animate-spin" />
-                ) : (
-                  <RefreshCw className="h-4 w-4" />
-                )}
-                فحص فوري
-              </Button>
+              <CpuChipIcon className="w-8 h-8 text-blue-400" />
             </div>
-          </div>
+          </CardContent>
+        </Card>
 
-          {systemStatus && (
-            <>
-              {/* حالة النظام العامة */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div className={`p-6 rounded-xl border-2 ${getStatusColor(systemStatus.status)}`}>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold">حالة النظام العامة</h3>
-                      <p className="text-2xl font-bold mt-2 capitalize">
-                        {systemStatus.status === 'healthy' ? 'سليم' :
-                         systemStatus.status === 'warning' ? 'تحذير' :
-                         systemStatus.status === 'critical' ? 'حرج' : 'غير متصل'}
-                      </p>
-                    </div>
-                    {getStatusIcon(systemStatus.status)}
-                  </div>
+        {/* Memory */}
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-400">الذاكرة</p>
+                <p className={`text-2xl font-bold ${getUsageColor(metrics?.memory.usage_percent || 0)}`}>
+                  {metrics?.memory.usage_percent || 0}%
+                </p>
+                <p className="text-xs text-gray-500">
+                  {metrics?.memory.used}GB / {metrics?.memory.total}GB
+                </p>
+              </div>
+              <CircleStackIcon className="w-8 h-8 text-green-400" />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Disk */}
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-400">التخزين</p>
+                <p className={`text-2xl font-bold ${getUsageColor(metrics?.disk.usage_percent || 0)}`}>
+                  {metrics?.disk.usage_percent || 0}%
+                </p>
+                <p className="text-xs text-gray-500">
+                  {metrics?.disk.used}GB / {metrics?.disk.total}GB
+                </p>
+              </div>
+              <CircleStackIcon className="w-8 h-8 text-yellow-400" />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Network */}
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-400">الشبكة</p>
+                <div className="flex items-center gap-2">
+                  <ArrowTrendingUpIcon className="w-4 h-4 text-red-400" />
+                  <span className="text-sm text-white">{metrics?.network.upload_speed || 0} MB/s</span>
                 </div>
-
-                <div className="p-6 bg-gray-800 rounded-xl border border-gray-700">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold text-white">الأخطاء النشطة</h3>
-                      <p className="text-2xl font-bold mt-2 text-red-400">
-                        {systemStatus.errors.filter(e => !e.resolved).length}
-                      </p>
-                    </div>
-                    <AlertCircle className="h-8 w-8 text-red-500" />
-                  </div>
-                </div>
-
-                <div className="p-6 bg-gray-800 rounded-xl border border-gray-700">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold text-white">الاقتراحات المعلقة</h3>
-                      <p className="text-2xl font-bold mt-2 text-yellow-400">
-                        {systemStatus.suggestions.filter(s => !s.implemented).length}
-                      </p>
-                    </div>
-                    <Zap className="h-8 w-8 text-yellow-500" />
-                  </div>
-                </div>
-
-                <div className="p-6 bg-gray-800 rounded-xl border border-gray-700">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold text-white">وقت الاستجابة</h3>
-                      <p className="text-2xl font-bold mt-2 text-blue-400">
-                        {systemStatus.performance.pageLoadTime}ms
-                      </p>
-                    </div>
-                    <TrendingUp className="h-8 w-8 text-blue-500" />
-                  </div>
+                <div className="flex items-center gap-2">
+                  <ArrowTrendingDownIcon className="w-4 h-4 text-green-400" />
+                  <span className="text-sm text-white">{metrics?.network.download_speed || 0} MB/s</span>
                 </div>
               </div>
+              <WifiIcon className="w-8 h-8 text-purple-400" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
-              {/* حالة المكونات */}
-              <div className="mb-8">
-                <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                  <Server className="h-6 w-6 text-red-500" />
-                  حالة المكونات
-                </h2>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {Object.entries(systemStatus.components).map(([key, component]) => (
-                    <div key={key} className="p-6 bg-gray-800 rounded-xl border border-gray-700">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-semibold text-white">{component.name}</h3>
-                        {getStatusIcon(component.status)}
-                      </div>
-                      
-                      <div className="space-y-2 text-sm">
-                        <div className="flex justify-between">
-                          <span className="text-gray-400">وقت الاستجابة:</span>
-                          <span className="text-white">{component.responseTime}ms</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-gray-400">معدل التشغيل:</span>
-                          <span className="text-green-400">{component.uptime}%</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-gray-400">آخر فحص:</span>
-                          <span className="text-white">
-                            {new Date(component.lastCheck).toLocaleTimeString('ar')}
-                          </span>
-                        </div>
-                      </div>
-
-                      {component.issues.length > 0 && (
-                        <div className="mt-4 p-3 bg-red-900/30 border border-red-800 rounded-lg">
-                          <h4 className="text-sm font-semibold text-red-400 mb-2">مشاكل:</h4>
-                          <ul className="text-xs text-red-300 space-y-1">
-                            {component.issues.map((issue, index) => (
-                              <li key={index}>• {issue}</li>
-                            ))}
-                          </ul>
-                        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {/* Services Status */}
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <ShieldCheckIcon className="w-5 h-5 text-blue-500" />
+              حالة الخدمات
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {services.map((service) => (
+                <div key={service.id} className="flex items-center justify-between p-3 bg-gray-700/50 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    {getStatusIcon(service.status)}
+                    <div>
+                      <h4 className="font-medium text-white">{service.name}</h4>
+                      <p className="text-sm text-gray-400">{service.description}</p>
+                      {service.port && (
+                        <p className="text-xs text-gray-500">المنفذ: {service.port}</p>
                       )}
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* الاقتراحات الذكية */}
-              {systemStatus.suggestions.length > 0 && (
-                <div className="mb-8">
-                  <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                    <Zap className="h-6 w-6 text-yellow-500" />
-                    الاقتراحات الذكية
-                  </h2>
+                  </div>
                   
-                  <div className="space-y-4">
-                    {systemStatus.suggestions
-                      .filter(s => !s.implemented)
-                      .slice(0, 5)
-                      .map((suggestion) => (
-                      <div key={suggestion.id} className="p-6 bg-gray-800 rounded-xl border border-gray-700">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-3 mb-2">
-                              <h3 className="text-lg font-semibold text-white">{suggestion.title}</h3>
-                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(suggestion.priority)}`}>
-                                {suggestion.priority === 'urgent' ? 'عاجل' :
-                                 suggestion.priority === 'high' ? 'عالي' :
-                                 suggestion.priority === 'medium' ? 'متوسط' : 'منخفض'}
-                              </span>
-                              {suggestion.autoImplementable && (
-                                <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
-                                  تطبيق تلقائي
-                                </span>
-                              )}
-                            </div>
-                            
-                            <p className="text-gray-300 mb-3">{suggestion.description}</p>
-                            
-                            <div className="grid grid-cols-2 gap-4 text-sm">
-                              <div>
-                                <span className="text-gray-400">التأثير المتوقع:</span>
-                                <p className="text-blue-300">{suggestion.estimatedImpact}</p>
-                              </div>
-                              <div>
-                                <span className="text-gray-400">الوقت المطلوب:</span>
-                                <p className="text-yellow-300">{suggestion.estimatedTime}</p>
-                              </div>
-                            </div>
-                          </div>
-                          
-                          <div className="flex gap-2 ml-4">
-                            {suggestion.autoImplementable && (
-                              <Button
-                                size="sm"
-                                onClick={() => implementSuggestion(suggestion.id)}
-                                className="bg-green-600 hover:bg-green-700"
-                              >
-                                <Play className="h-4 w-4 ml-1" />
-                                تطبيق
-                              </Button>
-                            )}
-                            <Button size="sm" variant="outline">
-                              <Eye className="h-4 w-4 ml-1" />
-                              تفاصيل
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                  <div className="text-right">
+                    {getStatusBadge(service.status)}
+                    <div className="mt-1 text-xs text-gray-400">
+                      <div>مدة التشغيل: {service.uptime}</div>
+                      <div>المعالج: {service.cpu_usage}%</div>
+                      <div>الذاكرة: {formatBytes(service.memory_usage * 1024 * 1024)}</div>
+                    </div>
                   </div>
                 </div>
-              )}
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
-              {/* الأخطاء الأخيرة */}
-              {systemStatus.errors.length > 0 && (
-                <div>
-                  <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                    <AlertTriangle className="h-6 w-6 text-red-500" />
-                    الأخطاء الأخيرة
-                  </h2>
-                  
-                  <div className="space-y-4">
-                    {systemStatus.errors.slice(0, 10).map((error) => (
-                      <div key={error.id} className={`p-4 rounded-lg border ${
-                        error.resolved ? 'bg-green-900/20 border-green-800' : 'bg-red-900/20 border-red-800'
-                      }`}>
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-3 mb-2">
-                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                error.severity === 'critical' ? 'bg-red-100 text-red-800' :
-                                error.severity === 'high' ? 'bg-orange-100 text-orange-800' :
-                                error.severity === 'medium' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800'
-                              }`}>
-                                {error.severity === 'critical' ? 'حرج' :
-                                 error.severity === 'high' ? 'عالي' :
-                                 error.severity === 'medium' ? 'متوسط' : 'منخفض'}
-                              </span>
-                              <span className="text-gray-400 text-sm">{error.component}</span>
-                              <span className="text-gray-400 text-sm">
-                                {new Date(error.timestamp).toLocaleString('ar')}
-                              </span>
-                            </div>
-                            
-                            <p className={error.resolved ? 'text-green-300' : 'text-red-300'}>
-                              {error.message}
-                            </p>
-                            
-                            {error.autoFixAttempted && (
-                              <p className="text-xs text-gray-400 mt-2">
-                                {error.autoFixSuccess ? '✅ تم الإصلاح تلقائياً' : '❌ فشل الإصلاح التلقائي'}
-                              </p>
-                            )}
-                          </div>
-                          
-                          {error.resolved ? (
-                            <CheckCircle className="h-5 w-5 text-green-500" />
-                          ) : (
-                            <XCircle className="h-5 w-5 text-red-500" />
+        {/* Active Alerts */}
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <ExclamationTriangleIcon className="w-5 h-5 text-red-500" />
+              التنبيهات النشطة
+              <Badge className="bg-red-600 ml-2">
+                {alerts.filter(a => !a.resolved).length}
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {alerts.filter(alert => !alert.resolved).length === 0 ? (
+                <div className="text-center text-gray-400 py-4">
+                  <CheckCircleIcon className="w-8 h-8 mx-auto mb-2 text-green-500" />
+                  <p>لا توجد تنبيهات نشطة</p>
+                </div>
+              ) : (
+                alerts.filter(alert => !alert.resolved).map((alert) => (
+                  <div key={alert.id} className="flex items-start justify-between p-3 bg-gray-700/50 rounded-lg border-r-4 border-red-500">
+                    <div className="flex items-start gap-3">
+                      {getAlertIcon(alert.type)}
+                      <div>
+                        <h4 className="font-medium text-white">{alert.title}</h4>
+                        <p className="text-sm text-gray-400 mt-1">{alert.message}</p>
+                        <div className="flex items-center gap-2 mt-2">
+                          <Badge className={
+                            alert.type === 'critical' ? 'bg-red-700' :
+                            alert.type === 'error' ? 'bg-red-600' :
+                            'bg-yellow-600'
+                          }>
+                            {alert.type === 'critical' ? 'حرج' : 
+                             alert.type === 'error' ? 'خطأ' : 'تحذير'}
+                          </Badge>
+                          {alert.service && (
+                            <Badge variant="outline" className="border-gray-500 text-gray-400">
+                              {alert.service}
+                            </Badge>
                           )}
                         </div>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {new Date(alert.timestamp).toLocaleString('ar-SA')}
+                        </p>
                       </div>
-                    ))}
+                    </div>
+                    
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => resolveAlert(alert.id)}
+                      className="border-green-600 text-green-400 hover:bg-green-600"
+                    >
+                      حل
+                    </Button>
                   </div>
-                </div>
+                ))
               )}
-            </>
-          )}
-        </main>
+            </div>
+          </CardContent>
+        </Card>
       </div>
+
+      {/* System Logs */}
+      <Card className="bg-gray-800 border-gray-700">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-white flex items-center gap-2">
+              <ClockIcon className="w-5 h-5 text-blue-500" />
+              سجلات النظام
+            </CardTitle>
+            
+            <div className="flex gap-2">
+              <select
+                value={selectedTimeRange}
+                onChange={(e) => setSelectedTimeRange(e.target.value)}
+                className="p-2 bg-gray-700 border border-gray-600 rounded-md text-white text-sm"
+              >
+                <option value="1h">آخر ساعة</option>
+                <option value="6h">آخر 6 ساعات</option>
+                <option value="24h">آخر 24 ساعة</option>
+                <option value="7d">آخر أسبوع</option>
+              </select>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2 max-h-96 overflow-y-auto">
+            {logs.map((log) => (
+              <div key={log.id} className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition-colors">
+                <div className="flex-shrink-0 mt-0.5">
+                  {getLevelIcon(log.level)}
+                </div>
+                
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    {getLevelBadge(log.level)}
+                    <Badge variant="outline" className="border-gray-500 text-gray-400">
+                      {log.service}
+                    </Badge>
+                    <span className="text-xs text-gray-500">
+                      {new Date(log.timestamp).toLocaleString('ar-SA')}
+                    </span>
+                  </div>
+                  
+                  <p className="text-white text-sm">{log.message}</p>
+                  
+                  {log.details && (
+                    <p className="text-gray-400 text-xs mt-1 bg-gray-800 p-2 rounded">
+                      {log.details}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
