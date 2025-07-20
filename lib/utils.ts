@@ -95,3 +95,7 @@ export function throttle<T extends (...args: any[]) => any>(
     }
   }
 }
+
+export function formatRating(rating: number): string {
+  return rating.toFixed(1)
+}

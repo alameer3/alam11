@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Search, Menu, X, Play, Star, Clock, Fire } from 'lucide-react'
+import { Search, Menu, X, Play, Star, Clock, Flame } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -68,7 +68,7 @@ const Header: React.FC = () => {
     {
       title: 'الرئيسية',
       href: '/ones',
-      icon: <Fire className="w-4 h-4" />,
+              icon: <Flame className="w-4 h-4" />,
       description: 'أحدث وأهم المحتويات'
     },
     {

@@ -98,7 +98,7 @@ export async function GET(request: NextRequest) {
 
     // اقتراحات البحث الذكية
     const suggestions = [
-      ...new Set([
+      ...Array.from(new Set([
         ...mockData
           .filter(item => item.title.toLowerCase().includes(query))
           .map(item => item.title),
@@ -108,7 +108,7 @@ export async function GET(request: NextRequest) {
         `${query} 2024`,
         `أفلام ${query}`,
         `مسلسلات ${query}`
-      ])
+      ]))
     ].slice(0, 5)
 
     return NextResponse.json({

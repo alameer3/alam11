@@ -8,7 +8,7 @@ import {
   Eye,
   Clock,
   ChevronRight,
-  Fire,
+  Flame,
   Sparkles,
   Award
 } from 'lucide-react'
@@ -38,7 +38,7 @@ const sections = [
     id: 'trending',
     title: 'الأكثر مشاهدة',
     subtitle: 'المحتوى الذي يتابعه الجميع الآن',
-    icon: <Fire className="w-5 h-5" />,
+    icon: <Flame className="w-5 h-5" />,
     href: '/ones',
     color: 'from-red-500 to-orange-500'
   },

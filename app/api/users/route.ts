@@ -70,8 +70,10 @@ export async function POST(request: NextRequest) {
     }
 
     // التحقق من عدم وجود مستخدم بنفس اسم المستخدم أو البريد الإلكتروني
-    const existingUser = await UserModel.findByUsernameOrEmail(body.username, body.email)
-    if (existingUser) {
+    const existingUserByUsername = await UserModel.findByUsername(body.username)
+    const existingUserByEmail = await UserModel.findByEmail(body.email)
+    
+    if (existingUserByUsername || existingUserByEmail) {
       return NextResponse.json(
         { error: 'اسم المستخدم أو البريد الإلكتروني مستخدم بالفعل' },
         { status: 409 }

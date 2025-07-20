@@ -11,7 +11,7 @@ import {
   Grid,
   List,
   ChevronDown,
-  Fire,
+  Flame,
   Award,
   Zap
 } from 'lucide-react'
@@ -43,7 +43,7 @@ const heroTrending = {
 
 const categories = [
   { id: 'all', name: 'الكل', icon: <Grid className="w-4 h-4" /> },
-  { id: 'trending', name: 'الأكثر مشاهدة', icon: <Fire className="w-4 h-4" /> },
+  { id: 'trending', name: 'الأكثر مشاهدة', icon: <Flame className="w-4 h-4" /> },
   { id: 'top-rated', name: 'الأعلى تقييماً', icon: <Star className="w-4 h-4" /> },
   { id: 'latest', name: 'الأحدث', icon: <Zap className="w-4 h-4" /> },
   { id: 'award-winning', name: 'الحائزة على جوائز', icon: <Award className="w-4 h-4" /> }
@@ -162,7 +162,7 @@ const OnesPage: React.FC = () => {
             {/* شارات المحتوى */}
             <div className="flex items-center space-x-3 rtl:space-x-reverse mb-4">
               <Badge className="bg-red-600 hover:bg-red-700 text-white border-0">
-                <Fire className="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" />
+                <Flame className="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" />
                 الأكثر شعبية
               </Badge>
               <Badge variant="outline" className="border-yellow-500 text-yellow-500">
@@ -311,7 +311,7 @@ const OnesPage: React.FC = () => {
                             <div className="absolute top-2 right-2 rtl:left-2 rtl:right-auto space-y-1">
                               {item.trending && (
                                 <Badge className="bg-red-600 hover:bg-red-600 text-white border-0 text-xs">
-                                  <Fire className="w-2 h-2 mr-1 rtl:ml-1 rtl:mr-0" />
+                                  <Flame className="w-2 h-2 mr-1 rtl:ml-1 rtl:mr-0" />
                                   رائج
                                 </Badge>
                               )}
