@@ -2,7 +2,7 @@ import { createI18nClient } from 'next-international/client';
 import { createI18nServer } from 'next-international/server';
 
 // الترجمة العربية
-const ar = {
+const ar = async () => ({
   // الصفحة الرئيسية
   home: {
     title: 'أكوام كلون - منصة البث المتقدمة',
@@ -287,7 +287,6 @@ const ar = {
     comments: 'التعليقات',
     downloads: 'التحميلات',
     growth: 'النمو',
-    engagement: 'التفاعل',
     export: 'تصدير التقرير',
     share: 'مشاركة',
     settings: 'الإعدادات'
@@ -343,10 +342,10 @@ const ar = {
     at: 'في',
     on: 'في'
   }
-};
+});
 
 // الترجمة الإنجليزية
-const en = {
+const en = async () => ({
   // Home page
   home: {
     title: 'Akwam Clone - Advanced Streaming Platform',
@@ -631,7 +630,6 @@ const en = {
     comments: 'Comments',
     downloads: 'Downloads',
     growth: 'Growth',
-    engagement: 'Engagement',
     export: 'Export Report',
     share: 'Share',
     settings: 'Settings'
@@ -687,7 +685,7 @@ const en = {
     at: 'at',
     on: 'on'
   }
-};
+});
 
 // إنشاء مثيلات i18n
 export const { useI18n, useScopedI18n, I18nProviderClient } = createI18nClient({
@@ -695,7 +693,7 @@ export const { useI18n, useScopedI18n, I18nProviderClient } = createI18nClient({
   en
 });
 
-export const { getI18n, getScopedI18n, I18nProviderServer } = createI18nServer({
+export const { getI18n, getScopedI18n } = createI18nServer({
   ar,
   en
 });

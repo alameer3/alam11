@@ -361,5 +361,4 @@ export const createLoggerMiddleware = (config?: Partial<LoggerConfig>) => {
 };
 
 // تصدير الأنواع
-export type { LogEntry, LoggerConfig };
-export { Logger, LogLevel };
+export { Logger };
