@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
 
     if (search) {
       // البحث في الأفلام
-      result = await MovieModel.search(search, page, perPage)
+      result = await MovieModel.searchMovies(search, page, perPage)
     } else if (featured) {
       // الأفلام المميزة
       const movies = await MovieModel.getFeatured(perPage)

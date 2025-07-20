@@ -299,7 +299,7 @@ export class SeriesModel extends BaseModel {
   /**
    * البحث في المسلسلات
    */
-  static async search(
+  static async searchSeries(
     searchTerm: string,
     page: number = 1,
     perPage: number = 20
@@ -397,6 +397,63 @@ export class SeriesModel extends BaseModel {
       LEFT JOIN qualities q ON s.quality_id = q.id
       WHERE s.is_active = 1 AND s.is_featured = 1
       ORDER BY s.imdb_rating DESC, s.views_count DESC
+      LIMIT ?
+    `
+
+    const series = await query<any>(sql, [limit])
+    
+    const seriesWithDetails: SeriesWithDetails[] = []
+    for (const seriesItem of series) {
+      const seriesWithDetail: SeriesWithDetails = {
+        ...seriesItem,
+        section: seriesItem.section_name ? {
+          id: seriesItem.section_id,
+          name: seriesItem.section_name,
+          slug: seriesItem.section_slug
+        } : undefined,
+        country: seriesItem.country_name ? {
+          id: seriesItem.country_id,
+          name: seriesItem.country_name,
+          code: seriesItem.country_code,
+          flag: seriesItem.country_flag
+        } : undefined,
+        language: seriesItem.language_name ? {
+          id: seriesItem.language_id,
+          name: seriesItem.language_name,
+          code: seriesItem.language_code
+        } : undefined,
+        quality: seriesItem.quality_name ? {
+          id: seriesItem.quality_id,
+          name: seriesItem.quality_name,
+          resolution: seriesItem.quality_resolution
+        } : undefined
+      }
+
+      seriesWithDetail.categories = await this.getSeriesCategories(seriesItem.id)
+      seriesWithDetails.push(seriesWithDetail)
+    }
+
+    return seriesWithDetails
+  }
+
+  /**
+   * الحصول على أحدث المسلسلات
+   */
+  static async getLatest(limit: number = 10): Promise<SeriesWithDetails[]> {
+    const sql = `
+      SELECT 
+        s.*,
+        sec.name as section_name, sec.slug as section_slug,
+        c.name as country_name, c.code as country_code, c.flag as country_flag,
+        l.name as language_name, l.code as language_code,
+        q.name as quality_name, q.resolution as quality_resolution
+      FROM series s
+      LEFT JOIN sections sec ON s.section_id = sec.id
+      LEFT JOIN countries c ON s.country_id = c.id
+      LEFT JOIN languages l ON s.language_id = l.id
+      LEFT JOIN qualities q ON s.quality_id = q.id
+      WHERE s.is_active = 1
+      ORDER BY s.created_at DESC, s.id DESC
       LIMIT ?
     `
 

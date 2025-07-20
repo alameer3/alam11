@@ -4,10 +4,126 @@ import { SearchBox } from '@/components/layout/search-box'
 import { AdSystem } from '@/components/ads/ad-system'
 import { MovieSlider } from '@/components/ui/movie-slider'
 import { ContentWidget } from '@/components/ui/content-widget'
+import { connectToDatabase } from '@/lib/database/connection'
+import { MovieModel } from '@/lib/database/models/movie'
+import { SeriesModel } from '@/lib/database/models/series'
+import { SectionModel } from '@/lib/database/models'
 import Link from 'next/link'
 import Image from 'next/image'
 
-export default function HomePage() {
+async function getHomePageData() {
+  await connectToDatabase()
+  
+  // جلب الأقسام
+  const sections = await SectionModel.getAll()
+  
+  // جلب المحتوى المميز للسلايدر
+  const featuredMovies = await MovieModel.getFeatured(3)
+  const featuredSeries = await SeriesModel.getFeatured(2)
+  
+  // جلب أحدث الأفلام
+  const latestMovies = await MovieModel.getLatest(8)
+  const featuredMovie = await MovieModel.getFeatured(1)
+  
+  // جلب أحدث المسلسلات
+  const latestSeries = await SeriesModel.getLatest(8)
+  const featuredSeriesItem = await SeriesModel.getFeatured(1)
+  
+  return {
+    sections,
+    featuredContent: [...featuredMovies, ...featuredSeries],
+    movies: {
+      featured: featuredMovie[0],
+      latest: latestMovies
+    },
+    series: {
+      featured: featuredSeriesItem[0],
+      latest: latestSeries
+    }
+  }
+}
+
+export default async function HomePage() {
+  const data = await getHomePageData()
+  
+  // تحويل البيانات لتتناسب مع المكونات الموجودة
+  const sliderItems = data.featuredContent.map(item => {
+    // التحقق من نوع العنصر
+    const isSeries = 'total_episodes' in item && item.total_episodes !== undefined
+    
+    return {
+      id: item.id.toString(),
+      type: (isSeries ? 'series' : 'movie') as 'movie' | 'series',
+      title: item.title,
+      image: item.poster || '/images/placeholder.jpg',
+      url: isSeries ? `/series/${item.slug}` : `/movie/${item.slug}`,
+      rating: item.imdb_rating?.toString() || item.local_rating?.toString(),
+      quality: item.quality?.name || 'HD'
+    }
+  })
+  
+  // تحضير عناصر الأفلام
+  const movieItems = data.movies.latest.map(movie => ({
+    id: movie.id.toString(),
+    title: movie.title,
+    image: movie.poster || '/images/placeholder.jpg',
+    rating: movie.imdb_rating?.toString() || movie.local_rating?.toString(),
+    year: movie.release_date ? new Date(movie.release_date).getFullYear().toString() : '',
+    genres: movie.categories ? movie.categories.map(c => c.name) : [],
+    quality: movie.quality?.name || 'HD',
+    url: `/movie/${movie.slug}`
+  }))
+  
+  // تحضير عناصر المسلسلات
+  const seriesItems = data.series.latest.map(series => ({
+    id: series.id.toString(),
+    title: series.title,
+    image: series.poster || '/images/placeholder.jpg',
+    rating: series.imdb_rating?.toString() || series.local_rating?.toString(),
+    year: series.first_air_date ? new Date(series.first_air_date).getFullYear().toString() : '',
+    genres: series.categories ? series.categories.map(c => c.name) : [],
+    episodes: series.total_episodes || 0,
+    quality: series.quality?.name || 'HD',
+    url: `/series/${series.slug}`
+  }))
+  
+  // تحضير العنصر المميز للأفلام
+  const movieFeaturedItem = data.movies.featured ? {
+    id: data.movies.featured.id.toString(),
+    title: data.movies.featured.title,
+    description: data.movies.featured.description || '',
+    image: data.movies.featured.backdrop || '/images/placeholder.jpg',
+    poster: data.movies.featured.poster || '/images/placeholder.jpg',
+    rating: data.movies.featured.imdb_rating?.toString() || data.movies.featured.local_rating?.toString() || '0',
+    quality: data.movies.featured.quality?.name || 'HD',
+    url: `/movie/${data.movies.featured.slug}`,
+    trailer: data.movies.featured.trailer_url
+  } : undefined
+  
+  // تحضير العنصر المميز للمسلسلات
+  const seriesFeaturedItem = data.series.featured ? {
+    id: data.series.featured.id.toString(),
+    title: data.series.featured.title,
+    description: data.series.featured.description || '',
+    image: data.series.featured.backdrop || '/images/placeholder.jpg',
+    poster: data.series.featured.poster || '/images/placeholder.jpg',
+    rating: data.series.featured.imdb_rating?.toString() || data.series.featured.local_rating?.toString() || '0',
+    quality: data.series.featured.quality?.name || 'HD',
+    url: `/series/${data.series.featured.slug}`,
+    trailer: data.series.featured.trailer_url
+  } : undefined
+  
+  // تحضير عناصر القائمة للأقسام
+  const movieSections = data.sections.map(section => ({
+    name: section.name,
+    url: `/movies?section=${section.id}`
+  }))
+  
+  const seriesSections = data.sections.map(section => ({
+    name: section.name,
+    url: `/series?section=${section.id}`
+  }))
+
   return (
     <div dir="rtl" className="header-fixed body-home min-h-screen bg-gradient-to-b from-black/55 to-black" 
          style={{ backgroundImage: 'url(/images/home-bg.webp)' }}>
@@ -35,43 +151,7 @@ export default function HomePage() {
               <div className="widget-body">
                 <MovieSlider 
                   title="المختارات" 
-                  items={[
-                    {
-                      id: '854',
-                      type: 'series',
-                      title: 'Lucifer الموسم الخامس',
-                      image: 'https://img.downet.net/thumb/270x400/uploads/BgvPP.jpg',
-                      url: '/series/854/lucifer-الموسم-الخامس'
-                    },
-                    {
-                      id: '1377',
-                      type: 'series',
-                      title: 'WandaVision الموسم الاول',
-                      image: 'https://img.downet.net/thumb/270x400/uploads/6ECRL.jpeg',
-                      url: '/series/1377/wandavision-الموسم-الاول'
-                    },
-                    {
-                      id: '9839',
-                      type: 'movie',
-                      title: 'Ballerina',
-                      image: 'https://img.downet.net/thumb/270x400/uploads/vg3hV.jpg',
-                      url: '/movie/9839/ballerina'
-                    },
-                    {
-                      id: '9837',
-                      type: 'movie',
-                      title: 'Thunderbolts',
-                      image: 'https://img.downet.net/thumb/270x400/uploads/bGttw.jpg',
-                      url: '/movie/9837/thunderbolts'
-                    },
-                    {
-                      id: '9805',
-                      type: 'movie',
-                      title: 'Squid Game الموسم الثالث',
-                      image: 'https://img.downet.net/thumb/270x400/uploads/sapgq.jpg',
-                      url: '/movie/9805/squid-game-الموسم-الثالث'
-                    }
-                  ]}
+                  items={sliderItems}
                 />
               </div>
             </div>
@@ -81,16 +161,8 @@ export default function HomePage() {
               <AdSystem 
                 type="banner"
                 position="content"
-                desktop={{
-                  key: 'c4dafd2afd106c16f2da137131642dc4',
-                  width: 728,
-                  height: 90
-                }}
-                mobile={{
-                  key: '96a30fbd2b80990e89652a08f49b609f',
-                  width: 300,
-                  height: 250
-                }}
+                width="728px"
+                height="90px"
               />
             </div>
 
@@ -98,88 +170,20 @@ export default function HomePage() {
             <ContentWidget 
               title="أفلام"
               type="movies"
-              headerMenuItems={[
-                { name: 'عربي', url: '/movies?section=29' },
-                { name: 'اجنبي', url: '/movies?section=30' },
-                { name: 'هندي', url: '/movies?section=31' },
-                { name: 'تركي', url: '/movies?section=32' },
-                { name: 'اسيوي', url: '/movies?section=33' }
-              ]}
+              headerMenuItems={movieSections}
               moreUrl="/movies"
-              featuredItem={{
-                id: '9946',
-                title: 'Hera Pher',
-                description: 'مشاهدة و تحميل فيلم Hera Pher حيث يدور العمل حول ينفصل الصديقان أجاي وفيجاي عن بعضهما البعض عندما يكتشفان أسرارًا عن ماضيهما',
-                image: 'https://img.downet.net/thumb/1140x310/uploads/Ul3ES.webp',
-                poster: 'https://img.downet.net/thumb/150x200/uploads/Ul3ES.webp',
-                rating: '6.6',
-                quality: 'WEB-DL',
-                url: '/movie/9946/hera-pher',
-                trailer: 'https://www.youtube.com/watch?v=cIPoW4VnZYk'
-              }}
-              items={[
-                {
-                  id: '9929',
-                  title: 'Push',
-                  image: 'https://img.downet.net/thumb/178x260/uploads/weU96.webp',
-                  rating: '7.2',
-                  year: '2024',
-                  genres: ['اثارة', 'رعب'],
-                  quality: 'WEB-DL',
-                  url: '/movie/9929/push'
-                }
-                // المزيد من الأفلام...
-              ]}
+              featuredItem={movieFeaturedItem}
+              items={movieItems}
             />
 
             {/* ويدجت المسلسلات */}
             <ContentWidget 
               title="مسلسلات"
               type="series"
-              headerMenuItems={[
-                { name: 'عربي', url: '/series?section=29' },
-                { name: 'اجنبي', url: '/series?section=30' },
-                { name: 'هندي', url: '/series?section=31' },
-                { name: 'تركي', url: '/series?section=32' },
-                { name: 'اسيوي', url: '/series?section=33' }
-              ]}
+              headerMenuItems={seriesSections}
               moreUrl="/series"
-              featuredItem={{
-                id: '4994',
-                title: 'Dexter: Resurrection',
-                description: 'مشاهدة و تحميل مسلسل Dexter: Resurrection حيث يدور العمل حول يستيقظ دكستر مورغان من غيبوبته ليجد هاريسون قد اختفى دون أثر',
-                image: 'https://img.downet.net/thumb/1140x310/uploads/ad99J.webp',
-                poster: 'https://img.downet.net/thumb/150x200/uploads/cU3Wm.webp',
-                rating: '7.9',
-                quality: 'WEB-DL',
-                url: '/series/4994/dexter-resurrection',
-                trailer: 'https://www.youtube.com/watch?v=agNIhIWwi6U'
-              }}
-              items={[
-                {
-                  id: '4970',
-                  title: 'فات الميعاد',
-                  image: 'https://img.downet.net/thumb/178x260/uploads/u3No5.jpg',
-                  rating: '6.0',
-                  year: '2025',
-                  genres: ['دراما'],
-                  episodes: 27,
-                  quality: 'WEB-DL',
-                  url: '/series/4970/فات-الميعاد'
-                },
-                {
-                  id: '4966',
-                  title: 'خطيئة اخيرة',
-                  image: 'https://img.downet.net/thumb/178x260/uploads/w4CQd.jpg',
-                  rating: '6.1',
-                  year: '2025',
-                  genres: ['دراما'],
-                  episodes: 41,
-                  quality: 'WEB-DL',
-                  url: '/series/4966/خطيئة-اخيرة'
-                }
-                // المزيد من المسلسلات...
-              ]}
+              featuredItem={seriesFeaturedItem}
+              items={seriesItems}
             />
 
             {/* ويدجت التلفزيون */}
@@ -193,9 +197,7 @@ export default function HomePage() {
                 { name: 'رياضة', url: '/shows?category=رياضة' }
               ]}
               moreUrl="/shows"
-              items={[
-                // محتوى التلفزيون...
-              ]}
+              items={[]}
             />
 
             {/* ويدجت المنوعات */}
@@ -208,9 +210,7 @@ export default function HomePage() {
                 { name: 'تطبيقات', url: '/mix?category=تطبيقات' }
               ]}
               moreUrl="/mix"
-              items={[
-                // محتوى المنوعات...
-              ]}
+              items={[]}
             />
           </div>
         </div>

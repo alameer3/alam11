@@ -35,19 +35,19 @@ export async function GET(request: NextRequest) {
       switch (type) {
         case 'movies':
           const { MovieModel } = await import('@/lib/database/models')
-          const movieResults = await MovieModel.search(query, 1, limit)
+          const movieResults = await MovieModel.searchMovies(query, 1, limit)
           results = { movies: movieResults.data, series: [], people: [] }
           break
           
         case 'series':
           const { SeriesModel } = await import('@/lib/database/models')
-          const seriesResults = await SeriesModel.search(query, 1, limit)
+          const seriesResults = await SeriesModel.searchSeries(query, 1, limit)
           results = { movies: [], series: seriesResults.data, people: [] }
           break
           
         case 'people':
           const { PersonModel } = await import('@/lib/database/models')
-          const people = await PersonModel.search(query, limit)
+          const people = await PersonModel.searchPeople(query, limit)
           results = { movies: [], series: [], people }
           break
           
@@ -87,8 +87,8 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// GET /api/search/suggestions - اقتراحات البحث
-export async function getSearchSuggestions(query: string): Promise<string[]> {
+// اقتراحات البحث - دالة مساعدة داخلية
+async function getSearchSuggestions(query: string): Promise<string[]> {
   try {
     // يمكن تحسين هذا لاحقاً بناءً على تاريخ البحث والشعبية
     const popularSearches = await SearchModel.getPopularSearches(10)

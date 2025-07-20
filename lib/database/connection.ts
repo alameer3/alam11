@@ -225,7 +225,9 @@ class DatabaseConnection {
       if (this.config.ADVANCED.enableQueryCache) {
         if (this.queryCache.size >= this.config.ADVANCED.maxCacheSize) {
           const firstKey = this.queryCache.keys().next().value
-          this.queryCache.delete(firstKey)
+          if (firstKey) {
+            this.queryCache.delete(firstKey)
+          }
         }
         this.queryCache.set(cacheKey, result)
       }
@@ -284,7 +286,7 @@ class DatabaseConnection {
     }
 
     const transaction = this.db.transaction(callback)
-    return transaction()
+    return transaction(this.db)
   }
 
   /**
@@ -390,7 +392,7 @@ class DatabaseConnection {
       }
     } catch (error) {
       console.error('❌ خطأ في الحصول على معلومات قاعدة البيانات:', error)
-      return { connected: false, error: error.message }
+      return { connected: false, error: error instanceof Error ? error.message : 'خطأ غير معروف' }
     }
   }
 }
@@ -404,8 +406,15 @@ export async function connectToDatabase(): Promise<Database.Database> {
 }
 
 // تصدير الدوال المساعدة
-export const query = (sql: string, params: any[] = []) => db.query(sql, params)
-export const queryOne = (sql: string, params: any[] = []) => db.queryOne(sql, params)
+export const query = async <T = any>(sql: string, params: any[] = []): Promise<T[]> => {
+  await connectToDatabase()
+  return db.query(sql, params) as T[]
+}
+
+export const queryOne = async <T = any>(sql: string, params: any[] = []): Promise<T | null> => {
+  await connectToDatabase()
+  return db.queryOne(sql, params) as T | null
+}
 export const execute = (sql: string, params: any[] = []) => db.execute(sql, params)
 export const transaction = <T>(callback: (db: Database.Database) => T) => db.transaction(callback)
 

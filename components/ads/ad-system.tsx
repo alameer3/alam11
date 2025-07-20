@@ -13,7 +13,7 @@ import {
 
 export interface AdSystemProps {
   type: 'video' | 'banner' | 'popup' | 'interstitial' | 'native'
-  position?: 'header' | 'sidebar' | 'content' | 'footer' | 'overlay' | 'floating'
+  position?: 'header' | 'sidebar' | 'content' | 'footer' | 'overlay' | 'floating' | 'popup'
   imageUrl?: string
   videoSrc?: string
   clickUrl?: string
@@ -230,7 +230,8 @@ export function AdSystem({
       content: 'w-full max-w-4xl mx-auto',
       footer: 'w-full',
       overlay: 'fixed inset-0 z-50 flex items-center justify-center bg-black/80',
-      floating: 'fixed bottom-4 right-4 z-40'
+      floating: 'fixed bottom-4 right-4 z-40',
+      popup: 'fixed inset-0 z-50 flex items-center justify-center bg-black/50'
     }
     
     return `${baseClasses} ${positionClasses[position]} ${className}`

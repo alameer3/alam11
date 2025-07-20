@@ -181,18 +181,18 @@ export default function MoviesPage() {
         <center>
           <div className="d-none d-md-block">
             <AdSystem
-              adType="banner"
-              placement="movies-top-desktop"
-              dimensions={{ width: 728, height: 90 }}
-              showCloseButton={false}
+              type="banner"
+              position="content"
+              width="728px"
+              height="90px"
             />
           </div>
-          <div className="d-md-none">
-            <AdSystem
-              adType="banner"
-              placement="movies-top-mobile"
-              dimensions={{ width: 300, height: 250 }}
-              showCloseButton={false}
+                      <div className="d-md-none">
+              <AdSystem
+                type="banner"
+                position="content"
+                width="300px"
+                height="250px"
             />
           </div>
         </center>
@@ -350,20 +350,20 @@ export default function MoviesPage() {
           {/* إعلان وسط الصفحة */}
           <div className="ads mb-3">
             <center>
-              <div className="d-none d-md-block">
-                <AdSystem
-                  adType="banner"
-                  placement="movies-middle-desktop"
-                  dimensions={{ width: 728, height: 90 }}
-                  showCloseButton={false}
+                          <div className="d-none d-md-block">
+              <AdSystem
+                type="banner"
+                position="content"
+                width="728px"
+                height="90px"
                 />
               </div>
-              <div className="d-md-none">
-                <AdSystem
-                  adType="banner"
-                  placement="movies-middle-mobile"
-                  dimensions={{ width: 300, height: 250 }}
-                  showCloseButton={false}
+                              <div className="d-md-none">
+                  <AdSystem
+                    type="banner"
+                    position="content"
+                    width="300px"
+                    height="250px"
                 />
               </div>
             </center>
@@ -399,9 +399,8 @@ export default function MoviesPage() {
                   {index > 0 && index % 6 === 0 && (
                     <div className="col-12 mb-4">
                       <AdSystem
-                        adType="native"
-                        placement={`movies-between-${index}`}
-                        showCloseButton={true}
+                        type="native"
+                        position="content"
                       />
                     </div>
                   )}

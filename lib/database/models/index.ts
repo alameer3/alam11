@@ -300,7 +300,7 @@ export class PersonModel extends BaseModel {
     return await query<Person>(sql, [limit])
   }
 
-  static async search(searchTerm: string, limit: number = 20): Promise<Person[]> {
+  static async searchPeople(searchTerm: string, limit: number = 20): Promise<Person[]> {
     const sql = `
       SELECT * FROM people 
       WHERE is_active = 1 
