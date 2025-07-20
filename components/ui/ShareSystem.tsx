@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Share2, Copy, Link as LinkIcon, Facebook, Twitter, WhatsApp, Telegram, Instagram, Mail, MessageCircle, QrCode, Download } from 'lucide-react';
+import { Share2, Copy, Link as LinkIcon, Facebook, Twitter, MessageCircle, Mail, QrCode, Download } from 'lucide-react';
 
 interface ShareSystemProps {
   contentId: string;

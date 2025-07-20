@@ -31,7 +31,7 @@ import {
 
 interface Notification {
   id: string;
-  type: 'info' | 'success' | 'warning' | 'error' | 'favorite' | 'download' | 'comment' | 'follow' | 'video';
+  type: 'info' | 'success' | 'warning' | 'error' | 'favorite' | 'download' | 'comment' | 'follow' | 'video' | 'system';
   title: string;
   message: string;
   timestamp: string;
