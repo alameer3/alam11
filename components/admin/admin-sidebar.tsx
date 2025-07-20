@@ -14,19 +14,26 @@ import {
   MegaphoneIcon,
   DocumentTextIcon,
   FolderIcon,
-  ShieldCheckIcon
+  ShieldCheckIcon,
+  DocumentChartBarIcon,
+  CloudArrowUpIcon,
+  ClockIcon
 } from '@heroicons/react/24/outline'
 
 const navigation = [
   { name: 'لوحة التحكم', href: '/admin', icon: ChartBarIcon },
   { name: 'الأفلام', href: '/admin/movies', icon: FilmIcon },
   { name: 'المسلسلات', href: '/admin/series', icon: TvIcon },
+  { name: 'المحتوى', href: '/admin/content', icon: DocumentTextIcon },
   { name: 'المستخدمون', href: '/admin/users', icon: UserGroupIcon },
   { name: 'الإعلانات', href: '/admin/ads', icon: MegaphoneIcon },
   { name: 'الخوادم', href: '/admin/servers', icon: ServerIcon },
   { name: 'المراقبة', href: '/admin/monitoring', icon: EyeIcon },
   { name: 'الملفات', href: '/admin/files', icon: FolderIcon },
-  { name: 'المحتوى', href: '/admin/content', icon: DocumentTextIcon },
+  { name: 'التقارير', href: '/admin/reports', icon: DocumentChartBarIcon },
+  { name: 'النسخ الاحتياطية', href: '/admin/backups', icon: CloudArrowUpIcon },
+  { name: 'سجل الأنشطة', href: '/admin/activity-log', icon: ClockIcon },
+  { name: 'الأذونات', href: '/admin/permissions', icon: ShieldCheckIcon },
   { name: 'الإعدادات', href: '/admin/settings', icon: CogIcon },
 ]
 
