@@ -1,24 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { connectToDatabase } from '@/lib/database/connection'
-import { MovieModel } from '@/lib/database/models/movie'
+import { MovieModel } from '@/lib/database/models'
 
-// GET /api/movies/[id] - جلب فيلم محدد
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase()
-    
-    const movieId = parseInt(params.id)
-    if (isNaN(movieId)) {
+    const movieId = Number(params.id)
+
+    if (!params.id || isNaN(movieId)) {
       return NextResponse.json(
         { error: 'معرف الفيلم غير صحيح' },
         { status: 400 }
       )
     }
 
-    const movie = await MovieModel.getWithDetails(movieId)
+    const movie = await MovieModel.findById(movieId)
     
     if (!movie) {
       return NextResponse.json(
@@ -29,24 +26,22 @@ export async function GET(
 
     return NextResponse.json(movie)
   } catch (error) {
-    console.error('Error fetching movie:', error)
+    console.error('خطأ في جلب الفيلم:', error)
     return NextResponse.json(
-      { error: 'فشل في جلب الفيلم' },
+      { error: 'خطأ في الخادم' },
       { status: 500 }
     )
   }
 }
 
-// PUT /api/movies/[id] - تحديث فيلم كامل
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase()
-    
-    const movieId = parseInt(params.id)
-    if (isNaN(movieId)) {
+    const movieId = Number(params.id)
+
+    if (!params.id || isNaN(movieId)) {
       return NextResponse.json(
         { error: 'معرف الفيلم غير صحيح' },
         { status: 400 }
@@ -56,7 +51,7 @@ export async function PUT(
     const body = await request.json()
     
     // التحقق من وجود الفيلم
-    const existingMovie = await MovieModel.getWithDetails(movieId)
+    const existingMovie = await MovieModel.findById(movieId)
     if (!existingMovie) {
       return NextResponse.json(
         { error: 'الفيلم غير موجود' },
@@ -75,24 +70,22 @@ export async function PUT(
 
     return NextResponse.json(updatedMovie)
   } catch (error) {
-    console.error('Error updating movie:', error)
+    console.error('خطأ في تحديث الفيلم:', error)
     return NextResponse.json(
-      { error: 'فشل في تحديث الفيلم' },
+      { error: 'خطأ في الخادم' },
       { status: 500 }
     )
   }
 }
 
-// PATCH /api/movies/[id] - تحديث جزئي للفيلم
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase()
-    
-    const movieId = parseInt(params.id)
-    if (isNaN(movieId)) {
+    const movieId = Number(params.id)
+
+    if (!params.id || isNaN(movieId)) {
       return NextResponse.json(
         { error: 'معرف الفيلم غير صحيح' },
         { status: 400 }
@@ -102,7 +95,7 @@ export async function PATCH(
     const body = await request.json()
     
     // التحقق من وجود الفيلم
-    const existingMovie = await MovieModel.getWithDetails(movieId)
+    const existingMovie = await MovieModel.findById(movieId)
     if (!existingMovie) {
       return NextResponse.json(
         { error: 'الفيلم غير موجود' },
@@ -112,41 +105,32 @@ export async function PATCH(
 
     const updatedMovie = await MovieModel.update(movieId, body)
     
-    if (!updatedMovie) {
-      return NextResponse.json(
-        { error: 'فشل في تحديث الفيلم' },
-        { status: 500 }
-      )
-    }
-
     return NextResponse.json(updatedMovie)
   } catch (error) {
-    console.error('Error updating movie:', error)
+    console.error('خطأ في تعديل الفيلم:', error)
     return NextResponse.json(
-      { error: 'فشل في تحديث الفيلم' },
+      { error: 'خطأ في الخادم' },
       { status: 500 }
     )
   }
 }
 
-// DELETE /api/movies/[id] - حذف فيلم
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase()
-    
-    const movieId = parseInt(params.id)
-    if (isNaN(movieId)) {
+    const movieId = Number(params.id)
+
+    if (!params.id || isNaN(movieId)) {
       return NextResponse.json(
         { error: 'معرف الفيلم غير صحيح' },
         { status: 400 }
       )
     }
-
+    
     // التحقق من وجود الفيلم
-    const existingMovie = await MovieModel.getWithDetails(movieId)
+    const existingMovie = await MovieModel.findById(movieId)
     if (!existingMovie) {
       return NextResponse.json(
         { error: 'الفيلم غير موجود' },
@@ -154,9 +138,9 @@ export async function DELETE(
       )
     }
 
-    const deleted = await MovieModel.delete(movieId)
+    const success = await MovieModel.delete(movieId)
     
-    if (!deleted) {
+    if (!success) {
       return NextResponse.json(
         { error: 'فشل في حذف الفيلم' },
         { status: 500 }
@@ -165,12 +149,12 @@ export async function DELETE(
 
     return NextResponse.json({ 
       message: 'تم حذف الفيلم بنجاح',
-      id: movieId 
+      success: true 
     })
   } catch (error) {
-    console.error('Error deleting movie:', error)
+    console.error('خطأ في حذف الفيلم:', error)
     return NextResponse.json(
-      { error: 'فشل في حذف الفيلم' },
+      { error: 'خطأ في الخادم' },
       { status: 500 }
     )
   }

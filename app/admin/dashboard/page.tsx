@@ -16,7 +16,7 @@ import {
   CloudArrowDownIcon,
   CursorArrowRaysIcon,
   CalendarDaysIcon,
-  TrendingUpIcon,
+  ArrowTrendingUpIcon,
   PlusIcon
 } from '@heroicons/react/24/outline'
 
@@ -266,7 +266,7 @@ export default function AdminDashboard() {
         <Card className="bg-gradient-to-br from-orange-900/50 to-orange-800/30 border-orange-700/50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-orange-100">التفاعل</CardTitle>
-            <TrendingUpIcon className="w-5 h-5 text-orange-400" />
+                            <ArrowTrendingUpIcon className="w-5 h-5 text-orange-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-white">{formatNumber(stats?.content.totalRatings || 0)}</div>
@@ -418,7 +418,7 @@ export default function AdminDashboard() {
               
               <Link href="/admin/ads" className="block">
                 <Button variant="outline" className="w-full justify-start border-gray-600 text-gray-300 hover:bg-gray-700">
-                  <TrendingUpIcon className="w-4 h-4 ml-2" />
+                  <ArrowTrendingUpIcon className="w-4 h-4 ml-2" />
                   إدارة الإعلانات
                 </Button>
               </Link>

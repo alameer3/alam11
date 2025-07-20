@@ -12,8 +12,8 @@ import {
   EyeIcon,
   UserGroupIcon,
   CalendarDaysIcon,
-  TrendingUpIcon,
-  TrendingDownIcon,
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
   ArrowPathIcon,
   FunnelIcon,
   DocumentArrowDownIcon
@@ -231,9 +231,9 @@ export default function ReportsPage() {
 
   const getGrowthIcon = (growth: number) => {
     if (growth > 0) {
-      return <TrendingUpIcon className="w-4 h-4 text-green-500" />
+      return <ArrowTrendingUpIcon className="w-4 h-4 text-green-500" />
     } else if (growth < 0) {
-      return <TrendingDownIcon className="w-4 h-4 text-red-500" />
+              return <ArrowTrendingDownIcon className="w-4 h-4 text-red-500" />
     }
     return null
   }
@@ -393,7 +393,7 @@ export default function ReportsPage() {
         <Card className="bg-gray-800 border-gray-700">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
-              <TrendingUpIcon className="w-5 h-5 text-green-500" />
+              <ArrowTrendingUpIcon className="w-5 h-5 text-green-500" />
               أفضل المحتوى أداءً
             </CardTitle>
           </CardHeader>
