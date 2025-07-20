@@ -12,6 +12,8 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
+import DarkModeToggle from './ui/DarkModeToggle'
+import NotificationSystem from './ui/NotificationSystem'
 
 interface Movie {
   id: number
@@ -231,6 +233,12 @@ const Header: React.FC = () => {
                   </div>
                 )}
               </div>
+              
+              {/* نظام الإشعارات */}
+              <NotificationSystem />
+              
+              {/* زر الوضع المظلم */}
+              <DarkModeToggle />
             </div>
 
             {/* زر القائمة المحمولة */}
