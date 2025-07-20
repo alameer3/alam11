@@ -31,6 +31,11 @@ export function MainHeader() {
     if (menu) {
       menu.classList.toggle('show')
     }
+
+    // Toggle body class to control global styles (e.g., hamburger icon X)
+    if (typeof document !== 'undefined') {
+      document.body.classList.toggle('main-menu-active')
+    }
   }
 
   return (
@@ -40,9 +45,9 @@ export function MainHeader() {
           {/* الشعار */}
           <div className="flex items-center">
             <h2 className="main-logo m-0">
-              <Link href="/ones" className="inline-flex">
+              <Link href="/" className="inline-flex">
                 <img
-                  src="/images/logo-white.svg"
+                  src="/logo.svg"
                   className="img-fluid"
                   alt="اكوام"
                   style={{ height: '40px' }}

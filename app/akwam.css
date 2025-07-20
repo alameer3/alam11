@@ -1,0 +1,136 @@
+/* Akwam-like global styles extracted and simplified for Tailwind project */
+
+/* Overlay that appears when main menu is open */
+.site-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 40;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.site-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Main header bar */
+.main-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 70px;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+  z-index: 50;
+  transition: background-color 0.3s ease;
+}
+
+.main-header.scrolled {
+  background-color: #000;
+}
+
+/* Hamburger icon */
+.menu-toggle .icn {
+  width: 26px;
+  height: 2px;
+  background-color: #fff;
+  position: relative;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+.menu-toggle .icn::before,
+.menu-toggle .icn::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #fff;
+  transition: transform 0.3s ease, top 0.3s ease, bottom 0.3s ease;
+}
+.menu-toggle .icn::before {
+  top: -6px;
+}
+.menu-toggle .icn::after {
+  bottom: -6px;
+}
+
+/* When menu is open ~ transform to X */
+body.main-menu-active .menu-toggle .icn {
+  background-color: #f3951e;
+}
+body.main-menu-active .menu-toggle .icn::before {
+  top: 0;
+  transform: rotate(-45deg);
+  background-color: #f3951e;
+}
+body.main-menu-active .menu-toggle .icn::after {
+  bottom: 0;
+  transform: rotate(45deg);
+  background-color: #f3951e;
+}
+
+/* Main menu drawer */
+.main-menu {
+  position: fixed;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  top: 70px; /* below header */
+  background-color: #27272c;
+  border-top: 1px solid #111114;
+  z-index: 45;
+  overflow-y: auto;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.main-menu.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Items inside main menu */
+.main-menu .menu .item {
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px;
+  font-size: 22px;
+  transition: color 0.2s ease;
+}
+.main-menu .menu .item:hover {
+  color: #f3951e;
+}
+.main-menu .menu .item .icn {
+  font-size: 48px;
+  margin-left: 12px;
+}
+
+/* Social links at bottom */
+.main-menu .social a {
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 50%;
+  border: 1px solid #777;
+  color: #777;
+  font-size: 14px;
+  text-align: center;
+  margin: 4px;
+  transition: all 0.3s ease;
+}
+.main-menu .social a:hover {
+  color: #fff;
+  background-color: #f3951e;
+  border-color: #f3951e;
+}

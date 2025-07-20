@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import './akwam.css'
+
+import { MainHeader } from '@/components/layout/main-header'
+import { MainMenu } from '@/components/layout/main-menu'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -63,7 +67,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {/* Site overlay for menu */}
+        <span className="site-overlay" />
+
+        {/* Global header and menu */}
+        <MainHeader />
+        <MainMenu />
+
+        {/* Page content */}
+        {children}
+      </body>
     </html>
   )
 }
