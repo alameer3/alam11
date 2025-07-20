@@ -1,578 +1,407 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { 
-  Play, 
-  Star, 
-  Calendar, 
-  Clock,
-  Eye,
-  Filter,
-  Grid,
-  List,
-  ChevronDown,
-  Search,
-  SlidersHorizontal,
-  ArrowUpDown,
-  Flame,
-  Award,
-  Zap
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Input } from '@/components/ui/input'
+import { Search, Filter, Star, Play, Eye, Download, Heart, Grid, List, Sliders } from 'lucide-react'
 
-// البيانات المحدثة بناءً على الملف الأصلي
-const sections = [
-  { id: 0, name: 'جميع الأقسام' },
-  { id: 29, name: 'عربي' },
-  { id: 30, name: 'أجنبي' },
-  { id: 31, name: 'هندي' },
-  { id: 32, name: 'تركي' },
-  { id: 33, name: 'آسيوي' }
+// بيانات تجريبية للأفلام
+const moviesData = [
+  {
+    id: 1,
+    title: "The Dark Knight",
+    originalTitle: "The Dark Knight",
+    slug: "the-dark-knight",
+    description: "فيلم أكشن وإثارة من بطولة كريستيان بيل",
+    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
+    rating: 9.0,
+    year: 2008,
+    duration: 152,
+    quality: "HD",
+    views: 1500000,
+    downloads: 500000,
+    likes: 25000,
+    isFeatured: true,
+    categories: ["Action", "Drama", "Crime"]
+  },
+  {
+    id: 2,
+    title: "Inception",
+    originalTitle: "Inception",
+    slug: "inception",
+    description: "فيلم خيال علمي من إخراج كريستوفر نولان",
+    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
+    rating: 8.8,
+    year: 2010,
+    duration: 148,
+    quality: "FHD",
+    views: 1200000,
+    downloads: 400000,
+    likes: 20000,
+    isFeatured: true,
+    categories: ["Sci-Fi", "Action", "Thriller"]
+  },
+  {
+    id: 3,
+    title: "Interstellar",
+    originalTitle: "Interstellar",
+    slug: "interstellar",
+    description: "رحلة فضائية مذهلة من بطولة ماثيو ماكونهي",
+    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
+    rating: 8.6,
+    year: 2014,
+    duration: 169,
+    quality: "4K",
+    views: 1800000,
+    downloads: 600000,
+    likes: 30000,
+    isFeatured: true,
+    categories: ["Sci-Fi", "Adventure", "Drama"]
+  },
+  {
+    id: 4,
+    title: "The Matrix",
+    originalTitle: "The Matrix",
+    slug: "the-matrix",
+    description: "فيلم ثوري في عالم الخيال العلمي",
+    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
+    rating: 8.7,
+    year: 1999,
+    duration: 136,
+    quality: "HD",
+    views: 2000000,
+    downloads: 800000,
+    likes: 35000,
+    isFeatured: false,
+    categories: ["Sci-Fi", "Action"]
+  },
+  {
+    id: 5,
+    title: "Pulp Fiction",
+    originalTitle: "Pulp Fiction",
+    slug: "pulp-fiction",
+    description: "فيلم كلاسيكي من إخراج كوينتن تارانتينو",
+    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
+    rating: 8.9,
+    year: 1994,
+    duration: 154,
+    quality: "HD",
+    views: 900000,
+    downloads: 300000,
+    likes: 15000,
+    isFeatured: false,
+    categories: ["Crime", "Drama"]
+  },
+  {
+    id: 6,
+    title: "Fight Club",
+    originalTitle: "Fight Club",
+    slug: "fight-club",
+    description: "فيلم نفسي مثير من بطولة براد بيت",
+    poster: "https://images.unsplash.com/photo-1489599835388-9c1b8b0b0b0b?w=300&h=450&fit=crop",
+    rating: 8.8,
+    year: 1999,
+    duration: 139,
+    quality: "FHD",
+    views: 1100000,
+    downloads: 350000,
+    likes: 18000,
+    isFeatured: false,
+    categories: ["Drama", "Thriller"]
+  }
 ]
 
-const categories = [
-  { id: 0, name: 'جميع التصنيفات' },
-  { id: 87, name: 'رمضان' },
-  { id: 30, name: 'أنمي' },
-  { id: 18, name: 'أكشن' },
-  { id: 71, name: 'مدبلج' },
-  { id: 72, name: 'نتفليكس' },
-  { id: 20, name: 'كوميدي' },
-  { id: 35, name: 'إثارة' },
-  { id: 34, name: 'غموض' },
-  { id: 33, name: 'عائلي' },
-  { id: 88, name: 'أطفال' },
-  { id: 25, name: 'حربي' },
-  { id: 32, name: 'رياضي' },
-  { id: 89, name: 'قصير' },
-  { id: 43, name: 'فانتازيا' },
-  { id: 24, name: 'خيال علمي' },
-  { id: 31, name: 'موسيقى' },
-  { id: 29, name: 'سيرة ذاتية' },
-  { id: 28, name: 'وثائقي' },
-  { id: 27, name: 'رومانسي' },
-  { id: 26, name: 'تاريخي' },
-  { id: 23, name: 'دراما' },
-  { id: 22, name: 'رعب' },
-  { id: 21, name: 'جريمة' },
-  { id: 19, name: 'مغامرة' },
-  { id: 91, name: 'غربي' }
-]
+const categories = ["All", "Action", "Drama", "Comedy", "Thriller", "Sci-Fi", "Crime", "Adventure"]
+const qualities = ["All", "HD", "FHD", "4K"]
+const years = ["All", "2024", "2023", "2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015", "2014", "2013", "2012", "2011", "2010", "2009", "2008", "2007", "2006", "2005", "2004", "2003", "2002", "2001", "2000", "1999", "1998", "1997", "1996", "1995", "1994", "1993", "1992", "1991", "1990"]
 
-const languages = [
-  { id: 0, name: 'جميع اللغات' },
-  { id: 1, name: 'عربي' },
-  { id: 2, name: 'إنجليزي' },
-  { id: 3, name: 'فرنسي' },
-  { id: 4, name: 'تركي' },
-  { id: 5, name: 'هندي' },
-  { id: 6, name: 'كوري' },
-  { id: 7, name: 'ياباني' }
-]
-
-const years = Array.from({ length: 25 }, (_, i) => {
-  const year = 2024 - i
-  return { id: year, name: year.toString() }
-})
-
-const qualities = [
-  { id: 0, name: 'جميع الجودات' },
-  { id: 1, name: '4K' },
-  { id: 2, name: 'FHD' },
-  { id: 3, name: 'HD' },
-  { id: 4, name: 'SD' }
-]
-
-const sortOptions = [
-  { id: 'latest', name: 'الأحدث' },
-  { id: 'popular', name: 'الأكثر شعبية' },
-  { id: 'rating', name: 'الأعلى تقييماً' },
-  { id: 'views', name: 'الأكثر مشاهدة' },
-  { id: 'title', name: 'حسب العنوان' },
-  { id: 'year', name: 'حسب السنة' }
-]
-
-// محاكاة بيانات الأفلام
-const mockMovies = Array.from({ length: 24 }, (_, i) => ({
-  id: i + 1,
-  title: `فيلم رائع ${i + 1}`,
-  poster: `/api/placeholder/250/375`,
-  backdrop: `/api/placeholder/400/225`,
-  rating: (8.0 + Math.random() * 2).toFixed(1),
-  year: 2024 - Math.floor(Math.random() * 5),
-  duration: `${90 + Math.floor(Math.random() * 60)}م`,
-  views: `${Math.floor(Math.random() * 1000)}K`,
-  quality: ['4K', 'FHD', 'HD'][Math.floor(Math.random() * 3)],
-  genres: categories.slice(1, 4).map(c => c.name),
-  isNew: Math.random() > 0.7,
-  isTrending: Math.random() > 0.8,
-  hasAward: Math.random() > 0.9
-}))
-
-const MoviesPage: React.FC = () => {
-  const [movies, setMovies] = useState(mockMovies)
-  const [loading, setLoading] = useState(false)
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+export default function MoviesPage() {
+  const [movies, setMovies] = useState(moviesData)
+  const [filteredMovies, setFilteredMovies] = useState(moviesData)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('All')
+  const [selectedQuality, setSelectedQuality] = useState('All')
+  const [selectedYear, setSelectedYear] = useState('All')
+  const [sortBy, setSortBy] = useState('rating')
+  const [viewMode, setViewMode] = useState('grid')
   const [showFilters, setShowFilters] = useState(false)
-  
-  // فلاتر البحث
-  const [filters, setFilters] = useState({
-    search: '',
-    section: 0,
-    category: 0,
-    language: 0,
-    year: 0,
-    quality: 0,
-    sort: 'latest'
-  })
 
-  // تطبيق الفلاتر
-  const applyFilters = () => {
-    setLoading(true)
-    // محاكاة استدعاء API
-    setTimeout(() => {
-      let filtered = [...mockMovies]
+  // فلترة وبحث الأفلام
+  useEffect(() => {
+    let filtered = movies.filter(movie => {
+      const matchesSearch = movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          movie.description.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesCategory = selectedCategory === 'All' || movie.categories.includes(selectedCategory)
+      const matchesQuality = selectedQuality === 'All' || movie.quality === selectedQuality
+      const matchesYear = selectedYear === 'All' || movie.year.toString() === selectedYear
       
-      if (filters.search) {
-        filtered = filtered.filter(movie => 
-          movie.title.toLowerCase().includes(filters.search.toLowerCase())
-        )
-      }
-      
-      // ترتيب النتائج
-      switch (filters.sort) {
+      return matchesSearch && matchesCategory && matchesQuality && matchesYear
+    })
+
+    // ترتيب النتائج
+    filtered.sort((a, b) => {
+      switch (sortBy) {
         case 'rating':
-          filtered.sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating))
-          break
+          return b.rating - a.rating
         case 'year':
-          filtered.sort((a, b) => b.year - a.year)
-          break
-        case 'popular':
-          filtered.sort((a, b) => parseInt(b.views) - parseInt(a.views))
-          break
+          return b.year - a.year
+        case 'views':
+          return b.views - a.views
         case 'title':
-          filtered.sort((a, b) => a.title.localeCompare(b.title, 'ar'))
-          break
+          return a.title.localeCompare(b.title)
         default:
-          // الأحدث
-          break
+          return 0
       }
-      
-      setMovies(filtered)
-      setLoading(false)
-    }, 1000)
+    })
+
+    setFilteredMovies(filtered)
+  }, [movies, searchTerm, selectedCategory, selectedQuality, selectedYear, sortBy])
+
+  const formatDuration = (minutes: number) => {
+    const hours = Math.floor(minutes / 60)
+    const mins = minutes % 60
+    return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`
   }
 
-  useEffect(() => {
-    applyFilters()
-  }, [filters])
+  const formatNumber = (num: number) => {
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(1) + 'M'
+    }
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1) + 'K'
+    }
+    return num.toString()
+  }
 
   return (
-    <div className="min-h-screen bg-gray-950 pt-20">
-      
-      {/* Hero Section للأفلام */}
-      <section className="relative h-80 lg:h-96 overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: 'url(/api/placeholder/1200/600)' }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-black/30" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-        </div>
-
-        <div className="relative z-10 container mx-auto px-4 h-full flex items-center">
-          <div className="max-w-2xl">
-            <div className="flex items-center space-x-2 rtl:space-x-reverse mb-4">
-              <Badge className="bg-blue-600 hover:bg-blue-700 text-white border-0">
-                <Play className="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" />
-                أفلام
-              </Badge>
-              <Badge variant="outline" className="border-gray-600 text-gray-300">
-                {movies.length} فيلم
-              </Badge>
-            </div>
-
-            <h1 className="text-4xl lg:text-5xl font-bold text-white mb-4">
-              مكتبة الأفلام
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 py-16">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
+              الأفلام
             </h1>
-            <p className="text-lg text-gray-300 mb-6">
-              اكتشف أحدث وأفضل الأفلام من جميع أنحاء العالم
+            <p className="text-xl text-white/90 max-w-2xl mx-auto">
+              اكتشف مجموعة ضخمة من أفضل الأفلام العربية والعالمية
             </p>
+          </div>
+        </div>
+      </div>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
-                <Flame className="w-5 h-5 mr-2 rtl:ml-2 rtl:mr-0" />
-                الأكثر شعبية
-              </Button>
-              <Button size="lg" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
-                <Award className="w-5 h-5 mr-2 rtl:ml-2 rtl:mr-0" />
-                الحائزة على جوائز
-              </Button>
+      {/* Search and Filters */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="bg-gray-800 rounded-xl p-6 mb-8">
+          {/* Search Bar */}
+          <div className="relative mb-6">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="ابحث عن فيلم..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          {/* Filters */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {categories.map(category => (
+                <option key={category} value={category}>
+                  {category === 'All' ? 'جميع التصنيفات' : category}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={selectedQuality}
+              onChange={(e) => setSelectedQuality(e.target.value)}
+              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {qualities.map(quality => (
+                <option key={quality} value={quality}>
+                  {quality === 'All' ? 'جميع الجودات' : quality}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {years.map(year => (
+                <option key={year} value={year}>
+                  {year === 'All' ? 'جميع السنوات' : year}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="rating">الأعلى تقييماً</option>
+              <option value="year">الأحدث</option>
+              <option value="views">الأكثر مشاهدة</option>
+              <option value="title">حسب العنوان</option>
+            </select>
+          </div>
+
+          {/* View Mode Toggle */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-400'}`}
+              >
+                <Grid className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                className={`p-2 rounded ${viewMode === 'list' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-400'}`}
+              >
+                <List className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="text-gray-400">
+              {filteredMovies.length} فيلم
             </div>
           </div>
         </div>
-      </section>
 
-      {/* شريط الفلاتر والبحث */}
-      <section className="py-6 bg-gray-900/50 border-b border-gray-800 sticky top-20 z-40">
-        <div className="container mx-auto px-4">
-          
-          {/* شريط البحث والأدوات الرئيسية */}
-          <div className="flex flex-col lg:flex-row gap-4 mb-4">
-            
-            {/* البحث */}
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 rtl:right-3 rtl:left-auto top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                type="text"
-                placeholder="البحث في الأفلام..."
-                value={filters.search}
-                onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-                className="pl-10 rtl:pr-10 rtl:pl-3 bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-blue-500"
-              />
-            </div>
-
-            {/* أدوات التحكم */}
-            <div className="flex items-center space-x-3 rtl:space-x-reverse">
-              
-              {/* الترتيب */}
-              <Select value={filters.sort} onValueChange={(value) => setFilters({ ...filters, sort: value })}>
-                <SelectTrigger className="w-40 bg-gray-800 border-gray-700 text-white">
-                  <ArrowUpDown className="w-4 h-4 mr-2 rtl:ml-2 rtl:mr-0" />
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-700">
-                  {sortOptions.map((option) => (
-                    <SelectItem key={option.id} value={option.id}>
-                      {option.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              {/* عرض الفلاتر */}
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setShowFilters(!showFilters)}
-                className="border-gray-700 text-gray-400 hover:text-white"
+        {/* Movies Grid/List */}
+        {viewMode === 'grid' ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+            {filteredMovies.map((movie) => (
+              <Link 
+                key={movie.id}
+                href={`/movie/${movie.slug}`}
+                className="group relative overflow-hidden rounded-xl bg-gray-800 hover:bg-gray-700 transition-all duration-300 transform hover:scale-105"
               >
-                <SlidersHorizontal className="w-4 h-4" />
-              </Button>
+                <div className="relative aspect-[2/3] overflow-hidden">
+                  <img
+                    src={movie.poster}
+                    alt={movie.title}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                  
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                  
+                  {/* Rating Badge */}
+                  <div className="absolute top-2 right-2 bg-yellow-500 text-black px-2 py-1 rounded text-xs font-bold">
+                    {movie.rating}
+                  </div>
 
-              {/* تغيير العرض */}
-              <div className="flex border border-gray-700 rounded-md">
-                <Button
-                  variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setViewMode('grid')}
-                  className="rounded-r-none border-r border-gray-700"
-                >
-                  <Grid className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant={viewMode === 'list' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setViewMode('list')}
-                  className="rounded-l-none"
-                >
-                  <List className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
+                  {/* Quality Badge */}
+                  <div className="absolute bottom-2 left-2 bg-white/90 text-black px-2 py-1 rounded text-xs font-bold">
+                    {movie.quality}
+                  </div>
+
+                  {/* Play Button */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                      <Play className="w-6 h-6 text-white" fill="white" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-3">
+                  <h3 className="text-white font-semibold text-sm mb-1 line-clamp-2">
+                    {movie.title}
+                  </h3>
+                  <div className="flex items-center justify-between text-gray-400 text-xs">
+                    <span>{movie.year}</span>
+                    <span>{formatDuration(movie.duration)}</span>
+                  </div>
+                  
+                  {/* Stats */}
+                  <div className="flex items-center space-x-2 mt-2 text-xs text-gray-500">
+                    <div className="flex items-center">
+                      <Eye className="w-3 h-3 mr-1" />
+                      {formatNumber(movie.views)}
+                    </div>
+                    <div className="flex items-center">
+                      <Download className="w-3 h-3 mr-1" />
+                      {formatNumber(movie.downloads)}
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
-
-          {/* الفلاتر المتقدمة */}
-          {showFilters && (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 p-4 bg-gray-800/50 rounded-lg border border-gray-700">
-              
-              <Select value={filters.section.toString()} onValueChange={(value) => setFilters({ ...filters, section: parseInt(value) })}>
-                <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
-                  <SelectValue placeholder="القسم" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-700">
-                  {sections.map((section) => (
-                    <SelectItem key={section.id} value={section.id.toString()}>
-                      {section.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.category.toString()} onValueChange={(value) => setFilters({ ...filters, category: parseInt(value) })}>
-                <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
-                  <SelectValue placeholder="التصنيف" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-700">
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id.toString()}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.language.toString()} onValueChange={(value) => setFilters({ ...filters, language: parseInt(value) })}>
-                <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
-                  <SelectValue placeholder="اللغة" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-700">
-                  {languages.map((language) => (
-                    <SelectItem key={language.id} value={language.id.toString()}>
-                      {language.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.year.toString()} onValueChange={(value) => setFilters({ ...filters, year: parseInt(value) })}>
-                <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
-                  <SelectValue placeholder="السنة" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-700">
-                  <SelectItem value="0">جميع السنوات</SelectItem>
-                  {years.map((year) => (
-                    <SelectItem key={year.id} value={year.id.toString()}>
-                      {year.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.quality.toString()} onValueChange={(value) => setFilters({ ...filters, quality: parseInt(value) })}>
-                <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
-                  <SelectValue placeholder="الجودة" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-700">
-                  {qualities.map((quality) => (
-                    <SelectItem key={quality.id} value={quality.id.toString()}>
-                      {quality.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Button 
-                onClick={() => setFilters({
-                  search: '',
-                  section: 0,
-                  category: 0,
-                  language: 0,
-                  year: 0,
-                  quality: 0,
-                  sort: 'latest'
-                })}
-                variant="outline"
-                className="border-gray-700 text-gray-400 hover:text-white"
+        ) : (
+          <div className="space-y-4">
+            {filteredMovies.map((movie) => (
+              <Link 
+                key={movie.id}
+                href={`/movie/${movie.slug}`}
+                className="group flex items-center space-x-4 bg-gray-800 rounded-xl p-4 hover:bg-gray-700 transition-all duration-300"
               >
-                مسح الفلاتر
-              </Button>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* المحتوى الرئيسي */}
-      <section className="py-8">
-        <div className="container mx-auto px-4">
-          
-          {loading ? (
-            <div className="flex justify-center items-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-            </div>
-          ) : (
-            <>
-              {/* عرض الشبكة */}
-              {viewMode === 'grid' && (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-                  {movies.map((movie) => (
-                    <Link key={movie.id} href={`/movie/${movie.id}`}>
-                      <Card className="group bg-gray-900/30 border-gray-800 hover:border-gray-700 transition-all duration-300 overflow-hidden hover:scale-105">
-                        <CardContent className="p-0">
-                          
-                          {/* صورة البوستر */}
-                          <div className="relative aspect-[2/3] overflow-hidden">
-                            <img 
-                              src={movie.poster}
-                              alt={movie.title}
-                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                            />
-
-                            {/* التراكبات والشارات */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            
-                            {/* شارات المحتوى */}
-                            <div className="absolute top-2 right-2 rtl:left-2 rtl:right-auto space-y-1">
-                              {movie.isNew && (
-                                <Badge className="bg-red-600 hover:bg-red-600 text-white border-0 text-xs">
-                                  <Zap className="w-2 h-2 mr-1 rtl:ml-1 rtl:mr-0" />
-                                  جديد
-                                </Badge>
-                              )}
-                              {movie.isTrending && (
-                                <Badge className="bg-orange-600 hover:bg-orange-600 text-white border-0 text-xs">
-                                  <Flame className="w-2 h-2 mr-1 rtl:ml-1 rtl:mr-0" />
-                                  رائج
-                                </Badge>
-                              )}
-                              {movie.hasAward && (
-                                <Badge className="bg-yellow-600 hover:bg-yellow-600 text-white border-0 text-xs">
-                                  <Award className="w-2 h-2 mr-1 rtl:ml-1 rtl:mr-0" />
-                                  جائزة
-                                </Badge>
-                              )}
-                            </div>
-
-                            {/* التقييم */}
-                            <div className="absolute top-2 left-2 rtl:right-2 rtl:left-auto">
-                              <Badge className="bg-black/70 hover:bg-black/70 text-yellow-500 border-0 text-xs">
-                                <Star className="w-2 h-2 mr-1 rtl:ml-1 rtl:mr-0" />
-                                {movie.rating}
-                              </Badge>
-                            </div>
-
-                            {/* الجودة */}
-                            <div className="absolute bottom-2 left-2 rtl:right-2 rtl:left-auto">
-                              <Badge variant="secondary" className="bg-white/90 text-gray-900 hover:bg-white text-xs">
-                                {movie.quality}
-                              </Badge>
-                            </div>
-
-                            {/* زر التشغيل */}
-                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                              <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-full flex items-center justify-center">
-                                <Play className="w-6 h-6 text-white" />
-                              </div>
-                            </div>
-
-                            {/* معلومات إضافية عند التفاعل */}
-                            <div className="absolute bottom-0 left-0 right-0 p-3 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                              <h3 className="text-white font-semibold text-sm mb-1 line-clamp-2">
-                                {movie.title}
-                              </h3>
-                              <div className="flex items-center justify-between text-xs text-gray-300">
-                                <span>{movie.year}</span>
-                                <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                                  <Eye className="w-3 h-3" />
-                                  <span>{movie.views}</span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* معلومات المحتوى */}
-                          <div className="p-3">
-                            <h3 className="font-medium text-white text-sm mb-1 line-clamp-2 group-hover:text-blue-400 transition-colors">
-                              {movie.title}
-                            </h3>
-                            <div className="flex items-center justify-between text-xs text-gray-400">
-                              <span>{movie.year}</span>
-                              <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                                <Clock className="w-3 h-3" />
-                                <span>{movie.duration}</span>
-                              </div>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  ))}
+                <div className="relative w-20 h-28 flex-shrink-0">
+                  <img
+                    src={movie.poster}
+                    alt={movie.title}
+                    className="w-full h-full object-cover rounded"
+                  />
+                  <div className="absolute top-1 right-1 bg-yellow-500 text-black px-1 py-0.5 rounded text-xs font-bold">
+                    {movie.rating}
+                  </div>
                 </div>
-              )}
 
-              {/* عرض القائمة */}
-              {viewMode === 'list' && (
-                <div className="space-y-4">
-                  {movies.map((movie) => (
-                    <Link key={movie.id} href={`/movie/${movie.id}`}>
-                      <Card className="group bg-gray-900/30 border-gray-800 hover:border-gray-700 transition-all duration-300 overflow-hidden">
-                        <CardContent className="p-0">
-                          <div className="flex">
-                            {/* صورة صغيرة */}
-                            <div className="relative w-24 h-36 flex-shrink-0">
-                              <img 
-                                src={movie.poster}
-                                alt={movie.title}
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                            
-                            {/* المحتوى */}
-                            <div className="flex-1 p-4">
-                              <div className="flex items-start justify-between">
-                                <div className="flex-1">
-                                  <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors">
-                                    {movie.title}
-                                  </h3>
-                                  
-                                  <div className="flex items-center space-x-4 rtl:space-x-reverse text-sm text-gray-400 mb-2">
-                                    <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                                      <Calendar className="w-4 h-4" />
-                                      <span>{movie.year}</span>
-                                    </div>
-                                    <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                                      <Clock className="w-4 h-4" />
-                                      <span>{movie.duration}</span>
-                                    </div>
-                                    <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                                      <Eye className="w-4 h-4" />
-                                      <span>{movie.views}</span>
-                                    </div>
-                                  </div>
-                                  
-                                  <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                                    <Badge className="bg-black/70 text-yellow-500 border-0">
-                                      <Star className="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" />
-                                      {movie.rating}
-                                    </Badge>
-                                    <Badge variant="secondary" className="bg-white/90 text-gray-900">
-                                      {movie.quality}
-                                    </Badge>
-                                  </div>
-                                </div>
-                                
-                                <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
-                                  <Play className="w-4 h-4 mr-1 rtl:ml-1 rtl:mr-0" />
-                                  مشاهدة
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  ))}
+                <div className="flex-1">
+                  <h3 className="text-white font-semibold text-lg mb-1">{movie.title}</h3>
+                  <p className="text-gray-400 text-sm mb-2 line-clamp-2">{movie.description}</p>
+                  
+                  <div className="flex items-center space-x-4 text-sm text-gray-400">
+                    <span>{movie.year}</span>
+                    <span>{formatDuration(movie.duration)}</span>
+                    <span className="bg-gray-700 px-2 py-1 rounded">{movie.quality}</span>
+                    <span>{movie.categories.join(', ')}</span>
+                  </div>
                 </div>
-              )}
 
-              {/* زر تحميل المزيد */}
-              <div className="text-center mt-12">
-                <Button 
-                  variant="outline" 
-                  size="lg"
-                  className="border-gray-700 text-white hover:bg-gray-800"
-                >
-                  تحميل المزيد
-                  <ChevronDown className="w-4 h-4 mr-2 rtl:ml-2 rtl:mr-0" />
-                </Button>
-              </div>
-            </>
-          )}
-        </div>
-      </section>
+                <div className="flex flex-col items-end space-y-2">
+                  <div className="flex items-center space-x-2 text-xs text-gray-500">
+                    <div className="flex items-center">
+                      <Eye className="w-3 h-3 mr-1" />
+                      {formatNumber(movie.views)}
+                    </div>
+                    <div className="flex items-center">
+                      <Download className="w-3 h-3 mr-1" />
+                      {formatNumber(movie.downloads)}
+                    </div>
+                    <div className="flex items-center">
+                      <Heart className="w-3 h-3 mr-1" />
+                      {formatNumber(movie.likes)}
+                    </div>
+                  </div>
+                  
+                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition-colors">
+                    مشاهدة
+                  </button>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+
+        {/* No Results */}
+        {filteredMovies.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-gray-400 text-6xl mb-4">🎬</div>
+            <h3 className="text-xl font-semibold text-white mb-2">لا توجد نتائج</h3>
+            <p className="text-gray-400">جرب تغيير معايير البحث</p>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
-
-export default MoviesPage
