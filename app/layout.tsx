@@ -1,36 +1,28 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Cairo } from 'next/font/google'
 import './globals.css'
-import { Toaster } from '@/components/ui/toaster'
-import { SiteSettingsProvider } from '@/context/site-settings-context'
-import { AdProvider } from '@/context/ad-context'
+import Header from '@/components/Header'
 
 const inter = Inter({ subsets: ['latin'] })
+const cairo = Cairo({ 
+  subsets: ['arabic', 'latin'],
+  variable: '--font-cairo'
+})
 
 export const metadata: Metadata = {
-  title: 'اكوام - شمس المواقع',
-  description: 'شمس المواقع، الموقع العربي الاول لتحميل و مشاهدة الافلام, المسلسلات, الالعاب, البرامج و التطبيقات, التلفزيون, المسرحيات, المصارعة, الرياضة, تحميل و مشاهدة مباشرة',
+  title: 'AKWAM - شمس المواقع',
+  description: 'الموقع العربي الأول لمشاهدة الأفلام والمسلسلات أونلاين',
+  keywords: 'أفلام, مسلسلات, مشاهدة أونلاين, عربي, ترفيه',
   openGraph: {
-    title: 'اكوام - شمس المواقع',
-    description: 'شمس المواقع، الموقع العربي الاول لتحميل و مشاهدة الافلام, المسلسلات, الالعاب, البرامج و التطبيقات, التلفزيون, المسرحيات, المصارعة, الرياضة, تحميل و مشاهدة مباشرة',
-    url: 'https://ak.sv',
-    siteName: 'اكوام',
-    type: 'website'
+    title: 'AKWAM - شمس المواقع',
+    description: 'الموقع العربي الأول لمشاهدة الأفلام والمسلسلات أونلاين',
+    type: 'website',
+    locale: 'ar_SA',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'اكوام - شمس المواقع',
-    description: 'شمس المواقع، الموقع العربي الاول لتحميل و مشاهدة الافلام, المسلسلات, الالعاب, البرامج و التطبيقات, التلفزيون, المسرحيات, المصارعة, الرياضة, تحميل و مشاهدة مباشرة'
-  },
-  viewport: 'width=device-width, initial-scale=1',
-  themeColor: '#26baee',
-  icons: {
-    icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' }
-    ],
-    apple: { url: '/apple-touch-icon.png', sizes: '180x180' }
+    title: 'AKWAM - شمس المواقع',
+    description: 'الموقع العربي الأول لمشاهدة الأفلام والمسلسلات أونلاين',
   }
 }
 
@@ -40,49 +32,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="ar" dir="rtl">
-      <head>
-        {/* Google Fonts للخط العربي */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link 
-          href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" 
-          rel="stylesheet" 
-        />
-        
-        {/* Meta tags إضافية */}
-        <meta name="robots" content="index, follow" />
-        <meta name="author" content="Akwam Team" />
-        <meta name="keywords" content="اكوام، أفلام، مسلسلات، ألعاب، برامج، تطبيقات، تلفزيون، مسرحيات، مصارعة، رياضة، تحميل، مشاهدة، مباشرة، عربي" />
-        
-        {/* Structured Data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              "name": "اكوام",
-              "alternateName": "Akwam",
-              "url": "https://ak.sv",
-              "description": "شمس المواقع، الموقع العربي الاول لتحميل و مشاهدة الافلام, المسلسلات, الالعاب, البرامج و التطبيقات",
-              "inLanguage": "ar",
-              "potentialAction": {
-                "@type": "SearchAction",
-                "target": "https://ak.sv/search?q={search_term_string}",
-                "query-input": "required name=search_term_string"
-              }
-            })
-          }}
-        />
-      </head>
-      <body className={inter.className}>
-        <SiteSettingsProvider>
-          <AdProvider>
+    <html lang="ar" dir="rtl" className={`${cairo.variable}`}>
+      <body className={`${cairo.className} antialiased`}>
+        <div className="min-h-screen bg-gray-950 text-white">
+          <Header />
+          <main className="relative">
             {children}
-            <Toaster />
-          </AdProvider>
-        </SiteSettingsProvider>
+          </main>
+        </div>
       </body>
     </html>
   )
