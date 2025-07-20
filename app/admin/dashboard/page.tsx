@@ -1,556 +1,462 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import Link from 'next/link'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { contentManager, initializeSampleData } from '@/lib/content-manager'
-import { SmartMaintenanceSystem } from '@/lib/smart-maintenance'
+import {
+  ChartBarIcon,
+  FilmIcon,
+  TvIcon,
+  UserGroupIcon,
+  EyeIcon,
+  HeartIcon,
+  ChatBubbleLeftRightIcon,
+  StarIcon,
+  CloudArrowDownIcon,
+  CursorArrowRaysIcon,
+  CalendarDaysIcon,
+  TrendingUpIcon,
+  PlusIcon
+} from '@heroicons/react/24/outline'
 
-const maintenanceSystem = new SmartMaintenanceSystem()
-import { 
-  PlusCircle, 
-  Edit3, 
-  Trash2, 
-  Download, 
-  Upload, 
-  BarChart3, 
-  Settings, 
-  AlertTriangle,
-  CheckCircle,
-  Users,
-  Eye,
-  TrendingUp,
-  Server,
-  Database,
-  Globe,
-  FileText,
-  Code,
-  Image
-} from 'lucide-react'
+interface Stats {
+  movies: {
+    total: number
+    featured: number
+    trending: number
+    active: number
+    totalViews: number
+    totalDownloads: number
+  }
+  series: {
+    total: number
+    featured: number
+    trending: number
+    active: number
+    totalViews: number
+    totalSeasons: number
+    totalEpisodes: number
+  }
+  users: {
+    total: number
+    active: number
+    verified: number
+    admins: number
+    moderators: number
+    newThisMonth: number
+  }
+  content: {
+    totalRatings: number
+    totalComments: number
+    totalFavorites: number
+    averageRating: number
+    totalCategories: number
+    totalPeople: number
+  }
+  activity: {
+    todayViews: number
+    todayDownloads: number
+    todayComments: number
+    todayRatings: number
+    todayRegistrations: number
+  }
+}
+
+interface RecentActivity {
+  id: number
+  type: 'view' | 'rating' | 'comment' | 'favorite' | 'registration'
+  user: string
+  content?: string
+  timestamp: string
+  rating?: number
+}
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState({
-    totalMovies: 0,
-    totalSeries: 0,
-    totalShows: 0,
-    totalMix: 0,
-    totalUsers: 1250,
-    monthlyViews: 45680,
-    systemHealth: 'good'
-  })
-  
-  const [systemStatus, setSystemStatus] = useState({
-    server: 'online',
-    database: 'online',
-    cdn: 'online',
-    backup: 'completed',
-    lastCheck: new Date().toLocaleString('ar-EG')
-  })
-  
-  const [recentActivities, setRecentActivities] = useState([
-    { id: 1, action: 'إضافة فيلم جديد', item: 'Spider-Man: No Way Home', time: '5 دقائق', user: 'المشرف' },
-    { id: 2, action: 'تحديث مسلسل', item: 'House of the Dragon', time: '15 دقيقة', user: 'المشرف' },
-    { id: 3, action: 'حذف محتوى', item: 'فيلم قديم', time: '30 دقيقة', user: 'المشرف' },
-    { id: 4, action: 'نسخ احتياطي', item: 'قاعدة البيانات', time: '1 ساعة', user: 'النظام' }
-  ])
-  
-  const [newMovie, setNewMovie] = useState({
-    title: '',
-    year: '',
-    genre: '',
-    quality: '4K',
-    plot: ''
-  })
-  
+  const [stats, setStats] = useState<Stats | null>(null)
+  const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([])
+  const [loading, setLoading] = useState(true)
+
+  const fetchStats = async () => {
+    try {
+      const response = await fetch('/api/admin/stats')
+      if (response.ok) {
+        const data = await response.json()
+        setStats(data)
+      }
+    } catch (error) {
+      console.error('خطأ في جلب الإحصائيات:', error)
+    }
+  }
+
+  const fetchRecentActivity = async () => {
+    try {
+      const response = await fetch('/api/admin/activity?limit=20')
+      if (response.ok) {
+        const data = await response.json()
+        setRecentActivity(data)
+      }
+    } catch (error) {
+      console.error('خطأ في جلب النشاطات الحديثة:', error)
+    }
+  }
+
   useEffect(() => {
-    loadDashboardData()
-    checkSystemHealth()
+    Promise.all([fetchStats(), fetchRecentActivity()]).finally(() => {
+      setLoading(false)
+    })
   }, [])
-  
-  const loadDashboardData = async () => {
-    const analytics = contentManager.getAnalytics()
-    setStats(prev => ({
-      ...prev,
-      totalMovies: analytics.totalMovies,
-      totalSeries: analytics.totalSeries,
-      totalShows: analytics.totalShows,
-      totalMix: analytics.totalMix
-    }))
+
+  const formatNumber = (num: number) => {
+    return new Intl.NumberFormat('ar-SA').format(num)
   }
-  
-  const checkSystemHealth = async () => {
-    try {
-      const health = await maintenanceSystem.runMaintenanceCheck()
-      setSystemStatus(prev => ({
-        ...prev,
-        systemHealth: health.overall,
-        lastCheck: new Date().toLocaleString('ar-EG')
-      }))
-    } catch (error) {
-      console.error('خطأ في فحص حالة النظام:', error)
+
+  const getActivityIcon = (type: string) => {
+    switch (type) {
+      case 'view':
+        return <EyeIcon className="w-4 h-4 text-blue-500" />
+      case 'rating':
+        return <StarIcon className="w-4 h-4 text-yellow-500" />
+      case 'comment':
+        return <ChatBubbleLeftRightIcon className="w-4 h-4 text-green-500" />
+      case 'favorite':
+        return <HeartIcon className="w-4 h-4 text-red-500" />
+      case 'registration':
+        return <UserGroupIcon className="w-4 h-4 text-purple-500" />
+      default:
+        return <CursorArrowRaysIcon className="w-4 h-4 text-gray-500" />
     }
   }
-  
-  const handleAddMovie = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    try {
-      await contentManager.addMovie({
-        title: newMovie.title,
-        year: newMovie.year,
-        genre: newMovie.genre.split(',').map(g => g.trim()),
-        quality: newMovie.quality,
-        plot: newMovie.plot,
-        featured: false
-      })
-      
-      setNewMovie({ title: '', year: '', genre: '', quality: '4K', plot: '' })
-      loadDashboardData()
-      
-      setRecentActivities(prev => [
-        { id: Date.now(), action: 'إضافة فيلم جديد', item: newMovie.title, time: 'الآن', user: 'المشرف' },
-        ...prev.slice(0, 3)
-      ])
-    } catch (error) {
-      console.error('خطأ في إضافة الفيلم:', error)
+
+  const getActivityText = (activity: RecentActivity) => {
+    switch (activity.type) {
+      case 'view':
+        return `شاهد ${activity.content}`
+      case 'rating':
+        return `قيّم ${activity.content} بـ ${activity.rating} نجوم`
+      case 'comment':
+        return `علّق على ${activity.content}`
+      case 'favorite':
+        return `أضاف ${activity.content} للمفضلة`
+      case 'registration':
+        return 'انضم للموقع'
+      default:
+        return 'نشاط غير معروف'
     }
   }
-  
-  const handleBackup = async () => {
-    try {
-      const filename = await contentManager.createBackup()
-      alert(`تم إنشاء نسخة احتياطية: ${filename}`)
-      
-      setRecentActivities(prev => [
-        { id: Date.now(), action: 'نسخ احتياطي', item: 'قاعدة البيانات', time: 'الآن', user: 'النظام' },
-        ...prev.slice(0, 3)
-      ])
-    } catch (error) {
-      console.error('خطأ في النسخ الاحتياطي:', error)
-    }
+
+  if (loading) {
+    return (
+      <div className="container mx-auto p-6" dir="rtl">
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-white text-xl">جاري التحميل...</div>
+        </div>
+      </div>
+    )
   }
-  
-  const initializeSampleDataHandler = async () => {
-    await initializeSampleData()
-    loadDashboardData()
-    alert('تم تحميل البيانات التجريبية بنجاح!')
-  }
-  
+
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* رأس لوحة التحكم */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">🎬 لوحة تحكم اكوام</h1>
-          <p className="text-gray-400">إدارة شاملة للموقع والمحتوى</p>
+    <div className="container mx-auto p-6" dir="rtl">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-white flex items-center gap-2">
+            <ChartBarIcon className="w-8 h-8 text-blue-500" />
+            لوحة التحكم
+          </h1>
+          <p className="text-gray-400 mt-1">
+            نظرة عامة على أداء الموقع والإحصائيات
+          </p>
         </div>
         
-        {/* بطاقات الإحصائيات */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-[#1a1a1a] border-[#333]">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-400">إجمالي الأفلام</CardTitle>
-              <Eye className="h-4 w-4 text-blue-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-white">{stats.totalMovies.toLocaleString()}</div>
-              <p className="text-xs text-green-500">+12% من الشهر الماضي</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-[#1a1a1a] border-[#333]">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-400">إجمالي المسلسلات</CardTitle>
-              <TrendingUp className="h-4 w-4 text-green-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-white">{stats.totalSeries.toLocaleString()}</div>
-              <p className="text-xs text-green-500">+8% من الشهر الماضي</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-[#1a1a1a] border-[#333]">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-400">المستخدمون النشطون</CardTitle>
-              <Users className="h-4 w-4 text-purple-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-white">{stats.totalUsers.toLocaleString()}</div>
-              <p className="text-xs text-green-500">+23% من الشهر الماضي</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-[#1a1a1a] border-[#333]">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-400">المشاهدات الشهرية</CardTitle>
-              <BarChart3 className="h-4 w-4 text-orange-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-white">{stats.monthlyViews.toLocaleString()}</div>
-              <p className="text-xs text-green-500">+15% من الشهر الماضي</p>
-            </CardContent>
-          </Card>
+        <div className="flex gap-2">
+          <Link href="/admin/movies/create">
+            <Button className="bg-blue-600 hover:bg-blue-700">
+              <PlusIcon className="w-4 h-4 ml-2" />
+              إضافة فيلم
+            </Button>
+          </Link>
+          <Link href="/admin/series/create">
+            <Button variant="outline" className="border-blue-600 text-blue-400 hover:bg-blue-600">
+              <PlusIcon className="w-4 h-4 ml-2" />
+              إضافة مسلسل
+            </Button>
+          </Link>
         </div>
-        
-        {/* حالة النظام */}
-        <Card className="bg-[#1a1a1a] border-[#333] mb-8">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <Server className="h-5 w-5" />
-              حالة النظام
-            </CardTitle>
-            <CardDescription className="text-gray-400">
-              آخر فحص: {systemStatus.lastCheck}
-            </CardDescription>
+      </div>
+
+      {/* Stats Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {/* Movies Stats */}
+        <Card className="bg-gradient-to-br from-blue-900/50 to-blue-800/30 border-blue-700/50">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-blue-100">الأفلام</CardTitle>
+            <FilmIcon className="w-5 h-5 text-blue-400" />
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <span className="text-sm text-gray-300">الخادم: متصل</span>
+            <div className="text-2xl font-bold text-white">{formatNumber(stats?.movies.total || 0)}</div>
+            <div className="space-y-1 mt-2">
+              <div className="flex justify-between text-xs">
+                <span className="text-blue-200">مميز</span>
+                <span className="text-white">{formatNumber(stats?.movies.featured || 0)}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <span className="text-sm text-gray-300">قاعدة البيانات: متصلة</span>
+              <div className="flex justify-between text-xs">
+                <span className="text-blue-200">رائج</span>
+                <span className="text-white">{formatNumber(stats?.movies.trending || 0)}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <span className="text-sm text-gray-300">CDN: نشط</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-blue-500" />
-                <span className="text-sm text-gray-300">النسخ الاحتياطي: مكتمل</span>
+              <div className="flex justify-between text-xs">
+                <span className="text-blue-200">المشاهدات</span>
+                <span className="text-white">{formatNumber(stats?.movies.totalViews || 0)}</span>
               </div>
             </div>
           </CardContent>
         </Card>
-        
-        {/* تبويبات الإدارة */}
-        <Tabs defaultValue="content" className="w-full">
-          <TabsList className="grid w-full grid-cols-5 bg-[#1a1a1a] border-[#333]">
-            <TabsTrigger value="content" className="text-white data-[state=active]:bg-[#26baee]">إدارة المحتوى</TabsTrigger>
-            <TabsTrigger value="users" className="text-white data-[state=active]:bg-[#26baee]">إدارة المستخدمين</TabsTrigger>
-            <TabsTrigger value="analytics" className="text-white data-[state=active]:bg-[#26baee]">التحليلات</TabsTrigger>
-            <TabsTrigger value="settings" className="text-white data-[state=active]:bg-[#26baee]">الإعدادات</TabsTrigger>
-            <TabsTrigger value="files" className="text-white data-[state=active]:bg-[#26baee]">الملفات</TabsTrigger>
-            <TabsTrigger value="backup" className="text-white data-[state=active]:bg-[#26baee]">النسخ الاحتياطي</TabsTrigger>
-          </TabsList>
-          
-          {/* إدارة المحتوى */}
-          <TabsContent value="content" className="space-y-6">
-            <Card className="bg-[#1a1a1a] border-[#333]">
-              <CardHeader>
-                <CardTitle className="text-white">إضافة فيلم جديد</CardTitle>
-                <CardDescription className="text-gray-400">
-                  أضف محتوى جديد إلى الموقع
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleAddMovie} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="title" className="text-gray-300">عنوان الفيلم</Label>
-                      <Input
-                        id="title"
-                        value={newMovie.title}
-                        onChange={(e) => setNewMovie(prev => ({ ...prev, title: e.target.value }))}
-                        className="bg-[#2a2a2a] border-[#444] text-white"
-                        placeholder="اسم الفيلم"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="year" className="text-gray-300">سنة الإنتاج</Label>
-                      <Input
-                        id="year"
-                        value={newMovie.year}
-                        onChange={(e) => setNewMovie(prev => ({ ...prev, year: e.target.value }))}
-                        className="bg-[#2a2a2a] border-[#444] text-white"
-                        placeholder="2024"
-                        required
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="genre" className="text-gray-300">النوع (مفصولة بفواصل)</Label>
-                      <Input
-                        id="genre"
-                        value={newMovie.genre}
-                        onChange={(e) => setNewMovie(prev => ({ ...prev, genre: e.target.value }))}
-                        className="bg-[#2a2a2a] border-[#444] text-white"
-                        placeholder="أكشن, دراما, كوميديا"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="quality" className="text-gray-300">الجودة</Label>
-                      <Input
-                        id="quality"
-                        value={newMovie.quality}
-                        onChange={(e) => setNewMovie(prev => ({ ...prev, quality: e.target.value }))}
-                        className="bg-[#2a2a2a] border-[#444] text-white"
-                        placeholder="4K, FHD, HD"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="plot" className="text-gray-300">القصة</Label>
-                    <Textarea
-                      id="plot"
-                      value={newMovie.plot}
-                      onChange={(e) => setNewMovie(prev => ({ ...prev, plot: e.target.value }))}
-                      className="bg-[#2a2a2a] border-[#444] text-white min-h-[100px]"
-                      placeholder="ملخص القصة..."
-                    />
-                  </div>
-                  
-                  <Button type="submit" className="bg-[#26baee] hover:bg-[#1fa3d1] text-white">
-                    <PlusCircle className="h-4 w-4 mr-2" />
-                    إضافة الفيلم
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-            
-            {/* أزرار سريعة للمحتوى */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button 
-                onClick={initializeSampleDataHandler}
-                className="bg-green-600 hover:bg-green-700 text-white p-6 h-auto"
-              >
-                <Database className="h-6 w-6 mb-2" />
-                <div>
-                  <div className="font-bold">تحميل البيانات التجريبية</div>
-                  <div className="text-sm opacity-90">أفلام ومسلسلات للاختبار</div>
-                </div>
-              </Button>
-              
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white p-6 h-auto">
-                <Upload className="h-6 w-6 mb-2" />
-                <div>
-                  <div className="font-bold">استيراد محتوى</div>
-                  <div className="text-sm opacity-90">من ملف CSV أو JSON</div>
-                </div>
-              </Button>
-              
-              <Button className="bg-purple-600 hover:bg-purple-700 text-white p-6 h-auto">
-                <Globe className="h-6 w-6 mb-2" />
-                <div>
-                  <div className="font-bold">سحب من API</div>
-                  <div className="text-sm opacity-90">TMDB أو مصادر أخرى</div>
-                </div>
-              </Button>
-            </div>
-          </TabsContent>
-          
-          {/* النسخ الاحتياطي */}
-          <TabsContent value="backup" className="space-y-6">
-            <Card className="bg-[#1a1a1a] border-[#333]">
-              <CardHeader>
-                <CardTitle className="text-white">إدارة النسخ الاحتياطي</CardTitle>
-                <CardDescription className="text-gray-400">
-                  إنشاء واستعادة النسخ الاحتياطية للموقع
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Button 
-                    onClick={handleBackup}
-                    className="bg-[#26baee] hover:bg-[#1fa3d1] text-white p-6 h-auto"
-                  >
-                    <Download className="h-6 w-6 mb-2" />
-                    <div>
-                      <div className="font-bold">إنشاء نسخة احتياطية</div>
-                      <div className="text-sm opacity-90">تصدير جميع البيانات</div>
-                    </div>
-                  </Button>
-                  
-                  <Button className="bg-orange-600 hover:bg-orange-700 text-white p-6 h-auto">
-                    <Upload className="h-6 w-6 mb-2" />
-                    <div>
-                      <div className="font-bold">استعادة نسخة احتياطية</div>
-                      <div className="text-sm opacity-90">استيراد البيانات</div>
-                    </div>
-                  </Button>
-                </div>
-                
-                <div className="bg-[#2a2a2a] p-4 rounded-lg border border-[#444]">
-                  <h4 className="text-white font-bold mb-2">آخر النسخ الاحتياطية</h4>
-                  <div className="space-y-2 text-sm text-gray-300">
-                    <div className="flex justify-between">
-                      <span>akwam-backup-2025-01-20.json</span>
-                      <span className="text-green-500">مكتملة</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>akwam-backup-2025-01-19.json</span>
-                      <span className="text-green-500">مكتملة</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>akwam-backup-2025-01-18.json</span>
-                      <span className="text-green-500">مكتملة</span>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          {/* التحليلات */}
-          <TabsContent value="analytics" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className="bg-[#1a1a1a] border-[#333]">
-                <CardHeader>
-                  <CardTitle className="text-white">الأنشطة الأخيرة</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {recentActivities.map((activity) => (
-                      <div key={activity.id} className="flex items-center justify-between p-3 bg-[#2a2a2a] rounded-lg">
-                        <div>
-                          <div className="text-white font-medium">{activity.action}</div>
-                          <div className="text-gray-400 text-sm">{activity.item}</div>
-                        </div>
-                        <div className="text-gray-500 text-sm">
-                          {activity.time}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card className="bg-[#1a1a1a] border-[#333]">
-                <CardHeader>
-                  <CardTitle className="text-white">إحصائيات سريعة</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-300">الأفلام المميزة</span>
-                      <span className="text-[#26baee] font-bold">24</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-300">المسلسلات النشطة</span>
-                      <span className="text-green-500 font-bold">12</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-300">المحتوى المضاف اليوم</span>
-                      <span className="text-yellow-500 font-bold">8</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-300">متوسط التقييم</span>
-                      <span className="text-purple-500 font-bold">8.2/10</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-          
-          {/* إدارة المستخدمين */}
-          <TabsContent value="users" className="space-y-6">
-            <Card className="bg-[#1a1a1a] border-[#333]">
-              <CardHeader>
-                <CardTitle className="text-white">المستخدمون النشطون</CardTitle>
-                <CardDescription className="text-gray-400">
-                  إدارة حسابات وصلاحيات المستخدمين
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-8 text-gray-400">
-                  <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>نظام إدارة المستخدمين قيد التطوير</p>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          {/* الإعدادات */}
-          <TabsContent value="settings" className="space-y-6">
-            <Card className="bg-[#1a1a1a] border-[#333]">
-              <CardHeader>
-                <CardTitle className="text-white">إعدادات النظام</CardTitle>
-                <CardDescription className="text-gray-400">
-                  تخصيص إعدادات الموقع والأداء
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Button 
-                    onClick={() => window.open('/admin/settings', '_blank')}
-                    className="bg-[#26baee] hover:bg-[#1fa3d1] text-white p-6 h-auto"
-                  >
-                    <Settings className="h-8 w-8 mb-2" />
-                    <div>
-                      <div className="font-bold">إعدادات الموقع الشاملة</div>
-                      <div className="text-sm opacity-90">تخصيص كامل للموقع</div>
-                    </div>
-                  </Button>
-                  
-                  <Button 
-                    className="bg-green-600 hover:bg-green-700 text-white p-6 h-auto"
-                    onClick={() => window.open('/admin/files', '_blank')}
-                  >
-                    <FileText className="h-8 w-8 mb-2" />
-                    <div>
-                      <div className="font-bold">محرر الملفات</div>
-                      <div className="text-sm opacity-90">تحرير ملفات الكود</div>
-                    </div>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
 
-          {/* الملفات */}
-          <TabsContent value="files" className="space-y-6">
-            <Card className="bg-[#1a1a1a] border-[#333]">
-              <CardHeader>
-                <CardTitle className="text-white">إدارة الملفات</CardTitle>
-                <CardDescription className="text-gray-400">
-                  تحرير وإدارة ملفات الموقع
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Button 
-                    onClick={() => window.open('/admin/files', '_blank')}
-                    className="bg-blue-600 hover:bg-blue-700 text-white p-6 h-auto"
-                  >
-                    <Code className="h-8 w-8 mb-2" />
-                    <div>
-                      <div className="font-bold">محرر الكود</div>
-                      <div className="text-sm opacity-90">تحرير ملفات React/CSS</div>
+        {/* Series Stats */}
+        <Card className="bg-gradient-to-br from-purple-900/50 to-purple-800/30 border-purple-700/50">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-purple-100">المسلسلات</CardTitle>
+            <TvIcon className="w-5 h-5 text-purple-400" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-white">{formatNumber(stats?.series.total || 0)}</div>
+            <div className="space-y-1 mt-2">
+              <div className="flex justify-between text-xs">
+                <span className="text-purple-200">المواسم</span>
+                <span className="text-white">{formatNumber(stats?.series.totalSeasons || 0)}</span>
+              </div>
+              <div className="flex justify-between text-xs">
+                <span className="text-purple-200">الحلقات</span>
+                <span className="text-white">{formatNumber(stats?.series.totalEpisodes || 0)}</span>
+              </div>
+              <div className="flex justify-between text-xs">
+                <span className="text-purple-200">المشاهدات</span>
+                <span className="text-white">{formatNumber(stats?.series.totalViews || 0)}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Users Stats */}
+        <Card className="bg-gradient-to-br from-green-900/50 to-green-800/30 border-green-700/50">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-green-100">المستخدمين</CardTitle>
+            <UserGroupIcon className="w-5 h-5 text-green-400" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-white">{formatNumber(stats?.users.total || 0)}</div>
+            <div className="space-y-1 mt-2">
+              <div className="flex justify-between text-xs">
+                <span className="text-green-200">نشط</span>
+                <span className="text-white">{formatNumber(stats?.users.active || 0)}</span>
+              </div>
+              <div className="flex justify-between text-xs">
+                <span className="text-green-200">موثق</span>
+                <span className="text-white">{formatNumber(stats?.users.verified || 0)}</span>
+              </div>
+              <div className="flex justify-between text-xs">
+                <span className="text-green-200">جديد هذا الشهر</span>
+                <span className="text-white">{formatNumber(stats?.users.newThisMonth || 0)}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Content Stats */}
+        <Card className="bg-gradient-to-br from-orange-900/50 to-orange-800/30 border-orange-700/50">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-orange-100">التفاعل</CardTitle>
+            <TrendingUpIcon className="w-5 h-5 text-orange-400" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-white">{formatNumber(stats?.content.totalRatings || 0)}</div>
+            <div className="space-y-1 mt-2">
+              <div className="flex justify-between text-xs">
+                <span className="text-orange-200">التعليقات</span>
+                <span className="text-white">{formatNumber(stats?.content.totalComments || 0)}</span>
+              </div>
+              <div className="flex justify-between text-xs">
+                <span className="text-orange-200">المفضلة</span>
+                <span className="text-white">{formatNumber(stats?.content.totalFavorites || 0)}</span>
+              </div>
+              <div className="flex justify-between text-xs">
+                <span className="text-orange-200">متوسط التقييم</span>
+                <span className="text-white">{(stats?.content.averageRating || 0).toFixed(1)}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Today's Activity */}
+      <Card className="mb-8 bg-gray-800 border-gray-700">
+        <CardHeader>
+          <CardTitle className="text-white flex items-center gap-2">
+            <CalendarDaysIcon className="w-5 h-5 text-blue-500" />
+            نشاط اليوم
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div className="text-center">
+              <div className="flex items-center justify-center w-12 h-12 bg-blue-600/20 rounded-full mx-auto mb-2">
+                <EyeIcon className="w-6 h-6 text-blue-400" />
+              </div>
+              <div className="text-2xl font-bold text-white">{formatNumber(stats?.activity.todayViews || 0)}</div>
+              <div className="text-sm text-gray-400">مشاهدة</div>
+            </div>
+
+            <div className="text-center">
+              <div className="flex items-center justify-center w-12 h-12 bg-green-600/20 rounded-full mx-auto mb-2">
+                <CloudArrowDownIcon className="w-6 h-6 text-green-400" />
+              </div>
+              <div className="text-2xl font-bold text-white">{formatNumber(stats?.activity.todayDownloads || 0)}</div>
+              <div className="text-sm text-gray-400">تحميل</div>
+            </div>
+
+            <div className="text-center">
+              <div className="flex items-center justify-center w-12 h-12 bg-yellow-600/20 rounded-full mx-auto mb-2">
+                <StarIcon className="w-6 h-6 text-yellow-400" />
+              </div>
+              <div className="text-2xl font-bold text-white">{formatNumber(stats?.activity.todayRatings || 0)}</div>
+              <div className="text-sm text-gray-400">تقييم</div>
+            </div>
+
+            <div className="text-center">
+              <div className="flex items-center justify-center w-12 h-12 bg-purple-600/20 rounded-full mx-auto mb-2">
+                <ChatBubbleLeftRightIcon className="w-6 h-6 text-purple-400" />
+              </div>
+              <div className="text-2xl font-bold text-white">{formatNumber(stats?.activity.todayComments || 0)}</div>
+              <div className="text-sm text-gray-400">تعليق</div>
+            </div>
+
+            <div className="text-center">
+              <div className="flex items-center justify-center w-12 h-12 bg-pink-600/20 rounded-full mx-auto mb-2">
+                <UserGroupIcon className="w-6 h-6 text-pink-400" />
+              </div>
+              <div className="text-2xl font-bold text-white">{formatNumber(stats?.activity.todayRegistrations || 0)}</div>
+              <div className="text-sm text-gray-400">تسجيل جديد</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Recent Activity */}
+        <div className="lg:col-span-2">
+          <Card className="bg-gray-800 border-gray-700">
+            <CardHeader>
+              <CardTitle className="text-white">النشاطات الحديثة</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4 max-h-96 overflow-y-auto">
+                {recentActivity.length === 0 ? (
+                  <div className="text-center text-gray-400 py-8">
+                    لا توجد نشاطات حديثة
+                  </div>
+                ) : (
+                  recentActivity.map((activity) => (
+                    <div key={activity.id} className="flex items-start space-x-3 space-x-reverse p-3 rounded-lg hover:bg-gray-700/50">
+                      <div className="flex-shrink-0 mt-1">
+                        {getActivityIcon(activity.type)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm font-medium text-white">
+                            {activity.user}
+                          </p>
+                          <p className="text-xs text-gray-400">
+                            {new Date(activity.timestamp).toLocaleString('ar-SA')}
+                          </p>
+                        </div>
+                        <p className="text-sm text-gray-300 mt-1">
+                          {getActivityText(activity)}
+                        </p>
+                      </div>
                     </div>
-                  </Button>
-                  
-                  <Button className="bg-purple-600 hover:bg-purple-700 text-white p-6 h-auto">
-                    <Image className="h-8 w-8 mb-2" />
-                    <div>
-                      <div className="font-bold">إدارة الصور</div>
-                      <div className="text-sm opacity-90">رفع وتنظيم الصور</div>
-                    </div>
-                  </Button>
-                  
-                  <Button className="bg-orange-600 hover:bg-orange-700 text-white p-6 h-auto">
-                    <Upload className="h-8 w-8 mb-2" />
-                    <div>
-                      <div className="font-bold">رفع الملفات</div>
-                      <div className="text-sm opacity-90">استيراد ملفات جديدة</div>
-                    </div>
-                  </Button>
+                  ))
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Quick Actions */}
+        <div>
+          <Card className="bg-gray-800 border-gray-700">
+            <CardHeader>
+              <CardTitle className="text-white">إجراءات سريعة</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Link href="/admin/movies" className="block">
+                <Button variant="outline" className="w-full justify-start border-gray-600 text-gray-300 hover:bg-gray-700">
+                  <FilmIcon className="w-4 h-4 ml-2" />
+                  إدارة الأفلام
+                </Button>
+              </Link>
+              
+              <Link href="/admin/series" className="block">
+                <Button variant="outline" className="w-full justify-start border-gray-600 text-gray-300 hover:bg-gray-700">
+                  <TvIcon className="w-4 h-4 ml-2" />
+                  إدارة المسلسلات
+                </Button>
+              </Link>
+              
+              <Link href="/admin/users" className="block">
+                <Button variant="outline" className="w-full justify-start border-gray-600 text-gray-300 hover:bg-gray-700">
+                  <UserGroupIcon className="w-4 h-4 ml-2" />
+                  إدارة المستخدمين
+                </Button>
+              </Link>
+              
+              <Link href="/admin/settings" className="block">
+                <Button variant="outline" className="w-full justify-start border-gray-600 text-gray-300 hover:bg-gray-700">
+                  <CursorArrowRaysIcon className="w-4 h-4 ml-2" />
+                  إعدادات الموقع
+                </Button>
+              </Link>
+              
+              <Link href="/admin/ads" className="block">
+                <Button variant="outline" className="w-full justify-start border-gray-600 text-gray-300 hover:bg-gray-700">
+                  <TrendingUpIcon className="w-4 h-4 ml-2" />
+                  إدارة الإعلانات
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          {/* System Status */}
+          <Card className="bg-gray-800 border-gray-700 mt-6">
+            <CardHeader>
+              <CardTitle className="text-white">حالة النظام</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-300">قاعدة البيانات</span>
+                <div className="flex items-center">
+                  <div className="w-2 h-2 bg-green-500 rounded-full ml-2"></div>
+                  <span className="text-green-400 text-sm">متصلة</span>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <span className="text-gray-300">الخادم</span>
+                <div className="flex items-center">
+                  <div className="w-2 h-2 bg-green-500 rounded-full ml-2"></div>
+                  <span className="text-green-400 text-sm">يعمل</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <span className="text-gray-300">النسخ الاحتياطي</span>
+                <div className="flex items-center">
+                  <div className="w-2 h-2 bg-yellow-500 rounded-full ml-2"></div>
+                  <span className="text-yellow-400 text-sm">جاري التحديث</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   )

@@ -4,27 +4,30 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { 
-  LayoutDashboard, 
-  Film, 
-  Tv, 
-  Users, 
-  Settings, 
-  BarChart3,
-  Server,
-  Activity,
-  Shield,
-  Download
-} from 'lucide-react'
+  ChartBarIcon,
+  FilmIcon,
+  TvIcon,
+  UserGroupIcon,
+  CogIcon,
+  ServerIcon,
+  EyeIcon,
+  MegaphoneIcon,
+  DocumentTextIcon,
+  FolderIcon,
+  ShieldCheckIcon
+} from '@heroicons/react/24/outline'
 
 const navigation = [
-  { name: 'لوحة التحكم', href: '/admin', icon: LayoutDashboard },
-  { name: 'الأفلام', href: '/admin/movies', icon: Film },
-  { name: 'المسلسلات', href: '/admin/series', icon: Tv },
-  { name: 'الخوادم', href: '/admin/servers', icon: Server },
-  { name: 'المراقبة والصيانة', href: '/admin/monitoring', icon: Activity },
-  { name: 'المستخدمون', href: '/admin/users', icon: Users },
-  { name: 'الإحصائيات', href: '/admin/stats', icon: BarChart3 },
-  { name: 'الإعدادات', href: '/admin/settings', icon: Settings },
+  { name: 'لوحة التحكم', href: '/admin', icon: ChartBarIcon },
+  { name: 'الأفلام', href: '/admin/movies', icon: FilmIcon },
+  { name: 'المسلسلات', href: '/admin/series', icon: TvIcon },
+  { name: 'المستخدمون', href: '/admin/users', icon: UserGroupIcon },
+  { name: 'الإعلانات', href: '/admin/ads', icon: MegaphoneIcon },
+  { name: 'الخوادم', href: '/admin/servers', icon: ServerIcon },
+  { name: 'المراقبة', href: '/admin/monitoring', icon: EyeIcon },
+  { name: 'الملفات', href: '/admin/files', icon: FolderIcon },
+  { name: 'المحتوى', href: '/admin/content', icon: DocumentTextIcon },
+  { name: 'الإعدادات', href: '/admin/settings', icon: CogIcon },
 ]
 
 export function AdminSidebar() {
@@ -66,7 +69,7 @@ export function AdminSidebar() {
       
       <div className="border-t border-gray-800 p-4">
         <div className="flex items-center">
-          <Shield className="h-8 w-8 text-red-500" />
+          <ShieldCheckIcon className="h-8 w-8 text-red-500" />
           <div className="mr-3">
             <p className="text-sm font-medium text-white">AK.SV Admin</p>
             <p className="text-xs text-gray-400">نظام إدارة متقدم</p>
