@@ -5,6 +5,7 @@ import './akwam.css'
 
 import { MainHeader } from '@/components/layout/main-header'
 import { MainMenu } from '@/components/layout/main-menu'
+import { MainFooter } from '@/components/layout/main-footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -77,6 +78,9 @@ export default function RootLayout({
 
         {/* Page content */}
         {children}
+
+        {/* Footer */}
+        <MainFooter />
       </body>
     </html>
   )
