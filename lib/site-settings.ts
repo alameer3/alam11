@@ -166,9 +166,11 @@ export class SiteSettingsManager {
   private async loadConfig(): Promise<void> {
     try {
       // في البيئة الحقيقية، سيتم تحميل الإعدادات من قاعدة البيانات أو ملف
-      const savedConfig = localStorage.getItem('siteConfig')
-      if (savedConfig) {
-        this.config = SiteConfigSchema.parse(JSON.parse(savedConfig))
+      if (typeof window !== 'undefined') {
+        const savedConfig = localStorage.getItem('siteConfig')
+        if (savedConfig) {
+          this.config = SiteConfigSchema.parse(JSON.parse(savedConfig))
+        }
       }
     } catch (error) {
       console.error('خطأ في تحميل الإعدادات:', error)
@@ -185,7 +187,9 @@ export class SiteSettingsManager {
       })
       
       // حفظ في localStorage (في البيئة الحقيقية سيكون في قاعدة البيانات)
-      localStorage.setItem('siteConfig', JSON.stringify(this.config))
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('siteConfig', JSON.stringify(this.config))
+      }
       
       // تطبيق التغييرات على الموقع
       this.applySettings()

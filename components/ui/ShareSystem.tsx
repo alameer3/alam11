@@ -95,19 +95,19 @@ export default function ShareSystem({ contentId, contentType, title, description
     },
     {
       name: 'واتساب',
-      icon: <WhatsApp className="w-5 h-5" />,
+      icon: <MessageCircle className="w-5 h-5" />,
       color: 'bg-green-500 hover:bg-green-600',
       action: () => shareToSocial('whatsapp')
     },
     {
       name: 'تليجرام',
-      icon: <Telegram className="w-5 h-5" />,
+      icon: <MessageCircle className="w-5 h-5" />,
       color: 'bg-blue-500 hover:bg-blue-600',
       action: () => shareToSocial('telegram')
     },
     {
       name: 'إنستغرام',
-      icon: <Instagram className="w-5 h-5" />,
+      icon: <MessageCircle className="w-5 h-5" />,
       color: 'bg-pink-500 hover:bg-pink-600',
       action: () => shareToSocial('instagram')
     },

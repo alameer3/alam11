@@ -1,29 +1,59 @@
 import type { Metadata } from 'next'
-import { Inter, Cairo } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import './globals.css'
-import Header from '@/components/Header'
 
 const inter = Inter({ subsets: ['latin'] })
-const cairo = Cairo({ 
-  subsets: ['arabic', 'latin'],
-  variable: '--font-cairo'
-})
 
 export const metadata: Metadata = {
-  title: 'AKWAM - شمس المواقع',
-  description: 'الموقع العربي الأول لمشاهدة الأفلام والمسلسلات أونلاين',
-  keywords: 'أفلام, مسلسلات, مشاهدة أونلاين, عربي, ترفيه',
+  title: 'اكوام - AKWAM',
+  description: 'موقع البث المتطور - أفلام، مسلسلات، برامج، منوعات',
+  keywords: 'أفلام,مسلسلات,حلقات,مصارعة,برامج,العاب,اكوام,akwam',
+  authors: [{ name: 'اكوام' }],
+  creator: 'اكوام',
+  publisher: 'اكوام',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL('http://localhost:3000'),
   openGraph: {
-    title: 'AKWAM - شمس المواقع',
-    description: 'الموقع العربي الأول لمشاهدة الأفلام والمسلسلات أونلاين',
-    type: 'website',
+    title: 'اكوام - AKWAM',
+    description: 'موقع البث المتطور - أفلام، مسلسلات، برامج، منوعات',
+    url: 'http://localhost:3000',
+    siteName: 'اكوام',
+    images: [
+      {
+        url: 'https://akw.to/files/social_logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'اكوام - AKWAM',
+      },
+    ],
     locale: 'ar_SA',
+    type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AKWAM - شمس المواقع',
-    description: 'الموقع العربي الأول لمشاهدة الأفلام والمسلسلات أونلاين',
-  }
+    title: 'اكوام - AKWAM',
+    description: 'موقع البث المتطور - أفلام، مسلسلات، برامج، منوعات',
+    images: ['https://akw.to/files/social_logo.png'],
+    creator: '@AKOAMsocial',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: 'your-google-verification-code',
+  },
 }
 
 export default function RootLayout({
@@ -32,15 +62,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="ar" dir="rtl" className={`${cairo.variable}`}>
-      <body className={`${cairo.className} antialiased`}>
-        <div className="min-h-screen bg-gray-950 text-white">
-          <Header />
-          <main className="relative">
-            {children}
-          </main>
-        </div>
-      </body>
+    <html lang="ar" dir="rtl">
+      <body className={inter.className}>{children}</body>
     </html>
   )
 }
