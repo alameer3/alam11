@@ -1,15 +1,16 @@
 import { MainHeader } from '@/components/layout/main-header'
 import { MainMenu } from '@/components/layout/main-menu'
 import { SearchBox } from '@/components/layout/search-box'
-import { Footer } from '@/components/layout/footer'
 import { AdSystem } from '@/components/ads/ad-system'
+import { MovieSlider } from '@/components/ui/movie-slider'
+import { ContentWidget } from '@/components/ui/content-widget'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function HomePage() {
   return (
-    <div dir="rtl" className="header-fixed body-home min-h-screen" style={{ 
-      background: 'linear-gradient(to bottom, rgba(0, 0, 0, .55), #000 100%), url(/images/home-bg.webp)' 
-    }}>
+    <div dir="rtl" className="header-fixed body-home min-h-screen bg-gradient-to-b from-black/55 to-black" 
+         style={{ backgroundImage: 'url(/images/home-bg.webp)' }}>
       <span className="site-overlay"></span>
       
       {/* القائمة الجانبية */}
@@ -20,164 +21,199 @@ export default function HomePage() {
       
       {/* حاوي الموقع */}
       <div className="site-container">
-        <div className="page-home">
-          <div className="main-header-top"></div>
+        {/* رأس الصفحة */}
+        <MainHeader />
+        
+        {/* محتوى الصفحة الرئيسية */}
+        <div className="main-content">
+          {/* مساحة فاصلة */}
+          <div style={{ marginBottom: '90px' }}></div>
           
-          {/* رأس الموقع */}
-          <MainHeader />
-          
-          <div className="main-header-height"></div>
-          
-          {/* المحتوى الرئيسي */}
-          <div className="container py-5 my-5">
-            {/* الزر الدائري المركزي مطابق للأصل */}
-            <div className="home-site-btn-container mt-5">
-              <h1>
-                <Link href="/main" className="link" style={{
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  width: '100%',
-                  height: '100%',
-                  zIndex: 10
-                }}>
-                  <span className="sr-only">الصفحة الرئيسية</span>
-                </Link>
-              </h1>
-              <div 
-                className="home-site-btn"
-                style={{
-                  backgroundImage: "url('/images/site-new.webp')",
-                  transition: 'background-position 5s',
-                  width: '300px',
-                  height: '300px',
-                  margin: '0 auto',
-                  borderRadius: '50%',
-                  position: 'relative',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexDirection: 'column',
-                  backgroundColor: '#2a2a2a',
-                  border: '3px solid #ff6b35'
-                }}
-              >
-                <span className="logo mb-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="87px" height="80px">
-                    <path fillRule="evenodd" fill="rgb(255, 255, 255)"
-                      d="M68.479,46.753 L55.101,55.064 L59.686,64.395 L26.302,64.395 L43.500,33.248 L48.558,41.524 L61.642,34.285 L43.500,-0.001 L0.000,80.001 L87.000,80.001 L68.479,46.753 Z"/>
-                  </svg>
-                </span>
-                <span className="text font-size-20 font-weight-medium text-white">الصفحة الرئيسية</span>
-              </div>
-            </div>
-
-            {/* صندوق البحث والقوائم الرئيسية */}
+          <div className="container">
+            {/* ويدجت المحتوى المتميز - Swiper */}
             <div className="widget-2 widget mb-4">
-              <div className="widget-body row">
-                <div className="col-lg-8 mx-auto">
-                  <form className="form d-flex no-gutters mb-4" action="/search" method="get">
-                    <div className="col pr-3">
-                      <input 
-                        type="text" 
-                        className="form-control bg-gray-800 border-gray-600 text-white text-right"
-                        id="widget2SearchInput" 
-                        name="q"
-                        placeholder="ابحث عن فيلم او مسلسل او لعبة او برنامج ..."
-                        style={{ 
-                          borderRadius: '6px 0 0 6px',
-                          padding: '12px 16px',
-                          fontSize: '16px',
-                          border: '1px solid #444'
-                        }}
-                      />
-                    </div>
-                    <div className="col-auto">
-                      <button 
-                        type="submit" 
-                        className="btn font-weight-bold text-white px-6 py-3"
-                        style={{ 
-                          backgroundColor: '#ff6b35',
-                          borderRadius: '0 6px 6px 0',
-                          border: 'none',
-                          fontSize: '16px'
-                        }}
-                      >
-                        بحث
-                      </button>
-                    </div>
-                  </form>
-
-                  {/* القوائم الرئيسية */}
-                  <div className="main-categories-list">
-                    <div className="row">
-                      <div className="col-lg col-4">
-                        <Link href="/movies" className="item d-block text-center text-white py-4 h-100 hover:bg-gray-700 transition-colors rounded">
-                          <div className="icn mb-2">
-                            <i className="text-4xl text-orange-500">🎬</i>
-                          </div>
-                          <div className="font-size-16 font-weight-medium">أفلام</div>
-                        </Link>
-                      </div>
-                      <div className="col-lg col-4">
-                        <Link href="/series" className="item d-block text-center text-white py-4 h-100 hover:bg-gray-700 transition-colors rounded">
-                          <div className="icn mb-2">
-                            <i className="text-4xl text-orange-500">📺</i>
-                          </div>
-                          <div className="font-size-16 font-weight-medium">مسلسلات</div>
-                        </Link>
-                      </div>
-                      <div className="col-lg col-4">
-                        <Link href="/shows" className="item d-block text-center text-white py-4 h-100 hover:bg-gray-700 transition-colors rounded">
-                          <div className="icn mb-2">
-                            <i className="text-4xl text-orange-500">📡</i>
-                          </div>
-                          <div className="font-size-16 font-weight-medium">تلفزيون</div>
-                        </Link>
-                      </div>
-                      <div className="col-lg col-4">
-                        <Link href="/mix" className="item d-block text-center text-white py-4 h-100 hover:bg-gray-700 transition-colors rounded">
-                          <div className="icn mb-2">
-                            <i className="text-4xl text-orange-500">🎭</i>
-                          </div>
-                          <div className="font-size-16 font-weight-medium">منوعات</div>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div className="widget-body">
+                <MovieSlider 
+                  title="المختارات" 
+                  items={[
+                    {
+                      id: '854',
+                      type: 'series',
+                      title: 'Lucifer الموسم الخامس',
+                      image: 'https://img.downet.net/thumb/270x400/uploads/BgvPP.jpg',
+                      url: '/series/854/lucifer-الموسم-الخامس'
+                    },
+                    {
+                      id: '1377',
+                      type: 'series',
+                      title: 'WandaVision الموسم الاول',
+                      image: 'https://img.downet.net/thumb/270x400/uploads/6ECRL.jpeg',
+                      url: '/series/1377/wandavision-الموسم-الاول'
+                    },
+                    {
+                      id: '9839',
+                      type: 'movie',
+                      title: 'Ballerina',
+                      image: 'https://img.downet.net/thumb/270x400/uploads/vg3hV.jpg',
+                      url: '/movie/9839/ballerina'
+                    },
+                    {
+                      id: '9837',
+                      type: 'movie',
+                      title: 'Thunderbolts',
+                      image: 'https://img.downet.net/thumb/270x400/uploads/bGttw.jpg',
+                      url: '/movie/9837/thunderbolts'
+                    },
+                    {
+                      id: '9805',
+                      type: 'movie',
+                      title: 'Squid Game الموسم الثالث',
+                      image: 'https://img.downet.net/thumb/270x400/uploads/sapgq.jpg',
+                      url: '/movie/9805/squid-game-الموسم-الثالث'
+                    }
+                  ]}
+                />
               </div>
             </div>
 
-            {/* إعلانات الصفحة الرئيسية */}
+            {/* إعلانات */}
             <div className="ads mb-3">
-              <center>
-                {/* إعلان للكمبيوتر */}
-                <div className="d-none d-md-block">
-                  <AdSystem
-                    adType="banner"
-                    placement="homepage-desktop"
-                    dimensions={{ width: 728, height: 90 }}
-                    showCloseButton={false}
-                  />
-                </div>
-
-                {/* إعلان للجوال */}
-                <div className="d-md-none">
-                  <AdSystem
-                    adType="banner"
-                    placement="homepage-mobile"
-                    dimensions={{ width: 300, height: 250 }}
-                    showCloseButton={false}
-                  />
-                </div>
-              </center>
+              <AdSystem 
+                type="banner"
+                position="content"
+                desktop={{
+                  key: 'c4dafd2afd106c16f2da137131642dc4',
+                  width: 728,
+                  height: 90
+                }}
+                mobile={{
+                  key: '96a30fbd2b80990e89652a08f49b609f',
+                  width: 300,
+                  height: 250
+                }}
+              />
             </div>
+
+            {/* ويدجت الأفلام */}
+            <ContentWidget 
+              title="أفلام"
+              type="movies"
+              headerMenuItems={[
+                { name: 'عربي', url: '/movies?section=29' },
+                { name: 'اجنبي', url: '/movies?section=30' },
+                { name: 'هندي', url: '/movies?section=31' },
+                { name: 'تركي', url: '/movies?section=32' },
+                { name: 'اسيوي', url: '/movies?section=33' }
+              ]}
+              moreUrl="/movies"
+              featuredItem={{
+                id: '9946',
+                title: 'Hera Pher',
+                description: 'مشاهدة و تحميل فيلم Hera Pher حيث يدور العمل حول ينفصل الصديقان أجاي وفيجاي عن بعضهما البعض عندما يكتشفان أسرارًا عن ماضيهما',
+                image: 'https://img.downet.net/thumb/1140x310/uploads/Ul3ES.webp',
+                poster: 'https://img.downet.net/thumb/150x200/uploads/Ul3ES.webp',
+                rating: '6.6',
+                quality: 'WEB-DL',
+                url: '/movie/9946/hera-pher',
+                trailer: 'https://www.youtube.com/watch?v=cIPoW4VnZYk'
+              }}
+              items={[
+                {
+                  id: '9929',
+                  title: 'Push',
+                  image: 'https://img.downet.net/thumb/178x260/uploads/weU96.webp',
+                  rating: '7.2',
+                  year: '2024',
+                  genres: ['اثارة', 'رعب'],
+                  quality: 'WEB-DL',
+                  url: '/movie/9929/push'
+                }
+                // المزيد من الأفلام...
+              ]}
+            />
+
+            {/* ويدجت المسلسلات */}
+            <ContentWidget 
+              title="مسلسلات"
+              type="series"
+              headerMenuItems={[
+                { name: 'عربي', url: '/series?section=29' },
+                { name: 'اجنبي', url: '/series?section=30' },
+                { name: 'هندي', url: '/series?section=31' },
+                { name: 'تركي', url: '/series?section=32' },
+                { name: 'اسيوي', url: '/series?section=33' }
+              ]}
+              moreUrl="/series"
+              featuredItem={{
+                id: '4994',
+                title: 'Dexter: Resurrection',
+                description: 'مشاهدة و تحميل مسلسل Dexter: Resurrection حيث يدور العمل حول يستيقظ دكستر مورغان من غيبوبته ليجد هاريسون قد اختفى دون أثر',
+                image: 'https://img.downet.net/thumb/1140x310/uploads/ad99J.webp',
+                poster: 'https://img.downet.net/thumb/150x200/uploads/cU3Wm.webp',
+                rating: '7.9',
+                quality: 'WEB-DL',
+                url: '/series/4994/dexter-resurrection',
+                trailer: 'https://www.youtube.com/watch?v=agNIhIWwi6U'
+              }}
+              items={[
+                {
+                  id: '4970',
+                  title: 'فات الميعاد',
+                  image: 'https://img.downet.net/thumb/178x260/uploads/u3No5.jpg',
+                  rating: '6.0',
+                  year: '2025',
+                  genres: ['دراما'],
+                  episodes: 27,
+                  quality: 'WEB-DL',
+                  url: '/series/4970/فات-الميعاد'
+                },
+                {
+                  id: '4966',
+                  title: 'خطيئة اخيرة',
+                  image: 'https://img.downet.net/thumb/178x260/uploads/w4CQd.jpg',
+                  rating: '6.1',
+                  year: '2025',
+                  genres: ['دراما'],
+                  episodes: 41,
+                  quality: 'WEB-DL',
+                  url: '/series/4966/خطيئة-اخيرة'
+                }
+                // المزيد من المسلسلات...
+              ]}
+            />
+
+            {/* ويدجت التلفزيون */}
+            <ContentWidget 
+              title="تلفزيون"
+              type="shows"
+              headerMenuItems={[
+                { name: 'برامج', url: '/shows?category=برامج' },
+                { name: 'توك شو', url: '/shows?category=توك-شو' },
+                { name: 'مصارعة', url: '/shows?category=مصارعة' },
+                { name: 'رياضة', url: '/shows?category=رياضة' }
+              ]}
+              moreUrl="/shows"
+              items={[
+                // محتوى التلفزيون...
+              ]}
+            />
+
+            {/* ويدجت المنوعات */}
+            <ContentWidget 
+              title="منوعات"
+              type="mix"
+              headerMenuItems={[
+                { name: 'العاب', url: '/mix?category=العاب' },
+                { name: 'برامج', url: '/mix?category=برامج' },
+                { name: 'تطبيقات', url: '/mix?category=تطبيقات' }
+              ]}
+              moreUrl="/mix"
+              items={[
+                // محتوى المنوعات...
+              ]}
+            />
           </div>
         </div>
-
-        {/* التذييل */}
-        <Footer />
       </div>
     </div>
   )
