@@ -97,21 +97,23 @@ const mockNotifications: Notification[] = [
     { id: 'settings', label: 'الإعدادات', count: 0 }
   ];
 
-  const getFilteredNotifications = () => {
-    switch (activeTab) {
-      case 'unread':
-        return mockNotifications.filter(n => !n.isRead);
-      case 'important':
-        return mockNotifications.filter(n => n.isImportant);
-      default:
-        return mockNotifications;
-    }
-  };
+
 
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<Notification[]>(mockNotifications);
   const [unreadCount, setUnreadCount] = useState(mockNotifications.filter(n => !n.isRead).length);
   const [activeTab, setActiveTab] = useState('all');
+
+  const getFilteredNotifications = () => {
+    switch (activeTab) {
+      case 'unread':
+        return notifications.filter(n => !n.isRead);
+      case 'important':
+        return notifications.filter(n => n.isImportant);
+      default:
+        return notifications;
+    }
+  };
 
   const markAsRead = (notificationId: string) => {
     setNotifications(prev => 
@@ -198,8 +200,8 @@ export default function NotificationsPage() {
                 }`}
               >
                 <div className="flex items-start space-x-4 space-x-reverse">
-                  <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${notification.color} bg-opacity-20`}>
-                    <IconComponent className="w-5 h-5" />
+                  <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center bg-gray-700 bg-opacity-50`}>
+                    <IconComponent className={`w-5 h-5 ${notification.color}`} />
                   </div>
                   
                   <div className="flex-1 min-w-0">
