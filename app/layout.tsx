@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import './akwam.css'
 
+import { StaticLayout } from '@/components/StaticLayout'
 import { ClientLayout } from '@/components/ClientLayout'
 import { Providers } from '@/components/providers'
 
@@ -74,8 +75,11 @@ export default function RootLayout({
         <Providers>
           {/* Site overlay for menu */}
           <span className="site-overlay" />
-          {/* Global header and menu */}
-          <ClientLayout />
+          {/* Combined layout with hydration protection */}
+          <div suppressHydrationWarning>
+            <StaticLayout />
+            <ClientLayout />
+          </div>
           {/* Page content */}
           {children}
         </Providers>
