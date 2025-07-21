@@ -33,7 +33,7 @@ export function EntryCard({ item }: EntryCardProps) {
       </div>
 
       {/* Image */}
-      <Link href={`/${item.slug}`} className="block relative aspect-poster bg-gray-700">
+      <Link href={`/movie/${item.slug}`} className="block relative aspect-poster bg-gray-700">
         <Image
           src={item.poster}
           alt={item.title}

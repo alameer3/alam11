@@ -3,6 +3,7 @@ const nextConfig = {
   experimental: {
   },
   allowedDevOrigins: [
+    'a501ac9f-2461-4725-a31a-06f835d210ff-00-x77hhfvlncp2.spock.replit.dev',
     '5cc4d22a-55ad-4d5d-b507-80b8f577d9f9-00-2m36py6tdhyek.picard.replit.dev',
     '127.0.0.1',
     'localhost'
@@ -28,6 +29,10 @@ const nextConfig = {
       {
         protocol: 'http',
         hostname: 'localhost'
+      },
+      {
+        protocol: 'https',
+        hostname: 'randomuser.me'
       }
     ],
     formats: ['image/webp', 'image/avif'],

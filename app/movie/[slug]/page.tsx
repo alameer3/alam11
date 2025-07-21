@@ -1,3 +1,5 @@
+
+
 'use client'
 
 import { MovieDetailsHeader } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/MovieDetailsHeader'
@@ -22,8 +24,9 @@ const movies = [
   },
 ]
 
-export default function MoviePage({ params }: { params: { slug: string } }) {
-  const movie = movies.find((m) => m.slug === params.slug) || movies[0]
+export default async function MoviePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const movie = movies.find((m) => m.slug === slug) || movies[0]
 
   return (
     <div className="bg-home min-h-screen">
