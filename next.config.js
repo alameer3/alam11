@@ -2,13 +2,33 @@
 const nextConfig = {
   experimental: {
   },
+  allowedDevOrigins: [
+    '5cc4d22a-55ad-4d5d-b507-80b8f577d9f9-00-2m36py6tdhyek.picard.replit.dev',
+    '127.0.0.1',
+    'localhost'
+  ],
   images: {
-    domains: [
-      'images.unsplash.com',
-      'via.placeholder.com',
-      'picsum.photos',
-      'akw.to',
-      'localhost'
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos'
+      },
+      {
+        protocol: 'https',
+        hostname: 'akw.to'
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost'
+      }
     ],
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],

@@ -124,6 +124,44 @@
   animation: scaleIn 0.6s ease-out;
 }
 
+/* Brand colors and theme */
+.bg-home {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  min-height: 100vh;
+}
+
+.bg-brand {
+  background-color: #f3951e;
+}
+
+.bg-brand-600 {
+  background-color: #e5821a;
+}
+
+.text-brand {
+  color: #f3951e;
+}
+
+/* Hero styles */
+.hero-swiper .swiper-pagination-bullet {
+  background-color: rgba(255, 255, 255, 0.5);
+  opacity: 1;
+}
+
+.hero-swiper .swiper-pagination-bullet-active {
+  background-color: #f3951e;
+}
+
+/* Aspect ratios */
+.aspect-poster {
+  aspect-ratio: 2/3;
+}
+
+/* Card animations */
+.animate-fade-up {
+  animation: fadeIn 0.6s ease-out;
+}
+
 .animate-pulse-slow {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
