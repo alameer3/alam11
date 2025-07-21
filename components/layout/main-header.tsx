@@ -4,11 +4,17 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { Search, User, Plus } from 'lucide-react'
+import { SafeClientWrapper } from '@/components/ui/safe-client-wrapper'
 
 export function MainHeader() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const { data: session } = useSession()
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,39 +39,40 @@ export function MainHeader() {
     }
 
     // Toggle body class to control global styles (e.g., hamburger icon X)
-    if (typeof document !== 'undefined') {
+    if (mounted && typeof document !== 'undefined') {
       document.body.classList.toggle('main-menu-active')
     }
   }
 
   return (
-    <header className={`main-header ${isScrolled ? 'scrolled' : ''}`}>
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between">
-          {/* الشعار */}
-          <div className="flex items-center">
-            <h2 className="main-logo m-0">
-              <Link href="/" className="inline-flex">
-                <img
-                  src="/logo.svg"
-                  className="img-fluid"
-                  alt="𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗"
-                  style={{ height: '40px' }}
-                />
-              </Link>
-            </h2>
-          </div>
+    <SafeClientWrapper>
+      <header className={`main-header ${isScrolled ? 'scrolled' : ''}`}>
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between">
+            {/* الشعار */}
+            <div className="flex items-center">
+              <h2 className="main-logo m-0">
+                <Link href="/" className="inline-flex">
+                  <img
+                    src="/logo.svg"
+                    className="img-fluid"
+                    alt="𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗"
+                    style={{ height: '40px' }}
+                  />
+                </Link>
+              </h2>
+            </div>
 
-          {/* زر القائمة */}
-          <div className="flex items-center ml-4">
-            <button
-              onClick={toggleMenu}
-              className="menu-toggle flex items-center text-white"
-            >
-              <span className="icn ml-3"></span>
-              <div className="text text-lg">الأقسام</div>
-            </button>
-          </div>
+            {/* زر القائمة */}
+            <div className="flex items-center ml-4">
+              <button
+                onClick={toggleMenu}
+                className="menu-toggle flex items-center text-white"
+              >
+                <span className="icn ml-3"></span>
+                <div className="text text-lg">الأقسام</div>
+              </button>
+            </div>
 
           {/* شريط البحث - مخفي على الهاتف */}
           <div className="hidden md:flex flex-1 max-w-lg mx-8">
@@ -116,5 +123,6 @@ export function MainHeader() {
         </div>
       </div>
     </header>
+    </SafeClientWrapper>
   )
 }
