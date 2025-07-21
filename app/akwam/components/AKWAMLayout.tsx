@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, ReactNode } from 'react';
+import SearchBox from './SearchBox';
 
 interface AKWAMLayoutProps {
   children: ReactNode;
@@ -11,6 +12,7 @@ interface AKWAMLayoutProps {
 
 export default function AKWAMLayout({ children, currentPage = '', pageTitle = 'اكوام' }: AKWAMLayoutProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
     <div className="akwam-layout" style={{ backgroundColor: '#1a1a1a', minHeight: '100vh' }}>
@@ -271,39 +273,36 @@ export default function AKWAMLayout({ children, currentPage = '', pageTitle = '�
               fontSize: '18px'
             }}
           >
-            <span style={{
-              width: '26px',
-              height: '2px',
-              backgroundColor: isMenuOpen ? '#f3951e' : 'white',
+            <div style={{
+              width: '24px',
+              height: '18px',
               position: 'relative',
-              display: 'inline-block',
-              transition: 'background-color 0.3s ease',
-              '::before': {
-                content: '""',
-                position: 'absolute',
-                right: 0,
-                width: '100%',
-                height: '2px',
-                backgroundColor: isMenuOpen ? '#f3951e' : 'white',
-                top: '-6px',
-                transition: 'transform 0.3s ease, top 0.3s ease',
-                transform: isMenuOpen ? 'rotate(-45deg)' : 'none',
-                top: isMenuOpen ? 0 : '-6px'
-              },
-              '::after': {
-                content: '""',
-                position: 'absolute',
-                right: 0,
-                width: '100%',
-                height: '2px',
-                backgroundColor: isMenuOpen ? '#f3951e' : 'white',
-                bottom: '-6px',
-                transition: 'transform 0.3s ease, bottom 0.3s ease',
-                transform: isMenuOpen ? 'rotate(45deg)' : 'none',
-                bottom: isMenuOpen ? 0 : '-6px'
-              }
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between'
             }}>
-            </span>
+              <span style={{
+                width: '100%',
+                height: '2px',
+                backgroundColor: isMenuOpen ? '#f3951e' : 'white',
+                transition: 'all 0.3s ease',
+                transform: isMenuOpen ? 'rotate(45deg) translateY(8px)' : 'none'
+              }}></span>
+              <span style={{
+                width: '100%',
+                height: '2px',
+                backgroundColor: isMenuOpen ? '#f3951e' : 'white',
+                transition: 'all 0.3s ease',
+                opacity: isMenuOpen ? 0 : 1
+              }}></span>
+              <span style={{
+                width: '100%',
+                height: '2px',
+                backgroundColor: isMenuOpen ? '#f3951e' : 'white',
+                transition: 'all 0.3s ease',
+                transform: isMenuOpen ? 'rotate(-45deg) translateY(-8px)' : 'none'
+              }}></span>
+            </div>
             <div style={{ marginRight: '12px', color: isMenuOpen ? '#f3951e' : 'white' }}>
               الأقسام
             </div>
@@ -324,15 +323,23 @@ export default function AKWAMLayout({ children, currentPage = '', pageTitle = '�
           
           {/* Search and User */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-            <Link href="/search" style={{ 
-              color: 'white', 
-              fontSize: '20px', 
-              textDecoration: 'none',
-              padding: '8px'
-            }}>
+            <button 
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+              style={{ 
+                background: 'none',
+                border: 'none',
+                color: isSearchOpen ? '#f3951e' : 'white', 
+                fontSize: '20px', 
+                cursor: 'pointer',
+                padding: '8px',
+                transition: 'color 0.3s ease'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#f3951e'}
+              onMouseLeave={(e) => e.currentTarget.style.color = isSearchOpen ? '#f3951e' : 'white'}
+            >
               🔍
-            </Link>
-            <Link href="/recent" style={{ 
+            </button>
+            <Link href="/akwam" style={{ 
               color: 'white', 
               fontSize: '16px', 
               textDecoration: 'none',
@@ -399,6 +406,9 @@ export default function AKWAMLayout({ children, currentPage = '', pageTitle = '�
           </form>
         </div>
       </div>
+
+      {/* Search Box Component */}
+      <SearchBox isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
       {/* Page Content */}
       <main style={{ paddingTop: '20px' }}>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import ArchiveCover from './ArchiveCover';
 
 interface FilterFormProps {
   currentPage: string;
@@ -29,10 +30,11 @@ export default function FilterForm({ currentPage, onFilterChange }: FilterFormPr
   const sections = [
     { value: '0', label: 'القسم' },
     { value: '29', label: 'عربي' },
-    { value: '30', label: 'اجنبي' },
+    { value: '30', label: 'اجنبي' }, 
     { value: '31', label: 'هندي' },
     { value: '32', label: 'تركي' },
-    { value: '33', label: 'اسيوي' }
+    { value: '33', label: 'اسيوي' },
+    { value: '34', label: 'اطفال' }
   ];
 
   const categories = [
@@ -99,9 +101,18 @@ export default function FilterForm({ currentPage, onFilterChange }: FilterFormPr
     { value: 'WebRip', label: 'WebRip' },
     { value: 'BRRIP', label: 'BRRIP' },
     { value: 'DVDrip', label: 'DVDrip' },
+    { value: 'DVDSCR', label: 'DVDSCR' },
     { value: 'HD', label: 'HD' },
+    { value: 'HDTS', label: 'HDTS' },
+    { value: 'HDTV', label: 'HDTV' },
+    { value: 'CAM', label: 'CAM' },
     { value: 'WEB-DL', label: 'WEB-DL' },
-    { value: '4K', label: '4K' }
+    { value: 'HDTC', label: 'HDTC' },
+    { value: 'BDRIP', label: 'BDRIP' },
+    { value: 'HDRIP', label: 'HDRIP' },
+    { value: 'HC HDRIP', label: 'HC HDRIP' },
+    { value: '4K', label: '4K' },
+    { value: '3D', label: '3D' }
   ];
 
   const ratings = [
@@ -137,142 +148,122 @@ export default function FilterForm({ currentPage, onFilterChange }: FilterFormPr
     cursor: 'pointer'
   };
 
+  const pageInfo = {
+    movies: { title: 'أفلام', icon: '🎬', description: 'أحدث وأفضل الأفلام العربية والأجنبية' },
+    series: { title: 'مسلسلات', icon: '📺', description: 'مسلسلات عربية وأجنبية بجودة عالية' },
+    shows: { title: 'تلفزيون', icon: '📻', description: 'برامج تلفزيونية وتوك شو ومسابقات' },
+    mix: { title: 'منوعات', icon: '🎭', description: 'وثائقيات وحفلات وعروض متنوعة' }
+  };
+
+  const info = pageInfo[currentPage as keyof typeof pageInfo] || pageInfo.movies;
+
   return (
-    <div 
-      className="archive-cover"
-      style={{
-        backgroundImage: 'linear-gradient(135deg, rgba(243, 149, 30, 0.1) 0%, rgba(0,0,0,0.8) 100%)',
+    <div>
+      <ArchiveCover 
+        currentPage={currentPage} 
+        title={info.title}
+        icon={info.icon}
+        description={info.description}
+      />
+      
+      <div style={{
         backgroundColor: '#1a1a1a',
-        padding: '30px 0',
-        marginBottom: '30px',
-        borderRadius: '10px'
-      }}
-    >
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px' }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'rgba(243, 149, 30, 0.2)',
-            borderRadius: '10px',
-            padding: '20px',
-            minWidth: '200px',
-            marginLeft: '30px'
-          }}>
-            <div style={{ fontSize: '48px', marginLeft: '15px', color: '#f3951e' }}>
-              {currentPage === 'movies' && '🎬'}
-              {currentPage === 'series' && '📺'}
-              {currentPage === 'shows' && '📻'}
-              {currentPage === 'mix' && '🎭'}
-            </div>
-            <h1 style={{
-              fontSize: '34px',
-              fontWeight: 'bold',
-              margin: 0,
-              color: 'white'
+        borderBottom: '1px solid #333',
+        padding: '25px 0'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
+
+          <form>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '15px'
             }}>
-              {currentPage === 'movies' && 'أفلام'}
-              {currentPage === 'series' && 'مسلسلات'}
-              {currentPage === 'shows' && 'تلفزيون'}
-              {currentPage === 'mix' && 'منوعات'}
-            </h1>
-          </div>
-
-          {/* Filter Form */}
-          <div style={{ flex: 1 }}>
-            <form>
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                gap: '15px'
-              }}>
-                <div>
-                  <select
-                    style={selectStyle}
-                    value={filters.section}
-                    onChange={(e) => handleFilterChange('section', e.target.value)}
-                  >
-                    {sections.map(section => (
-                      <option key={section.value} value={section.value}>
-                        {section.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <select
-                    style={selectStyle}
-                    value={filters.category}
-                    onChange={(e) => handleFilterChange('category', e.target.value)}
-                  >
-                    {categories.map(category => (
-                      <option key={category.value} value={category.value}>
-                        {category.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <select
-                    style={selectStyle}
-                    value={filters.year}
-                    onChange={(e) => handleFilterChange('year', e.target.value)}
-                  >
-                    {years.map(year => (
-                      <option key={year.value} value={year.value}>
-                        {year.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <select
-                    style={selectStyle}
-                    value={filters.rating}
-                    onChange={(e) => handleFilterChange('rating', e.target.value)}
-                  >
-                    {ratings.map(rating => (
-                      <option key={rating.value} value={rating.value}>
-                        {rating.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <select
-                    style={selectStyle}
-                    value={filters.language}
-                    onChange={(e) => handleFilterChange('language', e.target.value)}
-                  >
-                    {languages.map(language => (
-                      <option key={language.value} value={language.value}>
-                        {language.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <select
-                    style={selectStyle}
-                    value={filters.quality}
-                    onChange={(e) => handleFilterChange('quality', e.target.value)}
-                  >
-                    {qualities.map(quality => (
-                      <option key={quality.value} value={quality.value}>
-                        {quality.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+              <div>
+                <select
+                  style={selectStyle}
+                  value={filters.section}
+                  onChange={(e) => handleFilterChange('section', e.target.value)}
+                >
+                  {sections.map(section => (
+                    <option key={section.value} value={section.value}>
+                      {section.label}
+                    </option>
+                  ))}
+                </select>
               </div>
-            </form>
-          </div>
+
+              <div>
+                <select
+                  style={selectStyle}
+                  value={filters.category}
+                  onChange={(e) => handleFilterChange('category', e.target.value)}
+                >
+                  {categories.map(category => (
+                    <option key={category.value} value={category.value}>
+                      {category.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <select
+                  style={selectStyle}
+                  value={filters.rating}
+                  onChange={(e) => handleFilterChange('rating', e.target.value)}
+                >
+                  {ratings.map(rating => (
+                    <option key={rating.value} value={rating.value}>
+                      {rating.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <select
+                  style={selectStyle}
+                  value={filters.year}
+                  onChange={(e) => handleFilterChange('year', e.target.value)}
+                >
+                  {years.map(year => (
+                    <option key={year.value} value={year.value}>
+                      {year.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <select
+                  style={selectStyle}
+                  value={filters.language}
+                  onChange={(e) => handleFilterChange('language', e.target.value)}
+                >
+                  {languages.map(language => (
+                    <option key={language.value} value={language.value}>
+                      {language.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <select
+                  style={selectStyle}
+                  value={filters.quality}
+                  onChange={(e) => handleFilterChange('quality', e.target.value)}
+                >
+                  {qualities.map(quality => (
+                    <option key={quality.value} value={quality.value}>
+                      {quality.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>
