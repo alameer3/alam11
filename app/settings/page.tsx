@@ -604,3 +604,7 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                settings.autoDeleteDownloads ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
+
