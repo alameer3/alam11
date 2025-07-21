@@ -5,11 +5,6 @@ import Link from 'next/link'
 import { Film, Monitor, Tv, Grid3X3 } from 'lucide-react'
 
 export function MainMenu() {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
   const menuItems = [
     {
@@ -73,8 +68,6 @@ export function MainMenu() {
   ]
 
   const handleMenuClick = () => {
-    if (typeof window === 'undefined' || !mounted) return
-    
     const overlay = document.querySelector('.site-overlay')
     const menu = document.querySelector('.main-menu')
     

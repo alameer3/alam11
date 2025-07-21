@@ -7,15 +7,8 @@ import { Search, User, Plus } from 'lucide-react'
 
 export function MainHeader() {
   const [isScrolled, setIsScrolled] = useState(false)
-  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50)
     }
@@ -25,8 +18,6 @@ export function MainHeader() {
   }, [])
 
   const handleMenuToggle = () => {
-    if (typeof window === 'undefined' || !mounted) return
-    
     // تبديل الـ overlay
     const overlay = document.querySelector('.site-overlay')
     if (overlay) {
@@ -38,12 +29,12 @@ export function MainHeader() {
       menu.classList.toggle('show')
     }
 
-    // Toggle body class to control global styles (e.g., hamburger icon X)
+    // Toggle body class to control global styles
     document.body.classList.toggle('main-menu-active')
   }
 
   return (
-    <header className={`main-header ${mounted && isScrolled ? 'scrolled' : ''}`}>
+    <header className={`main-header ${isScrolled ? 'scrolled' : ''}`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           {/* الشعار */}

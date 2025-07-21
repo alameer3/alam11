@@ -4,8 +4,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import './akwam.css'
 
-import { MainHeader } from '@/components/layout/main-header'
-import { MainMenu } from '@/components/layout/main-menu'
+import { ClientLayout } from '@/components/ClientLayout'
 import { Providers } from '@/components/providers'
 
 
@@ -76,8 +75,7 @@ export default function RootLayout({
           {/* Site overlay for menu */}
           <span className="site-overlay" />
           {/* Global header and menu */}
-          <MainHeader />
-          <MainMenu />
+          <ClientLayout />
           {/* Page content */}
           {children}
         </Providers>
