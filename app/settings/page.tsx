@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useState } from 'react';
-import { Settings, User, Shield, Bell, Play, Monitor, Globe, Palette, Download, Eye, Lock, Smartphone, Tv, Volume2, Wifi, WifiOff } from 'lucide-react';
+import { Settings, User, Shield, Bell, Play, Monitor, Download } from 'lucide-react';
 
 interface SettingSection {
   id: string;
