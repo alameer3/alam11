@@ -160,7 +160,7 @@ export class ContentManager {
   
   getMovies(filter?: {
     genre?: string
-    year?: string
+    year?: number
     country?: string
     quality?: string
     featured?: boolean
@@ -170,10 +170,10 @@ export class ContentManager {
     
     if (filter) {
       if (filter.genre) {
-        filtered = filtered.filter(m => m.genre.includes(filter.genre!))
+        filtered = filtered.filter(m => m.genre && typeof m.genre === 'string' && m.genre.includes(filter.genre!))
       }
       if (filter.year) {
-        filtered = filtered.filter(m => m.year === filter.year)
+        filtered = filtered.filter(m => m.year === Number(filter.year))
       }
       if (filter.country) {
         filtered = filtered.filter(m => m.country === filter.country)

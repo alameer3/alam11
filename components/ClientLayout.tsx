@@ -6,18 +6,22 @@ import { MainMenu } from '@/components/layout/main-menu'
 
 export function ClientLayout() {
   const [isClient, setIsClient] = useState(false)
+  const [isStaticLayoutHidden, setIsStaticLayoutHidden] = useState(false)
 
   useEffect(() => {
     setIsClient(true)
-    
-    // Hide static layout after client mounts safely
-    setTimeout(() => {
+  }, [])
+
+  useEffect(() => {
+    if (isClient && !isStaticLayoutHidden) {
+      // Hide static layout after client mounts safely
       const staticLayout = document.querySelector('.static-layout') as HTMLElement
       if (staticLayout) {
         staticLayout.style.display = 'none'
+        setIsStaticLayoutHidden(true)
       }
-    }, 100)
-  }, [])
+    }
+  }, [isClient, isStaticLayoutHidden])
 
   if (!isClient) {
     return null

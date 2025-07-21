@@ -15,7 +15,12 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status') || ''
     
     // بناء شروط البحث
-    const filters: any = {}
+    const filters: {
+      search?: string;
+      role?: string;
+      is_active?: boolean;
+      is_verified?: boolean;
+    } = {}
     
     if (search) {
       filters.search = search

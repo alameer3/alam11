@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     const featured = searchParams.get('featured') === 'true'
     const trending = searchParams.get('trending') === 'true'
 
-    let result
+    let result: { data: any[]; pagination: any }
 
     if (search) {
       // البحث في المسلسلات
@@ -48,7 +48,17 @@ export async function GET(request: NextRequest) {
       }
     } else if (section) {
       // المسلسلات حسب القسم مع الفلاتر
-      const filters = {
+      const filters: {
+        category_id?: number;
+        country_id?: number;
+        language_id?: number;
+        quality_id?: number;
+        year?: number;
+        status?: string;
+        rating_min?: number;
+        sort?: string;
+        order?: 'ASC' | 'DESC';
+      } = {
         category_id: category ? parseInt(category) : undefined,
         country_id: country ? parseInt(country) : undefined,
         language_id: language ? parseInt(language) : undefined,
@@ -63,7 +73,7 @@ export async function GET(request: NextRequest) {
       result = await SeriesModel.findBySection(parseInt(section), page, perPage, filters)
     } else {
       // جميع المسلسلات مع الفلاتر
-      const conditions: any = {}
+      const conditions: Record<string, any> = {}
       
       if (category) conditions['sc.category_id'] = parseInt(category)
       if (country) conditions.country_id = parseInt(country)

@@ -1,5 +1,5 @@
-import { initializeApp } from 'firebase/app';
-import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import { initializeApp, getApps, getApp } from 'firebase/app';
+import { getMessaging, getToken, onMessage, type MessagePayload } from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -11,14 +11,16 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const messaging = getMessaging(app);
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+const messaging = typeof window !== 'undefined' ? getMessaging(app) : null;
 
 export { messaging };
 
 // Request permission and get token
 export async function requestNotificationPermission() {
   try {
+    if (typeof window === 'undefined' || !messaging) return null;
+    
     const permission = await Notification.requestPermission();
     if (permission === 'granted') {
       const token = await getToken(messaging, {
@@ -36,9 +38,11 @@ export async function requestNotificationPermission() {
 // Handle foreground messages
 export function onMessageListener() {
   return new Promise((resolve) => {
-    onMessage(messaging, (payload) => {
-      resolve(payload);
-    });
+    if (messaging) {
+      onMessage(messaging, (payload: MessagePayload) => {
+        resolve(payload);
+      });
+    }
   });
 }
 

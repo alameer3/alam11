@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
+import { Session } from 'next-auth'
 
 interface ClientOnlySessionProps {
-  children: (session: any, loading: boolean) => React.ReactNode
+  children: (session: Session | null, loading: boolean) => React.ReactNode
 }
 
 export function ClientOnlySession({ children }: ClientOnlySessionProps) {

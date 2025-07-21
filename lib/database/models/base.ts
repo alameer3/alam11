@@ -321,4 +321,6 @@ export interface PaginationResult<T> {
 }
 
 // تهيئة قاعدة البيانات عند استيراد الملف
-connectToDatabase().catch(// console.error)
+connectToDatabase().catch((error) => {
+  console.error('خطأ في تهيئة قاعدة البيانات:', error)
+})
