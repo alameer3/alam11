@@ -44,7 +44,7 @@ export function HeroSlider({ slides }: HeroSliderProps) {
             <div className="relative z-10 max-w-2xl mx-auto text-center text-white pt-40 px-4">
               <h2 className="text-4xl md:text-6xl font-bold mb-4">{slide.title}</h2>
               {slide.overview && <p className="text-sm md:text-lg mb-6 text-gray-300">{slide.overview}</p>}
-              <Link href={`/${slide.slug}`} className="inline-block bg-brand hover:bg-brand-600 text-white px-6 py-3 rounded-full text-sm font-semibold transition-colors">
+              <Link href={`/movie/${slide.slug}`} className="inline-block bg-brand hover:bg-brand-600 text-white px-6 py-3 rounded-full text-sm font-semibold transition-colors">
                 مشاهدة الآن
               </Link>
             </div>

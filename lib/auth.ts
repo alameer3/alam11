@@ -1,3 +1,4 @@
+import NextAuth from 'next-auth'
 import type { NextAuthConfig } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { PrismaAdapter } from '@auth/prisma-adapter'
@@ -61,3 +62,5 @@ export const authOptions: NextAuthConfig = {
     signIn: '/auth/signin',
   }
 }
+
+export const { handlers, auth, signIn, signOut } = NextAuth(authOptions)
