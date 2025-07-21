@@ -134,7 +134,7 @@ export class MovieModel extends BaseModel {
     perPage: number = 20,
     filters: MovieFilters = {}
   ): Promise<PaginationResult<MovieWithDetails>> {
-    let conditions: Record<string, any> = { section_id: sectionId }
+    const conditions: Record<string, any> = { section_id: sectionId }
     
     // تطبيق الفلاتر
     if (filters.category_id) conditions['mc.category_id'] = filters.category_id
