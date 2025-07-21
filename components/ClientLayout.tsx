@@ -11,7 +11,7 @@ export function ClientLayout() {
     setIsClient(true)
     
     // Hide static layout after client mounts
-    const staticLayout = document.querySelector('.static-layout')
+    const staticLayout = document.querySelector('.static-layout') as HTMLElement
     if (staticLayout) {
       staticLayout.style.display = 'none'
     }
