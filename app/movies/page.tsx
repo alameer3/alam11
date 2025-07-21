@@ -128,7 +128,7 @@ export default function MoviesPage() {
   // فلترة وبحث الأفلام
   useEffect(() => {
     // apply filters whenever movies or filters change
-    let list = movies.filter((m) => {
+    const list = movies.filter((m) => {
       const catOk = filters.category === 'all' || m.categories.includes(filters.category)
       const qualOk = filters.quality === 'all' || m.quality === filters.quality
       const yearOk = filters.year === 'all' || m.year.toString() === filters.year

@@ -130,7 +130,7 @@ export default function SeriesPage() {
   const perPage = 18
 
   useEffect(() => {
-    let list = series.filter((s) => {
+    const list = series.filter((s) => {
       const catOk = filters.category === 'all' || s.genre.includes(filters.category)
       const qualOk = filters.quality === 'all' || s.quality === filters.quality
       const yearOk = filters.year === 'all' || s.year.toString() === filters.year
