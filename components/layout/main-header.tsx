@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { Search, User, Plus } from 'lucide-react'
-import { SafeClientWrapper } from '@/components/ui/safe-client-wrapper'
 
 export function MainHeader() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -26,6 +25,8 @@ export function MainHeader() {
   }, [])
 
   const toggleMenu = () => {
+    if (!mounted) return
+    
     setIsMenuOpen(!isMenuOpen)
     // تبديل الـ overlay
     const overlay = document.querySelector('.site-overlay')
@@ -39,17 +40,14 @@ export function MainHeader() {
     }
 
     // Toggle body class to control global styles (e.g., hamburger icon X)
-    if (mounted && typeof document !== 'undefined') {
-      document.body.classList.toggle('main-menu-active')
-    }
+    document.body.classList.toggle('main-menu-active')
   }
 
-  return (
-    <SafeClientWrapper>
-      <header className={`main-header ${isScrolled ? 'scrolled' : ''}`}>
+  if (!mounted) {
+    return (
+      <header className="main-header">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between">
-            {/* الشعار */}
+          <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               <h2 className="main-logo m-0">
                 <Link href="/" className="inline-flex">
@@ -62,17 +60,40 @@ export function MainHeader() {
                 </Link>
               </h2>
             </div>
+          </div>
+        </div>
+      </header>
+    )
+  }
 
-            {/* زر القائمة */}
-            <div className="flex items-center ml-4">
-              <button
-                onClick={toggleMenu}
-                className="menu-toggle flex items-center text-white"
-              >
-                <span className="icn ml-3"></span>
-                <div className="text text-lg">الأقسام</div>
-              </button>
-            </div>
+  return (
+    <header className={`main-header ${isScrolled ? 'scrolled' : ''}`}>
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between">
+          {/* الشعار */}
+          <div className="flex items-center">
+            <h2 className="main-logo m-0">
+              <Link href="/" className="inline-flex">
+                <img
+                  src="/logo.svg"
+                  className="img-fluid"
+                  alt="𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗"
+                  style={{ height: '40px' }}
+                />
+              </Link>
+            </h2>
+          </div>
+
+          {/* زر القائمة */}
+          <div className="flex items-center ml-4">
+            <button
+              onClick={toggleMenu}
+              className="menu-toggle flex items-center text-white"
+            >
+              <span className="icn ml-3"></span>
+              <div className="text text-lg">الأقسام</div>
+            </button>
+          </div>
 
           {/* شريط البحث - مخفي على الهاتف */}
           <div className="hidden md:flex flex-1 max-w-lg mx-8">
@@ -106,15 +127,13 @@ export function MainHeader() {
               {session ? (
                 <div className="user-logged flex items-center">
                   <div className="user-toggle">
-                    <img
-                      src="https://img.downet.net/thumb/32x32/default.jpg"
-                      className="w-8 h-8 rounded-full"
-                      alt="user avatar"
-                    />
+                    <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center">
+                      <User className="w-4 h-4 text-white" />
+                    </div>
                   </div>
                 </div>
               ) : (
-                <Link href="/login" className="user-toggle">
+                <Link href="/auth/signin" className="user-toggle text-white">
                   <User className="w-5 h-5" />
                 </Link>
               )}
@@ -123,6 +142,5 @@ export function MainHeader() {
         </div>
       </div>
     </header>
-    </SafeClientWrapper>
   )
 }

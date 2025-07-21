@@ -10,6 +10,7 @@ export function MainMenu() {
   useEffect(() => {
     setMounted(true)
   }, [])
+
   const menuItems = [
     {
       href: '/movies',
@@ -60,7 +61,7 @@ export function MainMenu() {
       title: 'يوتيوب'
     },
     {
-      href: '/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗-Notifications',
+      href: '/notifications',
       icon: '🔔',
       title: 'الإشعارات'
     },
@@ -85,46 +86,49 @@ export function MainMenu() {
     }
   }
 
-  return (
-    <div className="main-menu">
-      <div className="flex flex-col h-full">
-        {/* القائمة الرئيسية */}
-        <div className="flex-1">
-          <div className="menu flex flex-col justify-center">
-            {menuItems.map((item) => {
-              const IconComponent = item.icon
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="item"
-                  onClick={closeMenu}
-                >
-                  <div className="icn ml-3">
-                    <IconComponent className="w-12 h-12" />
-                  </div>
-                  <div className="text">{item.text}</div>
-                </Link>
-              )
-            })}
+  if (!mounted) {
+    return (
+      <div className="main-menu">
+        <div className="container mx-auto px-4">
+          <div className="py-8 text-center text-white">
+            <div className="text-lg">القائمة</div>
           </div>
         </div>
+      </div>
+    )
+  }
 
-        {/* الشبكات الاجتماعية */}
-        <nav className="social flex justify-center flex-wrap">
+  return (
+    <div className="main-menu">
+      <div className="container mx-auto px-4">
+        {/* Menu Items */}
+        <div className="menu py-8">
+          {menuItems.map((item) => {
+            const IconComponent = item.icon
+            return (
+              <Link key={item.href} href={item.href} className="item" onClick={closeMenu}>
+                <IconComponent className="icn" />
+                <span>{item.text}</span>
+              </Link>
+            )
+          })}
+        </div>
+
+        {/* Social Links */}
+        <div className="social flex flex-wrap justify-center gap-2 py-4 border-t border-gray-600">
           {socialLinks.map((link, index) => (
-            <a
-              key={index}
-              href={link.href}
-              target={link.href.startsWith('http') ? '_blank' : '_self'}
-              className="mx-2 mb-2"
+            <a 
+              key={index} 
+              href={link.href} 
               title={link.title}
-              rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+              className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-600 text-gray-400 hover:text-white hover:bg-brand hover:border-brand transition-all"
+              target={link.href.startsWith('http') ? '_blank' : '_self'}
+              rel={link.href.startsWith('http') ? 'noopener noreferrer' : ''}
             >
-              <span className="text-xl">{link.icon}</span>
+              {link.icon}
             </a>
           ))}
-        </nav>
+        </div>
       </div>
     </div>
   )
