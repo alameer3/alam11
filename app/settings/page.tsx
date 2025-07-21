@@ -531,4 +531,3 @@ export default function SettingsPage() {
               onClick={() => handleSettingChange('autoDeleteDownloads', !settings.autoDeleteDownloads)}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                 settings.autoDeleteDownloads ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
-              }`
