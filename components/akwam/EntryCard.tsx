@@ -16,7 +16,7 @@ interface EntryCardProps {
 
 export function EntryCard({ item }: EntryCardProps) {
   return (
-    <div className="entry-box entry-box-1 bg-gray-900 rounded-md overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-transform">
+    <div className="entry-box entry-box-1 bg-gray-900 rounded-md overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-transform animate-fade-up">
       {/* Labels */}
       <div className="labels flex absolute top-2 right-2 z-10 text-xs">
         {item.rating && (
@@ -38,6 +38,7 @@ export function EntryCard({ item }: EntryCardProps) {
           src={item.poster}
           alt={item.title}
           fill
+          loading="lazy"
           sizes="(max-width: 768px) 50vw, 178px"
           className="object-cover"
         />

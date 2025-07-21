@@ -21,6 +21,7 @@ const config: Config = {
       fontFamily: {
         sans: ['Cairo', 'system-ui', 'sans-serif'],
         arabic: ['Cairo', 'Arial', 'sans-serif'],
+        akoam: ['STC-Regular', 'Cairo', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

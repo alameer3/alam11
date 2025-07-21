@@ -5,6 +5,7 @@ import { WatchServers } from '@/components/akwam/WatchServers'
 import { DownloadLinks } from '@/components/akwam/DownloadLinks'
 import { CastSlider } from '@/components/akwam/CastSlider'
 import { GallerySlider } from '@/components/akwam/GallerySlider'
+import Head from 'next/head'
 
 // temporary dataset
 const movies = [
@@ -26,6 +27,13 @@ export default function MoviePage({ params }: { params: { slug: string } }) {
 
   return (
     <div className="bg-home min-h-screen">
+      <Head>
+        <title>{movie.title} | اكوام</title>
+        <meta property="og:title" content={movie.title} />
+        <meta property="og:image" content={movie.poster} />
+        <meta property="og:description" content={movie.description} />
+      </Head>
+
       <MovieDetailsHeader
         poster={movie.poster}
         backdrop={movie.backdrop}

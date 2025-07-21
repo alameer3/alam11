@@ -17,9 +17,9 @@ interface MiniProps {
 
 export function EntryMiniCard({ item }: MiniProps) {
   return (
-    <Link href={`/${item.slug}`} className="entry-mini flex bg-gray-800 rounded hover:bg-gray-700 transition p-2">
+    <Link href={`/${item.slug}`} className="entry-mini flex bg-gray-800 rounded hover:bg-gray-700 transition p-2 animate-fade-up">
       <div className="relative w-20 h-28 flex-shrink-0 rounded overflow-hidden">
-        <Image src={item.poster} alt={item.title} fill sizes="80px" className="object-cover" />
+        <Image src={item.poster} alt={item.title} fill sizes="80px" loading="lazy" className="object-cover" />
       </div>
       <div className="flex-1 pl-3 text-white">
         <h4 className="font-semibold text-sm line-clamp-2">{item.title}</h4>

@@ -68,7 +68,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={inter.className}>
+      <body className={`${inter.className} font-akoam`}>
         {/* Site overlay for menu */}
         <span className="site-overlay" />
 
