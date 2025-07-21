@@ -134,7 +134,7 @@ export default function PerformanceOptimizer({
         const memory = (performance as any).memory;
         if (memory.usedJSHeapSize > memory.jsHeapSizeLimit * 0.8) {
           // تحذير من استخدام الذاكرة العالي
-          // // console.warn('High memory usage detected');
+          // // // console.warn('High memory usage detected');
         }
       }
       
@@ -165,7 +165,7 @@ export default function PerformanceOptimizer({
       }
       
     } catch (error) {
-      // // console.error('Auto optimization failed:', error);
+      // // // console.error('Auto optimization failed:', error);
     } finally {
       setIsOptimizing(false);
     }
@@ -181,7 +181,7 @@ export default function PerformanceOptimizer({
       currentUrl.searchParams.set('optimized', 'true');
       window.location.href = currentUrl.toString();
     } catch (error) {
-      // // console.error('Manual optimization failed:', error);
+      // // // console.error('Manual optimization failed:', error);
     } finally {
       setIsOptimizing(false);
     }

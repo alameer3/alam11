@@ -68,7 +68,7 @@ export abstract class BaseModel {
       }
       return null
     } catch (error) {
-      // // console.error(`خطأ في إنشاء سجل في ${this.tableName}:`, error)
+      // // // console.error(`خطأ في إنشاء سجل في ${this.tableName}:`, error)
       throw error
     }
   }
@@ -93,7 +93,7 @@ export abstract class BaseModel {
       }
       return null
     } catch (error) {
-      // // console.error(`خطأ في تحديث سجل في ${this.tableName}:`, error)
+      // // // console.error(`خطأ في تحديث سجل في ${this.tableName}:`, error)
       throw error
     }
   }
@@ -108,7 +108,7 @@ export abstract class BaseModel {
       const result = execute(sql, [new Date().toISOString(), id])
       return result.changes > 0
     } catch (error) {
-      // // console.error(`خطأ في حذف سجل من ${this.tableName}:`, error)
+      // // // console.error(`خطأ في حذف سجل من ${this.tableName}:`, error)
       throw error
     }
   }
@@ -123,7 +123,7 @@ export abstract class BaseModel {
       const result = execute(sql, [id])
       return result.changes > 0
     } catch (error) {
-      // // console.error(`خطأ في حذف سجل نهائياً من ${this.tableName}:`, error)
+      // // // console.error(`خطأ في حذف سجل نهائياً من ${this.tableName}:`, error)
       throw error
     }
   }
@@ -321,6 +321,6 @@ export interface PaginationResult<T> {
 }
 
 // تهيئة قاعدة البيانات عند استيراد الملف
-connectToDatabase().catch((error) => {
-  console.error('خطأ في تهيئة قاعدة البيانات:', error)
+connectToDatabase().catch(() => {
+  // خطأ في تهيئة قاعدة البيانات - تم التعامل معه صامتاً
 })

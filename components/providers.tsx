@@ -22,15 +22,11 @@ export function Providers({ children }: ProvidersProps) {
       enableSystem
       disableTransitionOnChange
     >
-      {mounted ? (
-        <SessionProvider>
-          {children}
-        </SessionProvider>
-      ) : (
-        <div suppressHydrationWarning>
+      <SessionProvider>
+        <div className={mounted ? '' : 'opacity-0'}>
           {children}
         </div>
-      )}
+      </SessionProvider>
     </ThemeProvider>
   )
 }

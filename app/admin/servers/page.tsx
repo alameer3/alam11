@@ -182,7 +182,7 @@ export default function ServersManagementPage() {
       ]
       setServers(mockServers)
     } catch (error) {
-      // // console.error('خطأ في جلب الخوادم:', error)
+      // // // console.error('خطأ في جلب الخوادم:', error)
     } finally {
       setLoading(false)
     }
@@ -265,7 +265,7 @@ export default function ServersManagementPage() {
       })
       
     } catch (error) {
-      // // console.error('خطأ في حفظ الخادم:', error)
+      // // // console.error('خطأ في حفظ الخادم:', error)
     }
   }
 
@@ -291,7 +291,7 @@ export default function ServersManagementPage() {
     try {
       setServers(servers.filter(server => server.id !== serverId))
     } catch (error) {
-      // // console.error('خطأ في حذف الخادم:', error)
+      // // // console.error('خطأ في حذف الخادم:', error)
     }
   }
 
@@ -307,7 +307,7 @@ export default function ServersManagementPage() {
           : server
       ))
     } catch (error) {
-      // // console.error('خطأ في تغيير حالة الخادم:', error)
+      // // // console.error('خطأ في تغيير حالة الخادم:', error)
     }
   }
 

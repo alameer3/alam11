@@ -10,7 +10,7 @@ export async function GET() {
     
     return NextResponse.json(languages)
   } catch (error) {
-    // // console.error('Error fetching languages:', error)
+    // // // console.error('Error fetching languages:', error)
     return NextResponse.json(
       { error: 'Failed to fetch languages' },
       { status: 500 }

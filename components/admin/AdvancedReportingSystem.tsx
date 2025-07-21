@@ -175,7 +175,7 @@ export default function AdvancedReportingSystem() {
         setActionTaken('none');
       }
     } catch (error) {
-      // // console.error('خطأ في تنفيذ الإجراء:', error);
+      // // // console.error('خطأ في تنفيذ الإجراء:', error);
     }
   };
 

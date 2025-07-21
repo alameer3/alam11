@@ -192,7 +192,7 @@ export default function SubscriptionSystem() {
 
   const handleSubscribe = () => {
     if (selectedPlan) {
-      // // console.log(`Subscribing to plan: ${selectedPlan}`);
+      // // // console.log(`Subscribing to plan: ${selectedPlan}`);
     }
   };
 

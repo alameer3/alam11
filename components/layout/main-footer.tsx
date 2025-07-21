@@ -57,7 +57,7 @@ export function MainFooter() {
         </div>
 
         <div className="mt-10 text-center text-xs text-gray-500">
-          جميع الحقوق محفوظة © {new Date().getFullYear()} 𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗
+          جميع الحقوق محفوظة © 2025 𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗
         </div>
       </div>
     </footer>

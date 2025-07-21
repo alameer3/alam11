@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    // // console.error('خطأ في إرسال الإشعار:', error);
+    // // // console.error('خطأ في إرسال الإشعار:', error);
     return NextResponse.json({ error: 'خطأ في إرسال الإشعار' }, { status: 500 });
   }
 }

@@ -131,7 +131,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    // // console.error('Search API Error:', error)
+    // // // console.error('Search API Error:', error)
     return NextResponse.json({
       success: false,
       error: 'خطأ في البحث',
@@ -216,7 +216,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    // // console.error('Advanced Search API Error:', error)
+    // // // console.error('Advanced Search API Error:', error)
     return NextResponse.json({
       success: false,
       error: 'خطأ في البحث المتقدم'

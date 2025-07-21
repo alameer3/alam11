@@ -76,7 +76,7 @@ export default function LoginPage() {
 
   const handleSocialLogin = (provider: string) => {
     // Handle social login
-    // // console.log(`Logging in with ${provider}`)
+    // // // console.log(`Logging in with ${provider}`)
   }
 
   return (

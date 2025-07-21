@@ -64,7 +64,7 @@ export async function GET(
 
     return NextResponse.json({ server })
   } catch (error) {
-    // // console.error('Error fetching server:', error)
+    // // // console.error('Error fetching server:', error)
     return NextResponse.json(
       { error: 'Failed to fetch server' },
       { status: 500 }
@@ -101,7 +101,7 @@ export async function PUT(
       server: updatedServer 
     })
   } catch (error) {
-    // // console.error('Error updating server:', error)
+    // // // console.error('Error updating server:', error)
     return NextResponse.json(
       { error: 'Failed to update server' },
       { status: 500 }
@@ -129,7 +129,7 @@ export async function DELETE(
       message: 'Server deleted successfully' 
     })
   } catch (error) {
-    // // console.error('Error deleting server:', error)
+    // // // console.error('Error deleting server:', error)
     return NextResponse.json(
       { error: 'Failed to delete server' },
       { status: 500 }

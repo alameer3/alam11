@@ -96,7 +96,7 @@ export default function CreateMoviePage() {
       if (qualitiesRes.ok) setQualities(await qualitiesRes.json())
       if (categoriesRes.ok) setCategories(await categoriesRes.json())
     } catch (error) {
-      // // console.error('خطأ في جلب الخيارات:', error)
+      // // // console.error('خطأ في جلب الخيارات:', error)
     }
   }
 
@@ -169,7 +169,7 @@ export default function CreateMoviePage() {
         alert(`فشل في إضافة الفيلم: ${error.message || 'خطأ غير معروف'}`)
       }
     } catch (error) {
-      // // console.error('خطأ في إضافة الفيلم:', error)
+      // // // console.error('خطأ في إضافة الفيلم:', error)
       alert('خطأ في إضافة الفيلم')
     } finally {
       setLoading(false)

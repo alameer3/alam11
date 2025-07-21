@@ -194,7 +194,7 @@ export default function AISearchSystem({
       }
       
     } catch (error) {
-      // // console.error('Search error:', error);
+      // // // console.error('Search error:', error);
     } finally {
       setIsSearching(false);
     }

@@ -39,7 +39,7 @@ export async function GET(
     })
 
   } catch (error) {
-    // // console.error('Error fetching movie:', error)
+    // // // console.error('Error fetching movie:', error)
     return NextResponse.json(
       { success: false, error: 'فشل في جلب تفاصيل الفيلم' },
       { status: 500 }
@@ -101,7 +101,7 @@ export async function PUT(
     })
 
   } catch (error) {
-    // // console.error('Error updating movie:', error)
+    // // // console.error('Error updating movie:', error)
     return NextResponse.json(
       { success: false, error: 'فشل في تحديث الفيلم' },
       { status: 500 }
@@ -129,7 +129,7 @@ export async function DELETE(
     })
 
   } catch (error) {
-    // // console.error('Error deleting movie:', error)
+    // // // console.error('Error deleting movie:', error)
     return NextResponse.json(
       { success: false, error: 'فشل في حذف الفيلم' },
       { status: 500 }

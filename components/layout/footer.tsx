@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from 'lucide-react'
 
 export function Footer() {
-  const currentYear = new Date().getFullYear()
+  const currentYear = 2025
 
   const footerLinks = {
     browse: [
@@ -32,10 +32,10 @@ export function Footer() {
   }
 
   const socialLinks = [
-    { name: 'Facebook', icon: Facebook, href: '#', color: 'hover:text-blue-500' },
-    { name: 'Twitter', icon: Twitter, href: '#', color: 'hover:text-blue-400' },
-    { name: 'Instagram', icon: Instagram, href: '#', color: 'hover:text-pink-500' },
-    { name: 'YouTube', icon: Youtube, href: '#', color: 'hover:text-red-500' },
+    { name: 'Facebook', icon: Facebook, href: 'https://facebook.com/yemenflix', color: 'hover:text-blue-500' },
+    { name: 'Twitter', icon: Twitter, href: 'https://twitter.com/yemenflix', color: 'hover:text-blue-400' },
+    { name: 'Instagram', icon: Instagram, href: 'https://instagram.com/yemenflix', color: 'hover:text-pink-500' },
+    { name: 'YouTube', icon: Youtube, href: 'https://youtube.com/@yemenflix', color: 'hover:text-red-500' },
   ]
 
   return (

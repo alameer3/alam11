@@ -119,9 +119,9 @@ export default function LiveStreamingSystem() {
       setViewerCount(Math.floor(0.5 * 100) + 50);
 
       // محاكاة بدء البث
-      // // console.log('بدء البث المباشر...');
+      // // // console.log('بدء البث المباشر...');
     } catch (error) {
-      // // console.error('خطأ في بدء البث:', error);
+      // // // console.error('خطأ في بدء البث:', error);
     }
   };
 
@@ -137,7 +137,7 @@ export default function LiveStreamingSystem() {
 
     setIsStreaming(false);
     setViewerCount(0);
-    // // console.log('إيقاف البث المباشر');
+    // // // console.log('إيقاف البث المباشر');
   };
 
   const toggleMute = () => {

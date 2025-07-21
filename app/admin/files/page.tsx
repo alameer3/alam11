@@ -169,7 +169,7 @@ export default function FilesManagementPage() {
       
       setFiles(mockFiles)
     } catch (error) {
-      // // console.error('خطأ في جلب الملفات:', error)
+      // // // console.error('خطأ في جلب الملفات:', error)
     } finally {
       setLoading(false)
     }
@@ -254,7 +254,7 @@ export default function FilesManagementPage() {
       setFiles(files.filter(file => !selectedFiles.includes(file.id)))
       setSelectedFiles([])
     } catch (error) {
-      // // console.error('خطأ في حذف الملفات:', error)
+      // // // console.error('خطأ في حذف الملفات:', error)
     }
   }
 
@@ -302,7 +302,7 @@ export default function FilesManagementPage() {
       setShowUploadModal(false)
       setUploadProgress(0)
     } catch (error) {
-      // // console.error('خطأ في رفع الملفات:', error)
+      // // // console.error('خطأ في رفع الملفات:', error)
     }
   }
 
@@ -326,7 +326,7 @@ export default function FilesManagementPage() {
       setNewFolderName('')
       setShowCreateFolderModal(false)
     } catch (error) {
-      // // console.error('خطأ في إنشاء المجلد:', error)
+      // // // console.error('خطأ في إنشاء المجلد:', error)
     }
   }
 

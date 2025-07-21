@@ -222,7 +222,7 @@ export default function SmartRecommendationSystem({
       setRecommendations(sortedRecommendations.slice(0, maxItems));
       
     } catch (error) {
-      // // console.error('Error generating recommendations:', error);
+      // // // console.error('Error generating recommendations:', error);
     } finally {
       setIsLoading(false);
     }

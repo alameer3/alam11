@@ -159,17 +159,17 @@ export default function PushNotifications() {
   });
 
   const handleSendNotification = () => {
-    // // console.log('Sending notification:', newNotification);
+    // // // console.log('Sending notification:', newNotification);
     // FCM sending logic
   };
 
   const handleScheduleNotification = () => {
-    // // console.log('Scheduling notification:', newNotification);
+    // // // console.log('Scheduling notification:', newNotification);
     // Schedule notification logic
   };
 
   const testFCMConnection = () => {
-    // // console.log('Testing FCM connection...');
+    // // // console.log('Testing FCM connection...');
     // Test FCM connection
   };
 

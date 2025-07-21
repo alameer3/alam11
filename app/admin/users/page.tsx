@@ -76,10 +76,10 @@ export default function UsersManagementPage() {
         setTotalPages(data.pagination.pages)
         setTotalUsers(data.pagination.total)
       } else {
-        // // console.error('فشل في جلب المستخدمين')
+        // // // console.error('فشل في جلب المستخدمين')
       }
     } catch (error) {
-      // // console.error('خطأ في جلب المستخدمين:', error)
+      // // // console.error('خطأ في جلب المستخدمين:', error)
     } finally {
       setLoading(false)
     }
@@ -101,7 +101,7 @@ export default function UsersManagementPage() {
         alert('فشل في حذف المستخدم')
       }
     } catch (error) {
-      // // console.error('خطأ في حذف المستخدم:', error)
+      // // // console.error('خطأ في حذف المستخدم:', error)
       alert('خطأ في حذف المستخدم')
     } finally {
       setIsDeleting(null)
@@ -128,7 +128,7 @@ export default function UsersManagementPage() {
         ))
       }
     } catch (error) {
-      // // console.error('خطأ في تحديث حالة المستخدم:', error)
+      // // // console.error('خطأ في تحديث حالة المستخدم:', error)
     }
   }
 
@@ -152,7 +152,7 @@ export default function UsersManagementPage() {
         ))
       }
     } catch (error) {
-      // // console.error('خطأ في تحديث دور المستخدم:', error)
+      // // // console.error('خطأ في تحديث دور المستخدم:', error)
     }
   }
 

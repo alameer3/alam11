@@ -127,7 +127,7 @@ export default function HelpPage() {
   const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission
-    // // console.log('Contact form submitted:', contactForm);
+    // // // console.log('Contact form submitted:', contactForm);
     // Reset form
     setContactForm({
       name: '',

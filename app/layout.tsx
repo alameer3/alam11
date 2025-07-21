@@ -76,10 +76,8 @@ export default function RootLayout({
           {/* Site overlay for menu */}
           <span className="site-overlay" />
           {/* Combined layout with hydration protection */}
-          <div suppressHydrationWarning>
-            <StaticLayout />
-            <ClientLayout />
-          </div>
+          <StaticLayout />
+          <ClientLayout />
           {/* Page content */}
           {children}
         </Providers>

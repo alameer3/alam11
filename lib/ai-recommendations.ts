@@ -103,7 +103,7 @@ export class AIRecommendationEngine {
 
       return recommendations;
     } catch (error) {
-      // // console.error('خطأ في توليد التوصيات:', error);
+      // // // console.error('خطأ في توليد التوصيات:', error);
       return this.generateFallbackRecommendations(userId, limit);
     }
   }
@@ -232,7 +232,7 @@ export class AIRecommendationEngine {
       // تحديث نموذج التوصيات
       await this.updateRecommendationModel(userId, contentId, action);
     } catch (error) {
-      // // console.error('خطأ في تحسين التوصيات:', error);
+      // // // console.error('خطأ في تحسين التوصيات:', error);
     }
   }
 
@@ -281,7 +281,7 @@ export class AIRecommendationEngine {
   ): Promise<void> {
     // هنا يمكن إضافة منطق تحديث النموذج
     // مثل تحديث أوزان الخوارزمية أو إعادة تدريب النموذج
-    // // console.log(`تحديث نموذج التوصيات: ${userId} -> ${contentId} -> ${action}`);
+    // // // console.log(`تحديث نموذج التوصيات: ${userId} -> ${contentId} -> ${action}`);
   }
 
   // الحصول على توصيات في الوقت الفعلي

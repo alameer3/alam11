@@ -39,7 +39,7 @@ export default class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // // console.error('ErrorBoundary caught an error:', error, errorInfo);
+    // // // console.error('ErrorBoundary caught an error:', error, errorInfo);
     
     this.setState({
       error,
@@ -81,7 +81,7 @@ export default class ErrorBoundary extends Component<Props, State> {
       });
 
     } catch (logError) {
-      // // console.error('Failed to log error:', logError);
+      // // // console.error('Failed to log error:', logError);
     }
   };
 
@@ -260,7 +260,7 @@ export default class ErrorBoundary extends Component<Props, State> {
 // Hook للاستخدام في المكونات الوظيفية
 export const useErrorHandler = () => {
   const handleError = (error: Error, errorInfo?: ErrorInfo) => {
-    // // console.error('Error caught by useErrorHandler:', error, errorInfo);
+    // // // console.error('Error caught by useErrorHandler:', error, errorInfo);
     
     // إرسال الخطأ إلى خدمة التتبع
     const errorData = {

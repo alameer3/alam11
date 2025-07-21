@@ -146,11 +146,11 @@ export default function EditMoviePage() {
           setSelectedCategories(movieData.categories.map((cat: {id: number}) => cat.id))
         }
       } else {
-        // // console.error('فشل في جلب بيانات الفيلم')
+        // // // console.error('فشل في جلب بيانات الفيلم')
         router.push('/admin/movies')
       }
     } catch (error) {
-      // // console.error('خطأ في جلب بيانات الفيلم:', error)
+      // // // console.error('خطأ في جلب بيانات الفيلم:', error)
       router.push('/admin/movies')
     }
   }
@@ -171,7 +171,7 @@ export default function EditMoviePage() {
       if (qualitiesRes.ok) setQualities(await qualitiesRes.json())
       if (categoriesRes.ok) setCategories(await categoriesRes.json())
     } catch (error) {
-      // // console.error('خطأ في جلب الخيارات:', error)
+      // // // console.error('خطأ في جلب الخيارات:', error)
     }
   }
 
@@ -248,7 +248,7 @@ export default function EditMoviePage() {
         alert(`فشل في تحديث الفيلم: ${error.message || 'خطأ غير معروف'}`)
       }
     } catch (error) {
-      // // console.error('خطأ في تحديث الفيلم:', error)
+      // // // console.error('خطأ في تحديث الفيلم:', error)
       alert('خطأ في تحديث الفيلم')
     } finally {
       setSaving(false)
@@ -273,7 +273,7 @@ export default function EditMoviePage() {
         alert('فشل في حذف الفيلم')
       }
     } catch (error) {
-      // // console.error('خطأ في حذف الفيلم:', error)
+      // // // console.error('خطأ في حذف الفيلم:', error)
       alert('خطأ في حذف الفيلم')
     } finally {
       setSaving(false)

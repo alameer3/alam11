@@ -122,7 +122,7 @@ export default function AdsManagementPage() {
       ]
       setAds(mockAds)
     } catch (error) {
-      // // console.error('خطأ في جلب الإعلانات:', error)
+      // // // console.error('خطأ في جلب الإعلانات:', error)
     } finally {
       setLoading(false)
     }
@@ -188,7 +188,7 @@ export default function AdsManagementPage() {
       })
       
     } catch (error) {
-      // // console.error('خطأ في حفظ الإعلان:', error)
+      // // // console.error('خطأ في حفظ الإعلان:', error)
     }
   }
 
@@ -216,7 +216,7 @@ export default function AdsManagementPage() {
       setIsDeleting(adId)
       setAds(ads.filter(ad => ad.id !== adId))
     } catch (error) {
-      // // console.error('خطأ في حذف الإعلان:', error)
+      // // // console.error('خطأ في حذف الإعلان:', error)
     } finally {
       setIsDeleting(null)
     }
@@ -230,7 +230,7 @@ export default function AdsManagementPage() {
           : ad
       ))
     } catch (error) {
-      // // console.error('خطأ في تغيير حالة الإعلان:', error)
+      // // // console.error('خطأ في تغيير حالة الإعلان:', error)
     }
   }
 

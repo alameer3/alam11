@@ -3,11 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
+// Removed unused UI imports
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
@@ -174,15 +170,15 @@ export default function AdvancedPayment() {
   }, []);
 
   const handleSubscriptionAction = (subscriptionId: string, action: 'edit' | 'delete' | 'toggle') => {
-    // // console.log(`Subscription ${subscriptionId} action: ${action}`);
+    // // // console.log(`Subscription ${subscriptionId} action: ${action}`);
   };
 
   const handleCouponAction = (couponId: string, action: 'edit' | 'delete' | 'toggle') => {
-    // // console.log(`Coupon ${couponId} action: ${action}`);
+    // // // console.log(`Coupon ${couponId} action: ${action}`);
   };
 
   const generateInvoicePDF = (invoiceId: string) => {
-    // // console.log(`Generating PDF for invoice: ${invoiceId}`);
+    // // // console.log(`Generating PDF for invoice: ${invoiceId}`);
     // PDF generation logic
   };
 

@@ -173,7 +173,7 @@ export class SiteSettingsManager {
         }
       }
     } catch (error) {
-      // // console.error('خطأ في تحميل الإعدادات:', error)
+      // // // console.error('خطأ في تحميل الإعدادات:', error)
       this.config = defaultConfig
     }
   }
@@ -196,7 +196,7 @@ export class SiteSettingsManager {
       
       return true
     } catch (error) {
-      // // console.error('خطأ في حفظ الإعدادات:', error)
+      // // // console.error('خطأ في حفظ الإعدادات:', error)
       return false
     }
   }
@@ -261,7 +261,7 @@ export class SiteSettingsManager {
       const validConfig = SiteConfigSchema.parse(importedConfig)
       return this.saveConfig(validConfig)
     } catch (error) {
-      // // console.error('خطأ في استيراد الإعدادات:', error)
+      // // // console.error('خطأ في استيراد الإعدادات:', error)
       return false
     }
   }

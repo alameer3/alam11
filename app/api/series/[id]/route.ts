@@ -26,7 +26,7 @@ export async function GET(
 
     return NextResponse.json(series)
   } catch (error) {
-    // // console.error('خطأ في جلب المسلسل:', error)
+    // // // console.error('خطأ في جلب المسلسل:', error)
     return NextResponse.json(
       { error: 'خطأ في الخادم' },
       { status: 500 }
@@ -70,7 +70,7 @@ export async function PUT(
 
     return NextResponse.json(updatedSeries)
   } catch (error) {
-    // // console.error('خطأ في تحديث المسلسل:', error)
+    // // // console.error('خطأ في تحديث المسلسل:', error)
     return NextResponse.json(
       { error: 'خطأ في الخادم' },
       { status: 500 }
@@ -107,7 +107,7 @@ export async function PATCH(
     
     return NextResponse.json(updatedSeries)
   } catch (error) {
-    // // console.error('خطأ في تعديل المسلسل:', error)
+    // // // console.error('خطأ في تعديل المسلسل:', error)
     return NextResponse.json(
       { error: 'خطأ في الخادم' },
       { status: 500 }
@@ -152,7 +152,7 @@ export async function DELETE(
       success: true 
     })
   } catch (error) {
-    // // console.error('خطأ في حذف المسلسل:', error)
+    // // // console.error('خطأ في حذف المسلسل:', error)
     return NextResponse.json(
       { error: 'خطأ في الخادم' },
       { status: 500 }

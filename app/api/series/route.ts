@@ -94,7 +94,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    // // console.error('خطأ في API المسلسلات:', error)
+    // // // console.error('خطأ في API المسلسلات:', error)
     return NextResponse.json(
       { 
         success: false, 
@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
     }
 
   } catch (error) {
-    // // console.error('خطأ في إضافة مسلسل:', error)
+    // // // console.error('خطأ في إضافة مسلسل:', error)
     return NextResponse.json(
       { 
         success: false, 

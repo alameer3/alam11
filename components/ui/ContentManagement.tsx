@@ -138,7 +138,7 @@ export default function ContentManagement() {
   };
 
   const handleContentAction = (action: string, contentId: string) => {
-    // // console.log(`${action} content ${contentId}`);
+    // // // console.log(`${action} content ${contentId}`);
   };
 
   return (

@@ -125,7 +125,7 @@ export default function RegisterPage() {
 
   const handleSocialSignup = (provider: string) => {
     // Handle social signup
-    // // console.log(`Signing up with ${provider}`)
+    // // // console.log(`Signing up with ${provider}`)
   }
 
   const getPasswordStrengthColor = () => {

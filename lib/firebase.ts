@@ -30,7 +30,7 @@ export async function requestNotificationPermission() {
     }
     return null;
   } catch (error) {
-    // // console.error('خطأ في طلب إذن الإشعارات:', error);
+    // // // console.error('خطأ في طلب إذن الإشعارات:', error);
     return null;
   }
 }
@@ -72,7 +72,7 @@ export async function sendNotificationToUser(userId: string, notification: {
     
     return await response.json();
   } catch (error) {
-    // // console.error('خطأ في إرسال الإشعار:', error);
+    // // // console.error('خطأ في إرسال الإشعار:', error);
     throw error;
   }
 }
@@ -103,7 +103,7 @@ export async function sendNotificationToTopic(topic: string, notification: {
     
     return await response.json();
   } catch (error) {
-    // // console.error('خطأ في إرسال الإشعار للموضوع:', error);
+    // // // console.error('خطأ في إرسال الإشعار للموضوع:', error);
     throw error;
   }
 }
@@ -125,7 +125,7 @@ export async function subscribeToTopic(topic: string) {
     
     return await response.json();
   } catch (error) {
-    // // console.error('خطأ في الاشتراك في الموضوع:', error);
+    // // // console.error('خطأ في الاشتراك في الموضوع:', error);
     throw error;
   }
 }
@@ -147,7 +147,7 @@ export async function unsubscribeFromTopic(topic: string) {
     
     return await response.json();
   } catch (error) {
-    // // console.error('خطأ في إلغاء الاشتراك من الموضوع:', error);
+    // // // console.error('خطأ في إلغاء الاشتراك من الموضوع:', error);
     throw error;
   }
 }
