@@ -2,7 +2,6 @@ import React from 'react';
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import './𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗.css'
 
 import { MainHeader } from '@/components/layout/main-header'
 import { MainMenu } from '@/components/layout/main-menu'
