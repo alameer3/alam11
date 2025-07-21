@@ -21,6 +21,7 @@ const config: Config = {
       fontFamily: {
         sans: ['Cairo', 'system-ui', 'sans-serif'],
         arabic: ['Cairo', 'Arial', 'sans-serif'],
+        akoam: ['STC-Regular', 'Cairo', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -58,7 +59,13 @@ const config: Config = {
         },
         gray: {
           950: '#0a0a0a',
-        }
+        },
+        brand: {
+          DEFAULT: '#f3951e',
+        },
+        dark: {
+          DEFAULT: '#27272c',
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

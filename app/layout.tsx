@@ -6,6 +6,7 @@ import './akwam.css'
 import { MainHeader } from '@/components/layout/main-header'
 import { MainMenu } from '@/components/layout/main-menu'
 
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -67,7 +68,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={inter.className}>
+
         {/* Site overlay for menu */}
         <span className="site-overlay" />
 
@@ -77,6 +78,7 @@ export default function RootLayout({
 
         {/* Page content */}
         {children}
+
       </body>
     </html>
   )
