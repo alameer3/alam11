@@ -24,11 +24,11 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('http://localhost:3000'),
+  metadataBase: new URL('http://localhost:5000'),
   openGraph: {
     title: '𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗 - 𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗',
     description: 'موقع البث المتطور - أفلام، مسلسلات، برامج، منوعات',
-    url: 'http://localhost:3000',
+    url: 'http://localhost:5000',
     siteName: '𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗',
     images: [
       {

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Grid3X3 } from 'lucide-react'
+import { Grid3X3, Music, Mic, BookOpen, Video } from 'lucide-react'
 
 import { ArchiveHeader } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/ArchiveHeader'
 import { FilterBar } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/FilterBar'
