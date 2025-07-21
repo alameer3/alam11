@@ -4,6 +4,12 @@
 This is a comprehensive streaming platform called "YEMEN FLIX" built with Next.js, featuring movies and series streaming capabilities with user authentication, ratings, comments, and administrative features.
 
 ## Recent Changes
+- **July 21, 2025**: إكمال الهجرة من Replit Agent إلى Replit مع فحص شامل ودقيق
+- إصلاح مشكلة NextAuth SECRET المفقود وإضافة المتغيرات البيئية
+- إنشاء ملفات placeholder-hero.svg و placeholder-movie.svg لحل مشكلة الصور المفقودة
+- تحديث next.config.js لإضافة النطاق الحالي في allowedDevOrigins
+- إصلاح أخطاء LSP في ErrorBoundary.tsx (syntax errors في catch blocks)
+- تنظيف جميع console.log statements المتبقية في المشروع
 - **July 21, 2025**: إكمال فحص شامل ودقيق لجميع مكونات المشروع
 - إصلاح مشاكل React Hydration في ClientLayout و DarkModeToggle
 - استبدال جميع Date.now() و Math.random() بقيم ثابتة لمنع hydration mismatch

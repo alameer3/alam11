@@ -76,7 +76,9 @@ export default class ErrorBoundary extends Component<Props, State> {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(errorData),
-      }).catch(// console.error);
+      }).catch(() => {
+        // Error logging silently handled
+      });
 
     } catch (logError) {
       // console.error('Failed to log error:', logError);
@@ -276,7 +278,9 @@ export const useErrorHandler = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(errorData),
-    }).catch(// console.error);
+    }).catch(() => {
+      // Error logging silently handled
+    });
   };
 
   return { handleError };
