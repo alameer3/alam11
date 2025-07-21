@@ -5,6 +5,7 @@ import './globals.css'
 
 import { MainHeader } from '@/components/layout/main-header'
 import { MainMenu } from '@/components/layout/main-menu'
+import { Providers } from '@/components/providers'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -69,13 +70,15 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <body>
-        {/* Site overlay for menu */}
-        <span className="site-overlay" />
-        {/* Global header and menu */}
-        <MainHeader />
-        <MainMenu />
-        {/* Page content */}
-        {children}
+        <Providers>
+          {/* Site overlay for menu */}
+          <span className="site-overlay" />
+          {/* Global header and menu */}
+          <MainHeader />
+          <MainMenu />
+          {/* Page content */}
+          {children}
+        </Providers>
       </body>
     </html>
   )
