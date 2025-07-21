@@ -13,7 +13,7 @@ import { Separator } from '@/components/ui/separator';
 import { 
   Globe, 
   Languages, 
-  Translate, 
+  Languages as Translate, 
   FileText, 
   Download, 
   Upload,

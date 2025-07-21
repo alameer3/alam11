@@ -38,6 +38,7 @@ import {
   Globe,
   Monitor,
   Gauge,
+  RefreshCcw,
   Thermometer,
   Battery,
   Wrench
@@ -400,7 +401,7 @@ export default function MonitoringTools() {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline">
-            <RefreshCw className="w-4 h-4 mr-2" />
+            <RefreshCcw className="w-4 h-4 mr-2" />
             Refresh
           </Button>
           <Button>

@@ -42,25 +42,13 @@ export class AIRecommendationEngine {
     const cached = this.userBehaviorCache.get(userId);
     if (cached) return cached;
 
+    // TODO: Add proper relations to Prisma schema
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: {
-        watchHistory: {
-          include: { content: true },
-          orderBy: { watchedAt: 'desc' },
-          take: 100,
-        },
-        likes: {
-          include: { content: true },
-        },
-        dislikes: {
-          include: { content: true },
-        },
-        searches: {
-          orderBy: { searchedAt: 'desc' },
-          take: 50,
-        },
-      },
+        ratings: true,
+        comments: true
+      }
     });
 
     if (!user) {
@@ -69,25 +57,16 @@ export class AIRecommendationEngine {
 
     const behavior: UserBehavior = {
       userId,
-      watchHistory: user.watchHistory.map(h => h.contentId),
-      likes: user.likes.map(l => l.contentId),
-      dislikes: user.dislikes.map(d => d.contentId),
-      searchHistory: user.searches.map(s => s.query),
+      watchHistory: [],
+      likes: [],
+      dislikes: [],
+      searchHistory: [],
       watchTime: {},
       categories: {},
     };
 
-    // حساب وقت المشاهدة لكل محتوى
-    for (const history of user.watchHistory) {
-      const contentId = history.contentId;
-      behavior.watchTime[contentId] = (behavior.watchTime[contentId] || 0) + history.watchDuration;
-    }
-
-    // حساب تفضيلات الفئات
-    for (const history of user.watchHistory) {
-      const category = history.content.category;
-      behavior.categories[category] = (behavior.categories[category] || 0) + 1;
-    }
+    // TODO: Implement actual behavior analysis when schema is updated
+    // For now, return empty behavior data
 
     this.userBehaviorCache.set(userId, behavior);
     return behavior;
@@ -101,10 +80,9 @@ export class AIRecommendationEngine {
     try {
       const behavior = await this.analyzeUserBehavior(userId);
       
-      // الحصول على المحتوى المتاح
-      const availableContent = await prisma.content.findMany({
+      // الحصول على المحتوى المتاح (TODO: Use proper content model)
+      const availableContent = await prisma.movie.findMany({
         where: {
-          status: 'published',
           id: {
             notIn: [...behavior.likes, ...behavior.dislikes],
           },
@@ -225,9 +203,8 @@ export class AIRecommendationEngine {
     userId: string,
     limit: number
   ): Promise<RecommendationResult[]> {
-    const popularContent = await prisma.content.findMany({
-      where: { status: 'published' },
-      orderBy: { viewCount: 'desc' },
+    const popularContent = await prisma.movie.findMany({
+      orderBy: { rating: 'desc' },
       take: limit,
     });
 

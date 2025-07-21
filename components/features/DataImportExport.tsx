@@ -24,7 +24,7 @@ import {
   Video,
   Music,
   Image,
-  Document,
+  FileText as Document,
   Cloud,
   HardDrive,
   Zap,

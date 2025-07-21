@@ -232,7 +232,7 @@ export default function QoS() {
       source: '192.168.1.101',
       destination: 'activision.com',
       bandwidth: 8.2,
-      priority: 'critical',
+      priority: 'high',
       status: 'active',
       timestamp: '2024-01-15 15:29'
     },
@@ -243,7 +243,7 @@ export default function QoS() {
       source: '192.168.1.102',
       destination: 'zoom.us',
       bandwidth: 12.8,
-      priority: 'critical',
+      priority: 'high',
       status: 'active',
       timestamp: '2024-01-15 15:28'
     },

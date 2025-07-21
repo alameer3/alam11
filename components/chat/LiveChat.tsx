@@ -35,7 +35,7 @@ import {
   Download,
   Share,
   Archive,
-  Block,
+  Shield,
   Ban
 } from 'lucide-react';
 

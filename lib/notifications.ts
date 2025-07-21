@@ -221,10 +221,10 @@ export class NotificationService {
       
       // TODO: إضافة notification إلى Prisma schema
       // console.log('Notification Saved:', {
-        title: notification.title,
-        type: notification.type,
-        priority: notification.priority
-      })
+      //   title: notification.title,
+      //   type: notification.type,
+      //   priority: notification.priority
+      // })
       
       await prisma.$disconnect()
     } catch (error) {

@@ -1,4 +1,4 @@
-export function 𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗Logo() {
+export function YemenFlixLogo() {
   return (
     <svg 
       xmlns="http://www.w3.org/2000/svg" 

@@ -116,7 +116,7 @@ export default function AdvancedReports() {
     {
       id: '2',
       type: 'copyright',
-      status: 'under_review',
+      status: 'reviewed',
       reporter: 'user456',
       reportedContent: 'Video: "Copyrighted Music"',
       description: 'Uses copyrighted music without permission',
