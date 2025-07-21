@@ -60,7 +60,7 @@ const Header: React.FC = () => {
       const data = await response.json()
       setSearchResults(data.results || [])
     } catch (error) {
-      console.error('Search error:', error)
+      // console.error('Search error:', error)
       setSearchResults([])
     } finally {
       setIsSearching(false)

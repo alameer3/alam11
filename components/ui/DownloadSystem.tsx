@@ -30,7 +30,7 @@ export default function DownloadSystem() {
       status: 'downloading',
       speed: '2.1 MB/s',
       remainingTime: '5 دقائق',
-      createdAt: new Date(Date.now() - 1000 * 60 * 30)
+      createdAt: new Date(new Date("2025-07-21T14:00:00Z").getTime() - 1000 * 60 * 30)
     },
     {
       id: '2',
@@ -43,7 +43,7 @@ export default function DownloadSystem() {
       status: 'completed',
       speed: '0 MB/s',
       remainingTime: 'مكتمل',
-      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2)
+      createdAt: new Date(new Date("2025-07-21T14:00:00Z").getTime() - 1000 * 60 * 60 * 2)
     },
     {
       id: '3',

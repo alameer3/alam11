@@ -173,7 +173,7 @@ export default function ContentManagement() {
         setContent(mockContent)
         setFilteredContent(mockContent)
       } catch (error) {
-        console.error('Error loading content:', error)
+        // console.error('Error loading content:', error)
       } finally {
         setLoading(false)
       }

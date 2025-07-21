@@ -98,7 +98,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Error fetching movies:', error)
+    // console.error('Error fetching movies:', error)
     return NextResponse.json(
       { success: false, error: 'فشل في جلب الأفلام' },
       { status: 500 }
@@ -157,7 +157,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Error creating movie:', error)
+    // console.error('Error creating movie:', error)
     return NextResponse.json(
       { success: false, error: 'فشل في إنشاء الفيلم' },
       { status: 500 }

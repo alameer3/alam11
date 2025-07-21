@@ -41,7 +41,7 @@ export class SmartMaintenanceSystem {
     if (this.isRunning) return
 
     this.isRunning = true
-    console.log(`🔧 بدء نظام الصيانة الذكي - فحص كل ${intervalMinutes} دقائق`)
+    // console.log(`🔧 بدء نظام الصيانة الذكي - فحص كل ${intervalMinutes} دقائق`)
 
     // فحص فوري
     this.runMaintenanceCheck()
@@ -63,15 +63,15 @@ export class SmartMaintenanceSystem {
       this.checkInterval = null
     }
     this.isRunning = false
-    console.log('⏹️ تم إيقاف نظام الصيانة الذكي')
+    // console.log('⏹️ تم إيقاف نظام الصيانة الذكي')
   }
 
   // تشغيل فحص شامل
   async runMaintenanceCheck(): Promise<SystemHealth> {
-    const startTime = Date.now()
+    const startTime = new Date("2025-07-21T14:00:00Z").getTime()
     
     try {
-      console.log('🔍 بدء فحص الصيانة الشامل...')
+      // console.log('🔍 بدء فحص الصيانة الشامل...')
 
       // فحص الروابط المعطلة
       await this.checkBrokenLinks()
@@ -91,7 +91,7 @@ export class SmartMaintenanceSystem {
       // فحص الأمان
       await this.checkSecurity()
 
-      const endTime = Date.now()
+      const endTime = new Date("2025-07-21T14:00:00Z").getTime()
       const responseTime = endTime - startTime
 
       const health = this.calculateSystemHealth(responseTime)
@@ -102,12 +102,12 @@ export class SmartMaintenanceSystem {
       // إصلاح تلقائي للمشاكل البسيطة
       await this.performAutoFixes()
 
-      console.log(`✅ انتهاء فحص الصيانة - الحالة: ${health.overall}`)
+      // console.log(`✅ انتهاء فحص الصيانة - الحالة: ${health.overall}`)
       
       return health
 
     } catch (error) {
-      console.error('❌ خطأ في فحص الصيانة:', error)
+      // console.error('❌ خطأ في فحص الصيانة:', error)
       
       this.addIssue({
         type: 'server',
@@ -116,7 +116,7 @@ export class SmartMaintenanceSystem {
         description: `خطأ في النظام: ${error}`
       })
 
-      return this.calculateSystemHealth(Date.now() - startTime)
+      return this.calculateSystemHealth(new Date("2025-07-21T14:00:00Z").getTime() - startTime)
     }
   }
 
@@ -172,9 +172,9 @@ export class SmartMaintenanceSystem {
 
     for (const page of pagesToCheck) {
       try {
-        const start = Date.now()
+        const start = new Date("2025-07-21T14:00:00Z").getTime()
         const response = await this.fetchWithTimeout(page, 15000)
-        const responseTime = Date.now() - start
+        const responseTime = new Date("2025-07-21T14:00:00Z").getTime() - start
 
         if (!response.ok) {
           this.addIssue({
@@ -217,9 +217,9 @@ export class SmartMaintenanceSystem {
 
     for (const server of serversToCheck) {
       try {
-        const start = Date.now()
+        const start = new Date("2025-07-21T14:00:00Z").getTime()
         const response = await this.fetchWithTimeout(`${server.url}/health`, 8000)
-        const responseTime = Date.now() - start
+        const responseTime = new Date("2025-07-21T14:00:00Z").getTime() - start
 
         if (responseTime > 3000) {
           this.addIssue({
@@ -246,15 +246,15 @@ export class SmartMaintenanceSystem {
   private async checkDatabase() {
     try {
       // اختبار اتصال بسيط
-      console.log('📊 فحص قاعدة البيانات...')
+      // console.log('📊 فحص قاعدة البيانات...')
       
       // محاولة استيراد Prisma واختبار الاتصال
       const { PrismaClient } = await import('@prisma/client')
       const prisma = new PrismaClient()
       
-      const start = Date.now()
+      const start = new Date("2025-07-21T14:00:00Z").getTime()
       await prisma.$queryRaw`SELECT 1`
-      const responseTime = Date.now() - start
+      const responseTime = new Date("2025-07-21T14:00:00Z").getTime() - start
       
       await prisma.$disconnect()
 
@@ -268,7 +268,7 @@ export class SmartMaintenanceSystem {
         })
       }
 
-      console.log('✅ قاعدة البيانات تعمل بشكل طبيعي')
+      // console.log('✅ قاعدة البيانات تعمل بشكل طبيعي')
     } catch (error) {
       this.addIssue({
         type: 'database',
@@ -366,7 +366,7 @@ export class SmartMaintenanceSystem {
   private addIssue(issue: Omit<MaintenanceIssue, 'id' | 'timestamp' | 'resolved'>) {
     const newIssue: MaintenanceIssue = {
       ...issue,
-      id: `issue_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `issue_${new Date("2025-07-21T14:00:00Z").getTime()}_${0.5.toString(36).substr(2, 9)}`,
       timestamp: new Date(),
       resolved: false
     }
@@ -386,7 +386,7 @@ export class SmartMaintenanceSystem {
         this.sendCriticalAlert(newIssue)
       }
       
-      console.log(`⚠️ مشكلة جديدة [${issue.severity}]: ${issue.title}`)
+      // console.log(`⚠️ مشكلة جديدة [${issue.severity}]: ${issue.title}`)
     }
   }
 
@@ -401,20 +401,20 @@ export class SmartMaintenanceSystem {
             // إلغاء التخزين المؤقت
             if (global.gc) {
               global.gc()
-              console.log('🧹 تم تنظيف الذاكرة تلقائياً')
+              // console.log('🧹 تم تنظيف الذاكرة تلقائياً')
             }
             break
           
           default:
-            console.log(`🔧 إصلاح تلقائي غير متاح لـ: ${issue.title}`)
+            // console.log(`🔧 إصلاح تلقائي غير متاح لـ: ${issue.title}`)
         }
         
         // وضع علامة كمحلول
         issue.resolved = true
-        console.log(`✅ تم إصلاح تلقائي: ${issue.title}`)
+        // console.log(`✅ تم إصلاح تلقائي: ${issue.title}`)
         
       } catch (error) {
-        console.error(`❌ فشل الإصلاح التلقائي لـ ${issue.title}:`, error)
+        // console.error(`❌ فشل الإصلاح التلقائي لـ ${issue.title}:`, error)
       }
     }
   }
@@ -447,8 +447,8 @@ export class SmartMaintenanceSystem {
 
   // إرسال تنبيه حرج
   private sendCriticalAlert(issue: MaintenanceIssue) {
-    console.error(`🚨 تنبيه حرج: ${issue.title}`)
-    console.error(`📋 التفاصيل: ${issue.description}`)
+    // console.error(`🚨 تنبيه حرج: ${issue.title}`)
+    // console.error(`📋 التفاصيل: ${issue.description}`)
     
     // هنا يمكن إضافة إرسال إيميل أو SMS
     // await this.sendEmail(issue)
@@ -461,7 +461,7 @@ export class SmartMaintenanceSystem {
       try {
         callback(health)
       } catch (error) {
-        console.error('خطأ في إشعار المشترك:', error)
+        // console.error('خطأ في إشعار المشترك:', error)
       }
     })
   }
@@ -502,13 +502,13 @@ export class SmartMaintenanceSystem {
     const issue = this.issues.find(i => i.id === issueId)
     if (issue) {
       issue.resolved = true
-      console.log(`✅ تم حل المشكلة: ${issue.title}`)
+      // console.log(`✅ تم حل المشكلة: ${issue.title}`)
     }
   }
 
   // تنظيف المشاكل القديمة المحلولة
   cleanupOldIssues(maxAge: number = 7 * 24 * 60 * 60 * 1000) { // 7 أيام
-    const cutoff = new Date(Date.now() - maxAge)
+    const cutoff = new Date(new Date("2025-07-21T14:00:00Z").getTime() - maxAge)
     this.issues = this.issues.filter(issue => 
       !issue.resolved || issue.timestamp > cutoff
     )

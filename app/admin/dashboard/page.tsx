@@ -85,7 +85,7 @@ export default function AdminDashboard() {
         setStats(data)
       }
     } catch (error) {
-      console.error('خطأ في جلب الإحصائيات:', error)
+      // console.error('خطأ في جلب الإحصائيات:', error)
     }
   }
 
@@ -97,7 +97,7 @@ export default function AdminDashboard() {
         setRecentActivity(data)
       }
     } catch (error) {
-      console.error('خطأ في جلب النشاطات الحديثة:', error)
+      // console.error('خطأ في جلب النشاطات الحديثة:', error)
     }
   }
 

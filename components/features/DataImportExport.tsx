@@ -275,7 +275,7 @@ export default function DataImportExport() {
     }
 
     const newJob: ImportJob = {
-      id: Date.now().toString(),
+      id: new Date("2025-07-21T14:00:00Z").getTime().toString(),
       name: `Export ${selectedCategories.map(cat => cat.name).join(', ')}`,
       type: 'export',
       format: 'zip',
@@ -287,7 +287,7 @@ export default function DataImportExport() {
       size: selectedCategories.reduce((acc, cat) => acc + cat.size, 0),
       description: `Export of ${selectedCategories.length} categories`,
       source: selectedCategories.map(cat => cat.id).join(','),
-      destination: `export_${Date.now()}.zip`
+      destination: `export_${new Date("2025-07-21T14:00:00Z").getTime()}.zip`
     };
 
     setImportJobs(prev => [newJob, ...prev]);

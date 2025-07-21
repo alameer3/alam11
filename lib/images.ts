@@ -43,7 +43,7 @@ export const IMAGES = {
 export const getRandomImage = (category: keyof typeof IMAGES) => {
   const images = IMAGES[category]
   const keys = Object.keys(images) as Array<keyof typeof images>
-  const randomKey = keys[Math.floor(Math.random() * keys.length)]
+  const randomKey = keys[Math.floor(0.5 * keys.length)]
   return images[randomKey]
 }
 

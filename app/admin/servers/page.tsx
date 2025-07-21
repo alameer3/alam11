@@ -92,7 +92,7 @@ export default function ServersManagementPage() {
           disk_usage: 45,
           bandwidth_usage: 82,
           uptime: '15 يوم، 8 ساعات',
-          last_check: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
+          last_check: new Date(new Date("2025-07-21T14:00:00Z").getTime() - 2 * 60 * 1000).toISOString(),
           is_active: true,
           location: 'الرياض، السعودية',
           capacity: '2TB SSD',
@@ -112,7 +112,7 @@ export default function ServersManagementPage() {
           disk_usage: 89,
           bandwidth_usage: 15,
           uptime: '45 يوم، 12 ساعة',
-          last_check: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+          last_check: new Date(new Date("2025-07-21T14:00:00Z").getTime() - 5 * 60 * 1000).toISOString(),
           is_active: true,
           location: 'دبي، الإمارات',
           capacity: '10TB HDD',
@@ -132,7 +132,7 @@ export default function ServersManagementPage() {
           disk_usage: 67,
           bandwidth_usage: 0,
           uptime: '0 يوم، 0 ساعة',
-          last_check: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+          last_check: new Date(new Date("2025-07-21T14:00:00Z").getTime() - 30 * 60 * 1000).toISOString(),
           is_active: false,
           location: 'لندن، بريطانيا',
           capacity: '500GB SSD',
@@ -152,7 +152,7 @@ export default function ServersManagementPage() {
           disk_usage: 34,
           bandwidth_usage: 25,
           uptime: '30 يوم، 5 ساعات',
-          last_check: new Date(Date.now() - 1 * 60 * 1000).toISOString(),
+          last_check: new Date(new Date("2025-07-21T14:00:00Z").getTime() - 1 * 60 * 1000).toISOString(),
           is_active: true,
           location: 'الرياض، السعودية',
           capacity: '1TB SSD',
@@ -172,7 +172,7 @@ export default function ServersManagementPage() {
           disk_usage: 12,
           bandwidth_usage: 45,
           uptime: '2 يوم، 3 ساعات',
-          last_check: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
+          last_check: new Date(new Date("2025-07-21T14:00:00Z").getTime() - 10 * 60 * 1000).toISOString(),
           is_active: true,
           location: 'الكويت، الكويت',
           capacity: '64GB RAM',
@@ -182,7 +182,7 @@ export default function ServersManagementPage() {
       ]
       setServers(mockServers)
     } catch (error) {
-      console.error('خطأ في جلب الخوادم:', error)
+      // console.error('خطأ في جلب الخوادم:', error)
     } finally {
       setLoading(false)
     }
@@ -237,7 +237,7 @@ export default function ServersManagementPage() {
         // إضافة خادم جديد
         const newServer: Server = {
           ...formData,
-          id: Date.now(),
+          id: new Date("2025-07-21T14:00:00Z").getTime(),
           status: 'offline',
           cpu_usage: 0,
           memory_usage: 0,
@@ -265,7 +265,7 @@ export default function ServersManagementPage() {
       })
       
     } catch (error) {
-      console.error('خطأ في حفظ الخادم:', error)
+      // console.error('خطأ في حفظ الخادم:', error)
     }
   }
 
@@ -291,7 +291,7 @@ export default function ServersManagementPage() {
     try {
       setServers(servers.filter(server => server.id !== serverId))
     } catch (error) {
-      console.error('خطأ في حذف الخادم:', error)
+      // console.error('خطأ في حذف الخادم:', error)
     }
   }
 
@@ -307,7 +307,7 @@ export default function ServersManagementPage() {
           : server
       ))
     } catch (error) {
-      console.error('خطأ في تغيير حالة الخادم:', error)
+      // console.error('خطأ في تغيير حالة الخادم:', error)
     }
   }
 

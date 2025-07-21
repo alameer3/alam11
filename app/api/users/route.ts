@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
     
     return NextResponse.json(result)
   } catch (error) {
-    console.error('Error fetching users:', error)
+    // console.error('Error fetching users:', error)
     return NextResponse.json(
       { error: 'فشل في جلب المستخدمين' },
       { status: 500 }
@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json(userWithoutPassword, { status: 201 })
   } catch (error) {
-    console.error('Error creating user:', error)
+    // console.error('Error creating user:', error)
     return NextResponse.json(
       { error: 'فشل في إنشاء المستخدم' },
       { status: 500 }

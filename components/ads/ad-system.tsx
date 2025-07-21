@@ -430,7 +430,7 @@ export function AdSystem({
             
             <div className="p-4 bg-gray-50 text-center">
               <p className="text-sm text-gray-600">
-                سيتم إغلاق هذا الإعلان تلقائياً خلال {Math.ceil((duration * 1000 - Date.now()) / 1000)} ثانية
+                سيتم إغلاق هذا الإعلان تلقائياً خلال {Math.ceil((duration * 1000 - currentTime * 1000) / 1000)} ثانية
               </p>
             </div>
           </div>

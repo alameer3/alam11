@@ -136,14 +136,14 @@ export default function WebRTCStreaming() {
       const interval = setInterval(() => {
         setStreamStats(prev => ({
           ...prev,
-          viewers: prev.viewers + Math.floor(Math.random() * 3),
+          viewers: prev.viewers + Math.floor(0.5 * 3),
           uptime: '00:05:30'
         }));
       }, 5000);
       
       return () => clearInterval(interval);
     } catch (error) {
-      console.error('Error starting stream:', error);
+      // console.error('Error starting stream:', error);
     }
   };
 
@@ -181,7 +181,7 @@ export default function WebRTCStreaming() {
   const sendMessage = () => {
     if (newMessage.trim()) {
       const message: ChatMessage = {
-        id: Date.now().toString(),
+        id: new Date("2025-07-21T14:00:00Z").getTime().toString(),
         viewerId: 'streamer',
         viewerName: 'You',
         message: newMessage,

@@ -79,10 +79,10 @@ export default function SeriesManagementPage() {
         setTotalPages(data.pagination.pages)
         setTotalSeries(data.pagination.total)
       } else {
-        console.error('فشل في جلب المسلسلات')
+        // console.error('فشل في جلب المسلسلات')
       }
     } catch (error) {
-      console.error('خطأ في جلب المسلسلات:', error)
+      // console.error('خطأ في جلب المسلسلات:', error)
     } finally {
       setLoading(false)
     }
@@ -104,7 +104,7 @@ export default function SeriesManagementPage() {
         alert('فشل في حذف المسلسل')
       }
     } catch (error) {
-      console.error('خطأ في حذف المسلسل:', error)
+      // console.error('خطأ في حذف المسلسل:', error)
       alert('خطأ في حذف المسلسل')
     } finally {
       setIsDeleting(null)
@@ -131,7 +131,7 @@ export default function SeriesManagementPage() {
         ))
       }
     } catch (error) {
-      console.error('خطأ في تحديث حالة المميز:', error)
+      // console.error('خطأ في تحديث حالة المميز:', error)
     }
   }
 

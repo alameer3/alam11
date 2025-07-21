@@ -10,11 +10,13 @@ export function ClientLayout() {
   useEffect(() => {
     setIsClient(true)
     
-    // Hide static layout after client mounts
-    const staticLayout = document.querySelector('.static-layout') as HTMLElement
-    if (staticLayout) {
-      staticLayout.style.display = 'none'
-    }
+    // Hide static layout after client mounts safely
+    setTimeout(() => {
+      const staticLayout = document.querySelector('.static-layout') as HTMLElement
+      if (staticLayout) {
+        staticLayout.style.display = 'none'
+      }
+    }, 100)
   }, [])
 
   if (!isClient) {

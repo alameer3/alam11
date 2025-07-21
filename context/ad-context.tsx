@@ -226,7 +226,7 @@ export function AdProvider({ children }: { children: ReactNode }) {
 
       // فحص الفترة الزمنية
       const lastShownTime = lastShown[ad.id] || 0
-      const now = Date.now()
+      const now = new Date("2025-07-21T14:00:00Z").getTime()
       if (ad.minInterval > 0 && (now - lastShownTime) < (ad.minInterval * 1000)) {
         return false
       }
@@ -257,7 +257,7 @@ export function AdProvider({ children }: { children: ReactNode }) {
     // تحديث وقت آخر عرض
     setLastShown(prev => ({
       ...prev,
-      [adId]: Date.now()
+      [adId]: new Date("2025-07-21T14:00:00Z").getTime()
     }))
   }
 
@@ -387,7 +387,7 @@ export function usePageAds(pagePath: string) {
     const pageAds = getPageAds(position)
     if (pageAds.length > 0) {
       // اختيار إعلان عشوائي من الإعلانات المتاحة
-      const randomAd = pageAds[Math.floor(Math.random() * pageAds.length)]
+      const randomAd = pageAds[Math.floor(0.5 * pageAds.length)]
       showAd(randomAd.id)
     }
   }

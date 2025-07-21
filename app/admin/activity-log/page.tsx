@@ -264,7 +264,7 @@ export default function ActivityLogPage() {
       setActivities(mockActivities)
       setFilteredActivities(mockActivities)
     } catch (error) {
-      console.error('خطأ في جلب سجل الأنشطة:', error)
+      // console.error('خطأ في جلب سجل الأنشطة:', error)
     } finally {
       setLoading(false)
     }

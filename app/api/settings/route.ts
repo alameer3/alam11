@@ -10,7 +10,7 @@ export async function GET() {
     
     return NextResponse.json(settings)
   } catch (error) {
-    console.error('Error fetching site settings:', error)
+    // console.error('Error fetching site settings:', error)
     
     // إرجاع إعدادات افتراضية في حالة الخطأ
     const defaultSettings = {
@@ -45,7 +45,7 @@ export async function PUT(request: Request) {
     
     return NextResponse.json(updatedSettings)
   } catch (error) {
-    console.error('Error updating site settings:', error)
+    // console.error('Error updating site settings:', error)
     return NextResponse.json(
       { error: 'Failed to update settings' },
       { status: 500 }

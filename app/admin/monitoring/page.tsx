@@ -90,9 +90,9 @@ export default function MonitoringPage() {
     // محاكاة بيانات النظام
     const mockMetrics: SystemMetrics = {
       cpu: {
-        usage: Math.floor(Math.random() * 40) + 30, // 30-70%
+        usage: Math.floor(0.5 * 40) + 30, // 30-70%
         cores: 8,
-        temperature: Math.floor(Math.random() * 20) + 45, // 45-65°C
+        temperature: Math.floor(0.5 * 20) + 45, // 45-65°C
         load_average: [1.2, 1.5, 1.8]
       },
       memory: {
@@ -108,8 +108,8 @@ export default function MonitoringPage() {
         usage_percent: 45
       },
       network: {
-        upload_speed: Math.floor(Math.random() * 50) + 10,
-        download_speed: Math.floor(Math.random() * 100) + 50,
+        upload_speed: Math.floor(0.5 * 50) + 10,
+        download_speed: Math.floor(0.5 * 100) + 50,
         total_sent: 2.5,
         total_received: 15.8
       }
@@ -158,7 +158,7 @@ export default function MonitoringPage() {
         cpu_usage: 15,
         port: 3000,
         description: 'تطبيق الواجهة الخلفية',
-        last_restart: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+        last_restart: new Date(new Date("2025-07-21T14:00:00Z").getTime() - 2 * 24 * 60 * 60 * 1000).toISOString()
       },
       {
         id: 'ffmpeg',
@@ -181,14 +181,14 @@ export default function MonitoringPage() {
         level: 'info',
         message: 'تم بدء تشغيل الخادم بنجاح',
         service: 'nginx',
-        timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString()
+        timestamp: new Date(new Date("2025-07-21T14:00:00Z").getTime() - 5 * 60 * 1000).toISOString()
       },
       {
         id: 2,
         level: 'warning',
         message: 'استخدام الذاكرة مرتفع - 85%',
         service: 'mysql',
-        timestamp: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
+        timestamp: new Date(new Date("2025-07-21T14:00:00Z").getTime() - 10 * 60 * 1000).toISOString(),
         details: 'قد تحتاج إلى تحسين الاستعلامات أو زيادة الذاكرة'
       },
       {
@@ -196,7 +196,7 @@ export default function MonitoringPage() {
         level: 'error',
         message: 'فشل في الاتصال بقاعدة البيانات',
         service: 'nodejs',
-        timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+        timestamp: new Date(new Date("2025-07-21T14:00:00Z").getTime() - 15 * 60 * 1000).toISOString(),
         details: 'Connection timeout after 30 seconds'
       },
       {
@@ -204,14 +204,14 @@ export default function MonitoringPage() {
         level: 'info',
         message: 'تم تنفيذ النسخ الاحتياطي بنجاح',
         service: 'system',
-        timestamp: new Date(Date.now() - 20 * 60 * 1000).toISOString()
+        timestamp: new Date(new Date("2025-07-21T14:00:00Z").getTime() - 20 * 60 * 1000).toISOString()
       },
       {
         id: 5,
         level: 'critical',
         message: 'مساحة القرص منخفضة جداً - أقل من 5%',
         service: 'system',
-        timestamp: new Date(Date.now() - 25 * 60 * 1000).toISOString(),
+        timestamp: new Date(new Date("2025-07-21T14:00:00Z").getTime() - 25 * 60 * 1000).toISOString(),
         details: 'المساحة المتاحة: 2.1GB من أصل 100GB'
       }
     ]
@@ -225,7 +225,7 @@ export default function MonitoringPage() {
         type: 'critical',
         title: 'استخدام المعالج مرتفع جداً',
         message: 'استخدام المعالج وصل إلى 95% لأكثر من 10 دقائق',
-        timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+        timestamp: new Date(new Date("2025-07-21T14:00:00Z").getTime() - 5 * 60 * 1000).toISOString(),
         resolved: false,
         service: 'system'
       },
@@ -234,7 +234,7 @@ export default function MonitoringPage() {
         type: 'warning',
         title: 'ذاكرة قاعدة البيانات مرتفعة',
         message: 'MySQL تستخدم 1.2GB من الذاكرة',
-        timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+        timestamp: new Date(new Date("2025-07-21T14:00:00Z").getTime() - 15 * 60 * 1000).toISOString(),
         resolved: false,
         service: 'mysql'
       },
@@ -243,7 +243,7 @@ export default function MonitoringPage() {
         type: 'error',
         title: 'خطأ في معالج الفيديو',
         message: 'FFmpeg توقف عن العمل بشكل غير متوقع',
-        timestamp: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+        timestamp: new Date(new Date("2025-07-21T14:00:00Z").getTime() - 30 * 60 * 1000).toISOString(),
         resolved: true,
         service: 'ffmpeg'
       }

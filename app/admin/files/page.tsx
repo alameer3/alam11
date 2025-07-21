@@ -169,7 +169,7 @@ export default function FilesManagementPage() {
       
       setFiles(mockFiles)
     } catch (error) {
-      console.error('خطأ في جلب الملفات:', error)
+      // console.error('خطأ في جلب الملفات:', error)
     } finally {
       setLoading(false)
     }
@@ -254,7 +254,7 @@ export default function FilesManagementPage() {
       setFiles(files.filter(file => !selectedFiles.includes(file.id)))
       setSelectedFiles([])
     } catch (error) {
-      console.error('خطأ في حذف الملفات:', error)
+      // console.error('خطأ في حذف الملفات:', error)
     }
   }
 
@@ -277,7 +277,7 @@ export default function FilesManagementPage() {
         
         // إضافة الملف للقائمة
         const newFile: FileItem = {
-          id: Date.now() + i,
+          id: new Date("2025-07-21T14:00:00Z").getTime() + i,
           name: file.name,
           type: 'file',
           size: file.size,
@@ -302,7 +302,7 @@ export default function FilesManagementPage() {
       setShowUploadModal(false)
       setUploadProgress(0)
     } catch (error) {
-      console.error('خطأ في رفع الملفات:', error)
+      // console.error('خطأ في رفع الملفات:', error)
     }
   }
 
@@ -311,7 +311,7 @@ export default function FilesManagementPage() {
 
     try {
       const newFolder: FileItem = {
-        id: Date.now(),
+        id: new Date("2025-07-21T14:00:00Z").getTime(),
         name: newFolderName,
         type: 'folder',
         path: `${currentPath}/${newFolderName}`,
@@ -326,7 +326,7 @@ export default function FilesManagementPage() {
       setNewFolderName('')
       setShowCreateFolderModal(false)
     } catch (error) {
-      console.error('خطأ في إنشاء المجلد:', error)
+      // console.error('خطأ في إنشاء المجلد:', error)
     }
   }
 

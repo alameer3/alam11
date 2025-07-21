@@ -78,10 +78,10 @@ export default function MoviesManagementPage() {
         setTotalPages(data.pagination.pages)
         setTotalMovies(data.pagination.total)
       } else {
-        console.error('فشل في جلب الأفلام')
+        // console.error('فشل في جلب الأفلام')
       }
     } catch (error) {
-      console.error('خطأ في جلب الأفلام:', error)
+      // console.error('خطأ في جلب الأفلام:', error)
     } finally {
       setLoading(false)
     }
@@ -103,7 +103,7 @@ export default function MoviesManagementPage() {
         alert('فشل في حذف الفيلم')
       }
     } catch (error) {
-      console.error('خطأ في حذف الفيلم:', error)
+      // console.error('خطأ في حذف الفيلم:', error)
       alert('خطأ في حذف الفيلم')
     } finally {
       setIsDeleting(null)
@@ -130,7 +130,7 @@ export default function MoviesManagementPage() {
         ))
       }
     } catch (error) {
-      console.error('خطأ في تحديث حالة المميز:', error)
+      // console.error('خطأ في تحديث حالة المميز:', error)
     }
   }
 

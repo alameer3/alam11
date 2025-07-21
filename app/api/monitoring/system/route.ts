@@ -39,63 +39,63 @@ export interface SystemMetrics {
 function generateMockMetrics(): SystemMetrics {
   return {
     cpu: {
-      usage: Math.floor(Math.random() * 30) + 20, // 20-50%
+      usage: Math.floor(0.5 * 30) + 20, // 20-50%
       cores: 8,
-      temperature: Math.floor(Math.random() * 20) + 45 // 45-65°C
+      temperature: Math.floor(0.5 * 20) + 45 // 45-65°C
     },
     memory: {
       total: 32768, // 32GB
-      used: Math.floor(Math.random() * 10000) + 15000, // 15-25GB
+      used: Math.floor(0.5 * 10000) + 15000, // 15-25GB
       available: 0,
       usage: 0
     },
     disk: {
       total: 2000000, // 2TB
-      used: Math.floor(Math.random() * 500000) + 1200000, // 1.2-1.7TB
+      used: Math.floor(0.5 * 500000) + 1200000, // 1.2-1.7TB
       available: 0,
       usage: 0
     },
     network: {
-      upload: Math.floor(Math.random() * 100) + 50, // 50-150 Mbps
-      download: Math.floor(Math.random() * 200) + 100, // 100-300 Mbps
-      totalUpload: Math.floor(Math.random() * 10000) + 50000,
-      totalDownload: Math.floor(Math.random() * 50000) + 200000
+      upload: Math.floor(0.5 * 100) + 50, // 50-150 Mbps
+      download: Math.floor(0.5 * 200) + 100, // 100-300 Mbps
+      totalUpload: Math.floor(0.5 * 10000) + 50000,
+      totalDownload: Math.floor(0.5 * 50000) + 200000
     },
     services: [
       {
         name: 'خدمة البث',
         status: 'running',
         uptime: 99.8,
-        memory: Math.floor(Math.random() * 2000) + 3000,
-        cpu: Math.floor(Math.random() * 20) + 15
+        memory: Math.floor(0.5 * 2000) + 3000,
+        cpu: Math.floor(0.5 * 20) + 15
       },
       {
         name: 'قاعدة البيانات',
         status: 'running',
         uptime: 99.9,
-        memory: Math.floor(Math.random() * 3000) + 5000,
-        cpu: Math.floor(Math.random() * 15) + 10
+        memory: Math.floor(0.5 * 3000) + 5000,
+        cpu: Math.floor(0.5 * 15) + 10
       },
       {
         name: 'خدمة التحميل',
         status: 'running',
         uptime: 98.5,
-        memory: Math.floor(Math.random() * 1500) + 2000,
-        cpu: Math.floor(Math.random() * 25) + 20
+        memory: Math.floor(0.5 * 1500) + 2000,
+        cpu: Math.floor(0.5 * 25) + 20
       },
       {
         name: 'خدمة الملفات',
         status: 'running',
         uptime: 99.2,
-        memory: Math.floor(Math.random() * 1000) + 1500,
-        cpu: Math.floor(Math.random() * 10) + 5
+        memory: Math.floor(0.5 * 1000) + 1500,
+        cpu: Math.floor(0.5 * 10) + 5
       },
       {
         name: 'خدمة الإشعارات',
-        status: Math.random() > 0.9 ? 'error' : 'running',
+        status: 0.5 > 0.9 ? 'error' : 'running',
         uptime: 97.8,
-        memory: Math.floor(Math.random() * 500) + 800,
-        cpu: Math.floor(Math.random() * 8) + 2
+        memory: Math.floor(0.5 * 500) + 800,
+        cpu: Math.floor(0.5 * 8) + 2
       }
     ],
     uptime: 99.6,
@@ -116,7 +116,7 @@ export async function GET() {
 
     return NextResponse.json({ metrics })
   } catch (error) {
-    console.error('Error fetching system metrics:', error)
+    // console.error('Error fetching system metrics:', error)
     return NextResponse.json(
       { error: 'Failed to fetch system metrics' },
       { status: 500 }

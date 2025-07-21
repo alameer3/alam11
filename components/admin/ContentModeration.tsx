@@ -122,7 +122,7 @@ export default function ContentModeration() {
         window.location.reload();
       }
     } catch (error) {
-      console.error('خطأ في تنفيذ الإجراء:', error);
+      // console.error('خطأ في تنفيذ الإجراء:', error);
     }
   };
 

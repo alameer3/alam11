@@ -1,13 +1,13 @@
 
 
-'use client'
+// Removed 'use client' to fix async Server Component error
 
 import { MovieDetailsHeader } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/MovieDetailsHeader'
 import { WatchServers } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/WatchServers'
 import { DownloadLinks } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/DownloadLinks'
 import { CastSlider } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/CastSlider'
 import { GallerySlider } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/GallerySlider'
-import Head from 'next/head'
+import { Metadata } from 'next'
 
 // temporary dataset
 const movies = [
@@ -24,18 +24,28 @@ const movies = [
   },
 ]
 
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const movie = movies.find((m) => m.slug === slug) || movies[0]
+  
+  return {
+    title: `${movie.title} | 𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗`,
+    description: movie.description,
+    openGraph: {
+      title: movie.title,
+      description: movie.description,
+      images: [movie.poster],
+    }
+  }
+}
+
 export default async function MoviePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const movie = movies.find((m) => m.slug === slug) || movies[0]
 
   return (
     <div className="bg-home min-h-screen">
-      <Head>
-        <title>{movie.title} | 𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗</title>
-        <meta property="og:title" content={movie.title} />
-        <meta property="og:image" content={movie.poster} />
-        <meta property="og:description" content={movie.description} />
-      </Head>
+{/* Metadata moved to generateMetadata function */}
 
       <MovieDetailsHeader
         poster={movie.poster}

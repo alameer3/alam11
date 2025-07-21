@@ -68,7 +68,7 @@ export default function ContentEditor({ initialData }: { initialData?: ContentDa
   const [newGenre, setNewGenre] = useState('');
 
   const handleSave = () => {
-    console.log('Saving content:', content);
+    // console.log('Saving content:', content);
     // API call to save content
   };
 

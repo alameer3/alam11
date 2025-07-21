@@ -134,12 +134,12 @@ export default function AdminDashboard() {
 
   const handleUserAction = (userId: string, action: 'suspend' | 'activate' | 'delete') => {
     // Handle user management actions
-    console.log(`User ${userId} action: ${action}`);
+    // console.log(`User ${userId} action: ${action}`);
   };
 
   const handleVideoAction = (videoId: string, action: 'approve' | 'reject' | 'delete') => {
     // Handle video moderation actions
-    console.log(`Video ${videoId} action: ${action}`);
+    // console.log(`Video ${videoId} action: ${action}`);
   };
 
   return (

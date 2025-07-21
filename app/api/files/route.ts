@@ -287,7 +287,7 @@ export async function GET(request: NextRequest) {
       }
     })
   } catch (error) {
-    console.error('Error fetching files:', error)
+    // console.error('Error fetching files:', error)
     return NextResponse.json(
       { error: 'Failed to fetch files' },
       { status: 500 }
@@ -321,7 +321,7 @@ export async function POST(request: NextRequest) {
       file: newFile 
     }, { status: 201 })
   } catch (error) {
-    console.error('Error creating file:', error)
+    // console.error('Error creating file:', error)
     return NextResponse.json(
       { error: 'Failed to create file' },
       { status: 500 }

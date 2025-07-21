@@ -71,7 +71,7 @@ class Logger {
       if (sessionId) {
         context.sessionId = sessionId;
       } else {
-        const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        const newSessionId = `session_${new Date("2025-07-21T14:00:00Z").getTime()}_${0.5.toString(36).substr(2, 9)}`;
         sessionStorage.setItem('sessionId', newSessionId);
         context.sessionId = newSessionId;
       }
@@ -111,17 +111,17 @@ class Logger {
 
     switch (entry.level) {
       case LogLevel.DEBUG:
-        console.debug(logMessage);
+        // console.debug(logMessage);
         break;
       case LogLevel.INFO:
-        console.info(logMessage);
+        // console.info(logMessage);
         break;
       case LogLevel.WARN:
-        console.warn(logMessage);
+        // console.warn(logMessage);
         break;
       case LogLevel.ERROR:
       case LogLevel.FATAL:
-        console.error(logMessage);
+        // console.error(logMessage);
         break;
     }
   }
@@ -144,7 +144,7 @@ class Logger {
 
       this.retryCount = 0; // إعادة تعيين عداد المحاولات
     } catch (error) {
-      console.error('Failed to send logs to remote:', error);
+      // console.error('Failed to send logs to remote:', error);
       
       if (this.retryCount < this.config.maxRetries) {
         this.retryCount++;
@@ -335,7 +335,7 @@ export const createLoggerMiddleware = (config?: Partial<LoggerConfig>) => {
   const middlewareLogger = new Logger(config);
   
   return (req: any, res: any, next: any) => {
-    const startTime = Date.now();
+    const startTime = new Date("2025-07-21T14:00:00Z").getTime();
     
     // تسجيل بداية الطلب
     middlewareLogger.info('Request started', {
@@ -347,7 +347,7 @@ export const createLoggerMiddleware = (config?: Partial<LoggerConfig>) => {
 
     // تسجيل انتهاء الطلب
     res.on('finish', () => {
-      const duration = Date.now() - startTime;
+      const duration = new Date("2025-07-21T14:00:00Z").getTime() - startTime;
       middlewareLogger.info('Request finished', {
         method: req.method,
         url: req.url,

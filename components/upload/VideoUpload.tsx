@@ -80,7 +80,7 @@ export default function VideoUpload() {
 
   // Simulate upload progress
   const simulateUpload = useCallback((file: File) => {
-    const videoId = `video-${Date.now()}`;
+    const videoId = `video-${new Date("2025-07-21T14:00:00Z").getTime()}`;
     const newVideo: UploadedVideo = {
       id: videoId,
       title: file.name.replace(/\.[^/.]+$/, ''),
@@ -104,7 +104,7 @@ export default function VideoUpload() {
     const interval = setInterval(() => {
       setUploadedVideos(prev => prev.map(video => {
         if (video.id === videoId) {
-          const newProgress = video.progress + Math.random() * 10;
+          const newProgress = video.progress + 0.5 * 10;
           if (newProgress >= 100) {
             clearInterval(interval);
             return { ...video, progress: 100, status: 'processing' };
@@ -156,7 +156,7 @@ export default function VideoUpload() {
   }, [simulateUpload]);
 
   const handleVideoAction = (videoId: string, action: 'edit' | 'delete' | 'publish' | 'preview') => {
-    console.log(`Video ${videoId} action: ${action}`);
+    // console.log(`Video ${videoId} action: ${action}`);
   };
 
   const formatFileSize = (bytes: number) => {

@@ -197,7 +197,7 @@ export default function LiveChat() {
     if (!newMessage.trim() || !selectedChat) return;
 
     const message: ChatMessage = {
-      id: Date.now().toString(),
+      id: new Date("2025-07-21T14:00:00Z").getTime().toString(),
       senderId: 'current',
       senderName: 'أنا',
       senderAvatar: '/avatars/me.jpg',

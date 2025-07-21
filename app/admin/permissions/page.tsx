@@ -228,7 +228,7 @@ export default function PermissionsPage() {
       setRoles(mockRoles)
       setAssignments(mockAssignments)
     } catch (error) {
-      console.error('خطأ في جلب البيانات:', error)
+      // console.error('خطأ في جلب البيانات:', error)
     } finally {
       setLoading(false)
     }
@@ -275,7 +275,7 @@ export default function PermissionsPage() {
   const handleCreateRole = async () => {
     try {
       const role: Role = {
-        id: Date.now().toString(),
+        id: new Date("2025-07-21T14:00:00Z").getTime().toString(),
         name: newRole.name,
         description: newRole.description,
         permissions: newRole.permissions,
@@ -290,7 +290,7 @@ export default function PermissionsPage() {
       setNewRole({ name: '', description: '', permissions: [], color: '#3B82F6' })
       setShowCreateRoleModal(false)
     } catch (error) {
-      console.error('خطأ في إنشاء الدور:', error)
+      // console.error('خطأ في إنشاء الدور:', error)
     }
   }
 
@@ -308,7 +308,7 @@ export default function PermissionsPage() {
     try {
       setRoles(roles.filter(r => r.id !== roleId))
     } catch (error) {
-      console.error('خطأ في حذف الدور:', error)
+      // console.error('خطأ في حذف الدور:', error)
     }
   }
 

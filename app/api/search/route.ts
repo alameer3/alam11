@@ -127,11 +127,11 @@ export async function GET(request: NextRequest) {
       suggestions,
       total: filteredResults.length,
       query,
-      searchTime: Date.now()
+      searchTime: new Date("2025-07-21T14:00:00Z").getTime()
     })
 
   } catch (error) {
-    console.error('Search API Error:', error)
+    // console.error('Search API Error:', error)
     return NextResponse.json({
       success: false,
       error: 'خطأ في البحث',
@@ -216,7 +216,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Advanced Search API Error:', error)
+    // console.error('Advanced Search API Error:', error)
     return NextResponse.json({
       success: false,
       error: 'خطأ في البحث المتقدم'

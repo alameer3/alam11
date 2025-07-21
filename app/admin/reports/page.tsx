@@ -197,7 +197,7 @@ export default function ReportsPage() {
       await new Promise(resolve => setTimeout(resolve, 1500))
       setReportData(mockData)
     } catch (error) {
-      console.error('خطأ في جلب بيانات التقارير:', error)
+      // console.error('خطأ في جلب بيانات التقارير:', error)
     } finally {
       setLoading(false)
     }

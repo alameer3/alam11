@@ -222,12 +222,12 @@ export default function AIRecommendations() {
   }, []);
 
   const testAIRecommendation = async () => {
-    console.log('Testing AI recommendation...');
+    // console.log('Testing AI recommendation...');
     // Simulate AI recommendation test
   };
 
   const retrainModel = async (modelId: string) => {
-    console.log(`Retraining model: ${modelId}`);
+    // console.log(`Retraining model: ${modelId}`);
     // Simulate model retraining
   };
 

@@ -11,7 +11,7 @@ import {
   UserIcon,
   DocumentTextIcon,
   ShieldCheckIcon,
-  BanIcon,
+  NoSymbolIcon as BanIcon,
   ChatBubbleLeftIcon,
   VideoCameraIcon,
   PhotoIcon
@@ -83,8 +83,8 @@ export default function AdvancedReportingSystem() {
         reason: 'محتوى مسيء',
         description: 'هذا الفيديو يحتوي على محتوى مسيء وغير مناسب للمشاهدة العامة',
         evidence: ['screenshot1.jpg', 'video_clip.mp4'],
-        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2),
-        updatedAt: new Date(Date.now() - 1000 * 60 * 30),
+        createdAt: new Date('2025-07-21T10:00:00Z'),
+        updatedAt: new Date('2025-07-21T12:30:00Z'),
       },
       {
         id: '2',
@@ -100,8 +100,8 @@ export default function AdvancedReportingSystem() {
         reportedUserName: 'فاطمة حسن',
         reason: 'رسائل مزعجة',
         description: 'هذا المستخدم يرسل رسائل مزعجة ومتكررة',
-        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 5),
-        updatedAt: new Date(Date.now() - 1000 * 60 * 60),
+        createdAt: new Date('2025-07-21T08:00:00Z'),
+        updatedAt: new Date('2025-07-21T11:00:00Z'),
         assignedTo: 'mod1',
       },
       {
@@ -119,8 +119,8 @@ export default function AdvancedReportingSystem() {
         reason: 'انتهاك حقوق النشر',
         description: 'هذا الفيديو منسوخ من قناة أخرى بدون إذن',
         evidence: ['original_video.mp4', 'comparison.pdf'],
-        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24),
-        updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 12),
+        createdAt: new Date('2025-07-20T14:00:00Z'),
+        updatedAt: new Date('2025-07-21T02:00:00Z'),
         resolution: 'تم إزالة المحتوى وإيقاف الحساب مؤقتاً',
         actionTaken: 'content_removal',
       },
@@ -175,7 +175,7 @@ export default function AdvancedReportingSystem() {
         setActionTaken('none');
       }
     } catch (error) {
-      console.error('خطأ في تنفيذ الإجراء:', error);
+      // console.error('خطأ في تنفيذ الإجراء:', error);
     }
   };
 

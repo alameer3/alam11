@@ -264,7 +264,7 @@ export default function EmailNotifications() {
     if (template) {
       const newTemplate: EmailTemplate = {
         ...template,
-        id: Date.now().toString(),
+        id: new Date("2025-07-21T14:00:00Z").getTime().toString(),
         name: `${template.name} (Copy)`,
         createdAt: new Date(),
         lastUsed: new Date(),

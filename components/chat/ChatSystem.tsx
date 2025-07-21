@@ -8,7 +8,7 @@ import {
   PhoneIcon,
   VideoCameraIcon,
   PaperClipIcon,
-  EmojiHappyIcon,
+  FaceSmileIcon as EmojiHappyIcon,
   MicrophoneIcon
 } from '@heroicons/react/24/outline';
 
@@ -66,7 +66,7 @@ export default function ChatSystem() {
           senderId: '1',
           senderName: 'أحمد محمد',
           content: 'مرحباً! كيف حالك؟',
-          timestamp: new Date(Date.now() - 1000 * 60 * 5),
+          timestamp: new Date('2025-07-21T14:20:00Z'),
           type: 'text',
           status: 'read',
         },
@@ -85,7 +85,7 @@ export default function ChatSystem() {
           senderId: 'current',
           senderName: 'أنا',
           content: 'شكراً لك!',
-          timestamp: new Date(Date.now() - 1000 * 60 * 30),
+          timestamp: new Date("2025-07-21T14:00:00Z"),
           type: 'text',
           status: 'delivered',
         },
@@ -106,7 +106,7 @@ export default function ChatSystem() {
           senderId: '1',
           senderName: 'أحمد محمد',
           content: 'هل انتهى الجميع من المهمة؟',
-          timestamp: new Date(Date.now() - 1000 * 60 * 60),
+          timestamp: new Date("2025-07-21T14:00:00Z"),
           type: 'text',
           status: 'read',
         },
@@ -126,7 +126,7 @@ export default function ChatSystem() {
           senderId: selectedChat.participants[0].id,
           senderName: selectedChat.participants[0].name,
           content: 'مرحباً! كيف حالك؟',
-          timestamp: new Date(Date.now() - 1000 * 60 * 10),
+          timestamp: new Date("2025-07-21T14:00:00Z"),
           type: 'text',
           status: 'read',
         },
@@ -135,7 +135,7 @@ export default function ChatSystem() {
           senderId: 'current',
           senderName: 'أنا',
           content: 'أهلاً! أنا بخير، شكراً لك. كيف حالك أنت؟',
-          timestamp: new Date(Date.now() - 1000 * 60 * 8),
+          timestamp: new Date("2025-07-21T14:00:00Z"),
           type: 'text',
           status: 'read',
         },
@@ -144,7 +144,7 @@ export default function ChatSystem() {
           senderId: selectedChat.participants[0].id,
           senderName: selectedChat.participants[0].name,
           content: 'أنا أيضاً بخير، شكراً! هل انتهيت من المشروع؟',
-          timestamp: new Date(Date.now() - 1000 * 60 * 5),
+          timestamp: new Date("2025-07-21T14:00:00Z"),
           type: 'text',
           status: 'read',
         },
@@ -153,7 +153,7 @@ export default function ChatSystem() {
           senderId: 'current',
           senderName: 'أنا',
           content: 'نعم، انتهيت منه أمس. هل تريد أن تراجع عليه؟',
-          timestamp: new Date(Date.now() - 1000 * 60 * 2),
+          timestamp: new Date("2025-07-21T14:00:00Z"),
           type: 'text',
           status: 'delivered',
         },
@@ -172,7 +172,7 @@ export default function ChatSystem() {
     if (!newMessage.trim() || !selectedChat) return;
 
     const message: Message = {
-      id: Date.now().toString(),
+      id: new Date("2025-07-21T14:00:00Z").getTime().toString(),
       senderId: 'current',
       senderName: 'أنا',
       content: newMessage,
@@ -187,7 +187,7 @@ export default function ChatSystem() {
     // محاكاة استجابة
     setTimeout(() => {
       const response: Message = {
-        id: (Date.now() + 1).toString(),
+        id: (new Date("2025-07-21T14:00:00Z").getTime() + 1).toString(),
         senderId: selectedChat.participants[0].id,
         senderName: selectedChat.participants[0].name,
         content: 'شكراً لك! سأراجعه قريباً.',
@@ -203,7 +203,7 @@ export default function ChatSystem() {
     const file = event.target.files?.[0];
     if (file && selectedChat) {
       const message: Message = {
-        id: Date.now().toString(),
+        id: new Date("2025-07-21T14:00:00Z").getTime().toString(),
         senderId: 'current',
         senderName: 'أنا',
         content: `ملف: ${file.name}`,

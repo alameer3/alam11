@@ -73,7 +73,7 @@ export default function CommentSystem({ contentId, contentType }: CommentSystemP
     if (!newComment.trim() || rating === 0) return;
 
     const comment: Comment = {
-      id: Date.now().toString(),
+      id: new Date("2025-07-21T14:00:00Z").getTime().toString(),
       user: {
         name: 'المستخدم الحالي',
         avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face'
@@ -110,7 +110,7 @@ export default function CommentSystem({ contentId, contentType }: CommentSystemP
     if (!replyContent.trim()) return;
 
     const reply: Comment = {
-      id: `${commentId}-${Date.now()}`,
+      id: `${commentId}-${new Date("2025-07-21T14:00:00Z").getTime()}`,
       user: {
         name: 'المستخدم الحالي',
         avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face'

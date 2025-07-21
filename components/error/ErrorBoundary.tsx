@@ -34,17 +34,17 @@ export default class ErrorBoundary extends Component<Props, State> {
       hasError: true,
       error,
       errorInfo: null,
-      errorId: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      errorId: `error_${new Date("2025-07-21T14:00:00Z").getTime()}_${0.5.toString(36).substr(2, 9)}`
     };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    // console.error('ErrorBoundary caught an error:', error, errorInfo);
     
     this.setState({
       error,
       errorInfo,
-      errorId: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      errorId: `error_${new Date("2025-07-21T14:00:00Z").getTime()}_${0.5.toString(36).substr(2, 9)}`
     });
 
     // استدعاء callback إذا تم تمريره
@@ -76,10 +76,10 @@ export default class ErrorBoundary extends Component<Props, State> {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(errorData),
-      }).catch(console.error);
+      }).catch(// console.error);
 
     } catch (logError) {
-      console.error('Failed to log error:', logError);
+      // console.error('Failed to log error:', logError);
     }
   };
 
@@ -258,7 +258,7 @@ export default class ErrorBoundary extends Component<Props, State> {
 // Hook للاستخدام في المكونات الوظيفية
 export const useErrorHandler = () => {
   const handleError = (error: Error, errorInfo?: ErrorInfo) => {
-    console.error('Error caught by useErrorHandler:', error, errorInfo);
+    // console.error('Error caught by useErrorHandler:', error, errorInfo);
     
     // إرسال الخطأ إلى خدمة التتبع
     const errorData = {
@@ -276,7 +276,7 @@ export const useErrorHandler = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(errorData),
-    }).catch(console.error);
+    }).catch(// console.error);
   };
 
   return { handleError };

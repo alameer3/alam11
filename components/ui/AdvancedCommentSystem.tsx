@@ -181,7 +181,7 @@ export default function AdvancedCommentSystem({
       await new Promise(resolve => setTimeout(resolve, 500));
       setComments(mockComments);
     } catch (error) {
-      console.error('Error loading comments:', error);
+      // console.error('Error loading comments:', error);
     }
   }, []);
 
@@ -208,7 +208,7 @@ export default function AdvancedCommentSystem({
       // إضافة التعليق محلياً
       const newCommentObj: Comment = {
         ...comment,
-        id: Date.now().toString(),
+        id: new Date("2025-07-21T14:00:00Z").getTime().toString(),
         timestamp: 'الآن',
         likes: 0,
         dislikes: 0,
@@ -227,7 +227,7 @@ export default function AdvancedCommentSystem({
       setNewRating(0);
       
     } catch (error) {
-      console.error('Error submitting comment:', error);
+      // console.error('Error submitting comment:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -246,7 +246,7 @@ export default function AdvancedCommentSystem({
       alert(`تم إرسال تقييمك: ${newRating}/5 نجوم`);
       
     } catch (error) {
-      console.error('Error submitting rating:', error);
+      // console.error('Error submitting rating:', error);
     }
   }, [newRating, onRatingSubmit]);
 
@@ -275,7 +275,7 @@ export default function AdvancedCommentSystem({
     if (!replyContent.trim()) return;
     
     const newReply: Comment = {
-      id: `${commentId}-${Date.now()}`,
+      id: `${commentId}-${new Date("2025-07-21T14:00:00Z").getTime()}`,
       userId: 'current-user',
       username: 'أنا',
       userAvatar: '/api/placeholder/40/40',

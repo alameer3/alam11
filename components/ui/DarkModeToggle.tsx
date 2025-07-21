@@ -5,8 +5,10 @@ import { Moon, Sun } from 'lucide-react';
 
 export default function DarkModeToggle() {
   const [isDark, setIsDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     // Check for saved theme preference or default to light mode
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -19,6 +21,22 @@ export default function DarkModeToggle() {
       document.documentElement.classList.remove('dark');
     }
   }, []);
+
+  if (!mounted) {
+    return (
+      <button
+        className="dark-mode-toggle bg-gray-200"
+        aria-label="Toggle dark mode"
+        disabled
+      >
+        <span className="toggle-thumb" />
+        <div className="absolute inset-0 flex items-center justify-between px-1">
+          <Sun className="h-3 w-3 text-yellow-500" />
+          <Moon className="h-3 w-3 text-blue-500" />
+        </div>
+      </button>
+    );
+  }
 
   const toggleTheme = () => {
     const newTheme = !isDark;

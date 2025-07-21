@@ -174,15 +174,15 @@ export default function AdvancedPayment() {
   }, []);
 
   const handleSubscriptionAction = (subscriptionId: string, action: 'edit' | 'delete' | 'toggle') => {
-    console.log(`Subscription ${subscriptionId} action: ${action}`);
+    // console.log(`Subscription ${subscriptionId} action: ${action}`);
   };
 
   const handleCouponAction = (couponId: string, action: 'edit' | 'delete' | 'toggle') => {
-    console.log(`Coupon ${couponId} action: ${action}`);
+    // console.log(`Coupon ${couponId} action: ${action}`);
   };
 
   const generateInvoicePDF = (invoiceId: string) => {
-    console.log(`Generating PDF for invoice: ${invoiceId}`);
+    // console.log(`Generating PDF for invoice: ${invoiceId}`);
     // PDF generation logic
   };
 

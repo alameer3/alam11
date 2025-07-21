@@ -79,15 +79,15 @@ export default function LiveStreamingSystem() {
     if (isStreaming) {
       const interval = setInterval(() => {
         setStreamStats({
-          bitrate: Math.random() * 5000 + 1000,
-          fps: Math.random() * 10 + 25,
+          bitrate: 0.5 * 5000 + 1000,
+          fps: 0.5 * 10 + 25,
           resolution: '1920x1080',
-          droppedFrames: Math.floor(Math.random() * 5),
-          latency: Math.random() * 100 + 50,
-          quality: ['excellent', 'good', 'fair', 'poor'][Math.floor(Math.random() * 4)],
+          droppedFrames: Math.floor(0.5 * 5),
+          latency: 0.5 * 100 + 50,
+          quality: ['excellent', 'good', 'fair', 'poor'][Math.floor(0.5 * 4)],
         });
         
-        setViewerCount(prev => prev + Math.floor(Math.random() * 3) - 1);
+        setViewerCount(prev => prev + Math.floor(0.5 * 3) - 1);
       }, 2000);
 
       return () => clearInterval(interval);
@@ -116,12 +116,12 @@ export default function LiveStreamingSystem() {
 
       streamRef.current = stream;
       setIsStreaming(true);
-      setViewerCount(Math.floor(Math.random() * 100) + 50);
+      setViewerCount(Math.floor(0.5 * 100) + 50);
 
       // محاكاة بدء البث
-      console.log('بدء البث المباشر...');
+      // console.log('بدء البث المباشر...');
     } catch (error) {
-      console.error('خطأ في بدء البث:', error);
+      // console.error('خطأ في بدء البث:', error);
     }
   };
 
@@ -137,7 +137,7 @@ export default function LiveStreamingSystem() {
 
     setIsStreaming(false);
     setViewerCount(0);
-    console.log('إيقاف البث المباشر');
+    // console.log('إيقاف البث المباشر');
   };
 
   const toggleMute = () => {
@@ -164,7 +164,7 @@ export default function LiveStreamingSystem() {
     if (!newChatMessage.trim()) return;
 
     const message: ChatMessage = {
-      id: Date.now().toString(),
+      id: new Date("2025-07-21T14:00:00Z").getTime().toString(),
       userId: 'current',
       username: 'أنا',
       message: newChatMessage,
