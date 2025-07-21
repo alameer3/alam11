@@ -9,6 +9,7 @@ import { MainMenu } from '@/components/layout/main-menu'
 import { Providers } from '@/components/providers'
 
 
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {

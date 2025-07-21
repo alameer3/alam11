@@ -72,63 +72,58 @@ export function MainMenu() {
     }
   ]
 
-  const closeMenu = () => {
-    if (!mounted) return
+  const handleMenuClick = () => {
+    if (typeof window === 'undefined' || !mounted) return
     
     const overlay = document.querySelector('.site-overlay')
     const menu = document.querySelector('.main-menu')
     
     if (overlay) overlay.classList.remove('show')
     if (menu) menu.classList.remove('show')
-
-    if (typeof document !== 'undefined') {
-      document.body.classList.remove('main-menu-active')
-    }
-  }
-
-  if (!mounted) {
-    return (
-      <div className="main-menu">
-        <div className="container mx-auto px-4">
-          <div className="py-8 text-center text-white">
-            <div className="text-lg">القائمة</div>
-          </div>
-        </div>
-      </div>
-    )
+    
+    document.body.classList.remove('main-menu-active')
   }
 
   return (
     <div className="main-menu">
-      <div className="container mx-auto px-4">
-        {/* Menu Items */}
-        <div className="menu py-8">
-          {menuItems.map((item) => {
-            const IconComponent = item.icon
-            return (
-              <Link key={item.href} href={item.href} className="item" onClick={closeMenu}>
-                <IconComponent className="icn" />
-                <span>{item.text}</span>
-              </Link>
-            )
-          })}
+      <div className="flex flex-col h-full">
+        {/* القائمة الرئيسية */}
+        <div className="flex-1">
+          <div className="menu flex flex-col justify-center">
+            {menuItems.map((item) => {
+              const IconComponent = item.icon
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="item"
+                  onClick={handleMenuClick}
+                >
+                  <div className="icn ml-3">
+                    <IconComponent className="w-12 h-12" />
+                  </div>
+                  <div className="text">{item.text}</div>
+                </Link>
+              )
+            })}
+          </div>
         </div>
 
-        {/* Social Links */}
-        <div className="social flex flex-wrap justify-center gap-2 py-4 border-t border-gray-600">
+        {/* الشبكات الاجتماعية */}
+        <nav className="social flex justify-center flex-wrap">
           {socialLinks.map((link, index) => (
-            <a 
-              key={index} 
-              href={link.href} 
-              title={link.title}
-              className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-600 text-gray-400 hover:text-white hover:bg-brand hover:border-brand transition-all"
+            <a
+              key={index}
+              href={link.href}
               target={link.href.startsWith('http') ? '_blank' : '_self'}
-              rel={link.href.startsWith('http') ? 'noopener noreferrer' : ''}
+              className="mx-2 mb-2"
+              title={link.title}
+              rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
             >
-              {link.icon}
+              <span className="text-xl">{link.icon}</span>
             </a>
           ))}
-        </div>
+        </nav>
       </div>
     </div>
   )

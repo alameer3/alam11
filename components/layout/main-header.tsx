@@ -2,20 +2,20 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useSession } from 'next-auth/react'
+import { ClientOnlySession } from '@/components/ClientOnlySession'
 import { Search, User, Plus } from 'lucide-react'
 
 export function MainHeader() {
   const [isScrolled, setIsScrolled] = useState(false)
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const { data: session } = useSession()
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
   useEffect(() => {
+    if (typeof window === 'undefined') return
+    
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50)
     }
@@ -24,10 +24,9 @@ export function MainHeader() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const toggleMenu = () => {
-    if (!mounted) return
+  const handleMenuToggle = () => {
+    if (typeof window === 'undefined' || !mounted) return
     
-    setIsMenuOpen(!isMenuOpen)
     // تبديل الـ overlay
     const overlay = document.querySelector('.site-overlay')
     if (overlay) {
@@ -43,31 +42,8 @@ export function MainHeader() {
     document.body.classList.toggle('main-menu-active')
   }
 
-  if (!mounted) {
-    return (
-      <header className="main-header">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center">
-              <h2 className="main-logo m-0">
-                <Link href="/" className="inline-flex">
-                  <img
-                    src="/logo.svg"
-                    className="img-fluid"
-                    alt="𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗"
-                    style={{ height: '40px' }}
-                  />
-                </Link>
-              </h2>
-            </div>
-          </div>
-        </div>
-      </header>
-    )
-  }
-
   return (
-    <header className={`main-header ${isScrolled ? 'scrolled' : ''}`}>
+    <header className={`main-header ${mounted && isScrolled ? 'scrolled' : ''}`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           {/* الشعار */}
@@ -87,7 +63,7 @@ export function MainHeader() {
           {/* زر القائمة */}
           <div className="flex items-center ml-4">
             <button
-              onClick={toggleMenu}
+              onClick={handleMenuToggle}
               className="menu-toggle flex items-center text-white"
             >
               <span className="icn ml-3"></span>
@@ -124,19 +100,23 @@ export function MainHeader() {
 
             {/* لوحة المستخدم */}
             <div className="user-panel">
-              {session ? (
-                <div className="user-logged flex items-center">
-                  <div className="user-toggle">
-                    <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center">
-                      <User className="w-4 h-4 text-white" />
+              <ClientOnlySession>
+                {(session, loading) => (
+                  session ? (
+                    <div className="user-logged flex items-center">
+                      <div className="user-toggle">
+                        <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center">
+                          <User className="w-4 h-4 text-white" />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ) : (
-                <Link href="/auth/signin" className="user-toggle text-white">
-                  <User className="w-5 h-5" />
-                </Link>
-              )}
+                  ) : (
+                    <Link href="/auth/signin" className="user-toggle text-white">
+                      <User className="w-5 h-5" />
+                    </Link>
+                  )
+                )}
+              </ClientOnlySession>
             </div>
           </div>
         </div>
