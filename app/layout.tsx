@@ -5,7 +5,7 @@ import './akwam.css'
 
 import { MainHeader } from '@/components/layout/main-header'
 import { MainMenu } from '@/components/layout/main-menu'
-import { MainFooter } from '@/components/layout/main-footer'
+
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -68,7 +68,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={`${inter.className} font-akoam`}>
+
         {/* Site overlay for menu */}
         <span className="site-overlay" />
 
@@ -79,8 +79,6 @@ export default function RootLayout({
         {/* Page content */}
         {children}
 
-        {/* Footer */}
-        <MainFooter />
       </body>
     </html>
   )
