@@ -8,7 +8,7 @@ interface SettingSection {
   id: string;
   title: string;
   description: string;
-  icon: any;
+  icon: React.ElementType;
 }
 
 const settingSections: SettingSection[] = [
@@ -22,7 +22,7 @@ const settingSections: SettingSection[] = [
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('account');
-  const [settings, setSettings] = useState({
+  const [settings, setSettings] = useState<Record<string, unknown>>({
     // Account settings
     email: 'user@example.com',
     username: 'streamuser',
@@ -61,7 +61,7 @@ export default function SettingsPage() {
     autoDeleteDownloads: false
   });
 
-  const handleSettingChange = (key: string, value: any) => {
+  const handleSettingChange = (key: string, value: unknown) => {
     setSettings(prev => ({ ...prev, [key]: value }));
   };
 
@@ -78,7 +78,7 @@ export default function SettingsPage() {
             </label>
             <input
               type="email"
-              value={settings.email}
+              value={settings.email as string}
               onChange={(e) => handleSettingChange('email', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
@@ -89,7 +89,7 @@ export default function SettingsPage() {
             </label>
             <input
               type="text"
-              value={settings.username}
+              value={settings.username as string}
               onChange={(e) => handleSettingChange('username', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
@@ -100,7 +100,7 @@ export default function SettingsPage() {
                 Language
               </label>
               <select
-                value={settings.language}
+                value={settings.language as string}
                 onChange={(e) => handleSettingChange('language', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
@@ -116,7 +116,7 @@ export default function SettingsPage() {
                 Timezone
               </label>
               <select
-                value={settings.timezone}
+                value={settings.timezone as string}
                 onChange={(e) => handleSettingChange('timezone', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
@@ -145,7 +145,7 @@ export default function SettingsPage() {
               <p className="text-sm text-gray-600 dark:text-gray-400">Control who can see your profile</p>
             </div>
             <select
-              value={settings.profileVisibility}
+              value={settings.profileVisibility as string}
               onChange={(e) => handleSettingChange('profileVisibility', e.target.value)}
               className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
@@ -160,7 +160,7 @@ export default function SettingsPage() {
               <p className="text-sm text-gray-600 dark:text-gray-400">Save your viewing history</p>
             </div>
             <button
-              onClick={() => handleSettingChange('watchHistory', !settings.watchHistory)}
+              onClick={() => handleSettingChange('watchHistory', !(settings.watchHistory as boolean))}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                 settings.watchHistory ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
               }`}
@@ -178,7 +178,7 @@ export default function SettingsPage() {
               <p className="text-sm text-gray-600 dark:text-gray-400">Use your data for recommendations</p>
             </div>
             <button
-              onClick={() => handleSettingChange('recommendations', !settings.recommendations)}
+              onClick={() => handleSettingChange('recommendations', !(settings.recommendations as boolean))}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                 settings.recommendations ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
               }`}
@@ -196,7 +196,7 @@ export default function SettingsPage() {
               <p className="text-sm text-gray-600 dark:text-gray-400">Allow data collection for analytics</p>
             </div>
             <button
-              onClick={() => handleSettingChange('dataCollection', !settings.dataCollection)}
+              onClick={() => handleSettingChange('dataCollection', !(settings.dataCollection as boolean))}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                 settings.dataCollection ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
               }`}
@@ -226,7 +226,7 @@ export default function SettingsPage() {
               <p className="text-sm text-gray-600 dark:text-gray-400">Receive notifications via email</p>
             </div>
             <button
-              onClick={() => handleSettingChange('emailNotifications', !settings.emailNotifications)}
+              onClick={() => handleSettingChange('emailNotifications', !(settings.emailNotifications as boolean))}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                 settings.emailNotifications ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
               }`}
@@ -244,7 +244,7 @@ export default function SettingsPage() {
               <p className="text-sm text-gray-600 dark:text-gray-400">Receive push notifications</p>
             </div>
             <button
-              onClick={() => handleSettingChange('pushNotifications', !settings.pushNotifications)}
+              onClick={() => handleSettingChange('pushNotifications', !(settings.pushNotifications as boolean))}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                 settings.pushNotifications ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
               }`}
@@ -262,7 +262,7 @@ export default function SettingsPage() {
               <p className="text-sm text-gray-600 dark:text-gray-400">Get notified about new releases</p>
             </div>
             <button
-              onClick={() => handleSettingChange('newContentAlerts', !settings.newContentAlerts)}
+              onClick={() => handleSettingChange('newContentAlerts', !(settings.newContentAlerts as boolean))}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                 settings.newContentAlerts ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
               }`}
@@ -280,7 +280,7 @@ export default function SettingsPage() {
               <p className="text-sm text-gray-600 dark:text-gray-400">Receive promotional emails</p>
             </div>
             <button
-              onClick={() => handleSettingChange('marketingEmails', !settings.marketingEmails)}
+              onClick={() => handleSettingChange('marketingEmails', !(settings.marketingEmails as boolean))}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                 settings.marketingEmails ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
               }`}
@@ -310,7 +310,7 @@ export default function SettingsPage() {
               <p className="text-sm text-gray-600 dark:text-gray-400">Automatically play videos</p>
             </div>
             <button
-              onClick={() => handleSettingChange('autoplay', !settings.autoplay)}
+              onClick={() => handleSettingChange('autoplay', !(settings.autoplay as boolean))}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                 settings.autoplay ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
               }`}
@@ -328,7 +328,7 @@ export default function SettingsPage() {
               <p className="text-sm text-gray-600 dark:text-gray-400">Automatically play next episode</p>
             </div>
             <button
-              onClick={() => handleSettingChange('autoplayNext', !settings.autoplayNext)}
+              onClick={() => handleSettingChange('autoplayNext', !(settings.autoplayNext as boolean))}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                 settings.autoplayNext ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
               }`}
@@ -346,7 +346,7 @@ export default function SettingsPage() {
                 Subtitles
               </label>
               <select
-                value={settings.subtitles}
+                value={settings.subtitles as string}
                 onChange={(e) => handleSettingChange('subtitles', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
@@ -360,7 +360,7 @@ export default function SettingsPage() {
                 Audio Language
               </label>
               <select
-                value={settings.audioLanguage}
+                value={settings.audioLanguage as string}
                 onChange={(e) => handleSettingChange('audioLanguage', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
@@ -376,7 +376,7 @@ export default function SettingsPage() {
               Default Playback Speed
             </label>
             <select
-              value={settings.playbackSpeed}
+              value={settings.playbackSpeed as number}
               onChange={(e) => handleSettingChange('playbackSpeed', parseFloat(e.target.value))}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
@@ -405,7 +405,7 @@ export default function SettingsPage() {
               Streaming Quality
             </label>
             <select
-              value={settings.streamingQuality}
+              value={settings.streamingQuality as string}
               onChange={(e) => handleSettingChange('streamingQuality', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
@@ -421,7 +421,7 @@ export default function SettingsPage() {
               Download Quality
             </label>
             <select
-              value={settings.downloadQuality}
+              value={settings.downloadQuality as string}
               onChange={(e) => handleSettingChange('downloadQuality', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
@@ -435,7 +435,7 @@ export default function SettingsPage() {
               Bandwidth Limit
             </label>
             <select
-              value={settings.bandwidthLimit}
+              value={settings.bandwidthLimit as string}
               onChange={(e) => handleSettingChange('bandwidthLimit', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
@@ -451,7 +451,7 @@ export default function SettingsPage() {
               <p className="text-sm text-gray-600 dark:text-gray-400">Use GPU for video decoding</p>
             </div>
             <button
-              onClick={() => handleSettingChange('hardwareAcceleration', !settings.hardwareAcceleration)}
+              onClick={() => handleSettingChange('hardwareAcceleration', !(settings.hardwareAcceleration as boolean))}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                 settings.hardwareAcceleration ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
               }`}
@@ -480,7 +480,7 @@ export default function SettingsPage() {
               Download Location
             </label>
             <select
-              value={settings.downloadLocation}
+              value={settings.downloadLocation as string}
               onChange={(e) => handleSettingChange('downloadLocation', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
@@ -494,7 +494,7 @@ export default function SettingsPage() {
               Download Limit
             </label>
             <select
-              value={settings.downloadLimit}
+              value={settings.downloadLimit as string}
               onChange={(e) => handleSettingChange('downloadLimit', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
@@ -510,7 +510,7 @@ export default function SettingsPage() {
               <p className="text-sm text-gray-600 dark:text-gray-400">Only download when connected to WiFi</p>
             </div>
             <button
-              onClick={() => handleSettingChange('downloadOverWifi', !settings.downloadOverWifi)}
+              onClick={() => handleSettingChange('downloadOverWifi', !(settings.downloadOverWifi as boolean))}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                 settings.downloadOverWifi ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
               }`}
@@ -528,7 +528,7 @@ export default function SettingsPage() {
               <p className="text-sm text-gray-600 dark:text-gray-400">Automatically delete watched downloads</p>
             </div>
             <button
-              onClick={() => handleSettingChange('autoDeleteDownloads', !settings.autoDeleteDownloads)}
+              onClick={() => handleSettingChange('autoDeleteDownloads', !(settings.autoDeleteDownloads as boolean))}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${settings.autoDeleteDownloads ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'}`}
             >
               <span
