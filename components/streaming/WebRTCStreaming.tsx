@@ -143,7 +143,7 @@ export default function WebRTCStreaming() {
       
       return () => clearInterval(interval);
     } catch (error) {
-      // console.error('Error starting stream:', error);
+      // // console.error('Error starting stream:', error);
     }
   };
 

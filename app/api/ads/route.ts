@@ -135,7 +135,7 @@ export async function GET(request: NextRequest) {
       }
     })
   } catch (error) {
-    // console.error('Error fetching ads:', error)
+    // // console.error('Error fetching ads:', error)
     return NextResponse.json(
       { error: 'Failed to fetch ads' },
       { status: 500 }
@@ -175,7 +175,7 @@ export async function POST(request: NextRequest) {
       ad: newAd 
     }, { status: 201 })
   } catch (error) {
-    // console.error('Error creating ad:', error)
+    // // console.error('Error creating ad:', error)
     return NextResponse.json(
       { error: 'Failed to create ad' },
       { status: 500 }

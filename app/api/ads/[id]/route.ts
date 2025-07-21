@@ -58,7 +58,7 @@ export async function GET(
 
     return NextResponse.json({ ad })
   } catch (error) {
-    // console.error('Error fetching ad:', error)
+    // // console.error('Error fetching ad:', error)
     return NextResponse.json(
       { error: 'Failed to fetch ad' },
       { status: 500 }
@@ -95,7 +95,7 @@ export async function PUT(
       ad: updatedAd 
     })
   } catch (error) {
-    // console.error('Error updating ad:', error)
+    // // console.error('Error updating ad:', error)
     return NextResponse.json(
       { error: 'Failed to update ad' },
       { status: 500 }
@@ -123,7 +123,7 @@ export async function DELETE(
       message: 'Ad deleted successfully' 
     })
   } catch (error) {
-    // console.error('Error deleting ad:', error)
+    // // console.error('Error deleting ad:', error)
     return NextResponse.json(
       { error: 'Failed to delete ad' },
       { status: 500 }

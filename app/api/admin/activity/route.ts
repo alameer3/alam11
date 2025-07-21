@@ -158,7 +158,7 @@ export async function GET(request: NextRequest) {
     
     return NextResponse.json(limitedActivities)
   } catch (error) {
-    // console.error('Error fetching activities:', error)
+    // // console.error('Error fetching activities:', error)
     return NextResponse.json(
       { error: 'فشل في جلب النشاطات' },
       { status: 500 }

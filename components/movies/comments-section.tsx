@@ -68,7 +68,7 @@ export function CommentsSection({ movieId }: CommentsSectionProps) {
   const handleSubmitComment = (e: React.FormEvent) => {
     e.preventDefault()
     // TODO: Submit comment to backend
-    // console.log('New comment:', { content: newComment, rating: newRating })
+    // // console.log('New comment:', { content: newComment, rating: newRating })
     setNewComment('')
     setNewRating(5)
   }

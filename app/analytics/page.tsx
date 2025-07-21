@@ -9,7 +9,7 @@ interface Metric {
   value: string;
   change: number;
   changeType: 'increase' | 'decrease';
-  icon: any;
+  icon: React.ComponentType;
   color: string;
 }
 

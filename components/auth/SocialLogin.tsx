@@ -73,7 +73,7 @@ export default function SocialLogin({ callbackUrl = '/', className = '' }: Socia
     try {
       await signIn(provider, { callbackUrl });
     } catch (error) {
-      // console.error('خطأ في تسجيل الدخول الاجتماعي:', error);
+      // // console.error('خطأ في تسجيل الدخول الاجتماعي:', error);
     }
   };
 

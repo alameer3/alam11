@@ -312,7 +312,7 @@ export class ContentManager {
         return true
       }
     } catch (error) {
-      // console.error('خطأ في استعادة النسخة الاحتياطية:', error)
+      // // console.error('خطأ في استعادة النسخة الاحتياطية:', error)
     }
     
     return false
@@ -326,11 +326,11 @@ export class ContentManager {
   private async saveToDatabase(collection: string, data: any): Promise<void> {
     // هنا سيتم الحفظ في قاعدة البيانات الفعلية
     // يمكن استخدام Prisma أو MongoDB أو أي قاعدة بيانات أخرى
-    // console.log(`حفظ في ${collection}:`, data.id)
+    // // console.log(`حفظ في ${collection}:`, data.id)
   }
   
   private async deleteFromDatabase(collection: string, id: string): Promise<void> {
-    // console.log(`حذف من ${collection}:`, id)
+    // // console.log(`حذف من ${collection}:`, id)
   }
   
   private async saveAllToDatabase(): Promise<void> {
@@ -346,7 +346,7 @@ export class ContentManager {
   
   private async saveBackupFile(filename: string, content: string): Promise<void> {
     // حفظ ملف النسخة الاحتياطية
-    // console.log(`حفظ نسخة احتياطية: ${filename}`)
+    // // console.log(`حفظ نسخة احتياطية: ${filename}`)
   }
 }
 
@@ -414,5 +414,5 @@ export const initializeSampleData = async () => {
     releaseDate: "2022-08-21"
   })
   
-  // console.log('تم تحميل البيانات التجريبية')
+  // // console.log('تم تحميل البيانات التجريبية')
 }

@@ -173,7 +173,7 @@ export default function ContentManagement() {
         setContent(mockContent)
         setFilteredContent(mockContent)
       } catch (error) {
-        // console.error('Error loading content:', error)
+        // // console.error('Error loading content:', error)
       } finally {
         setLoading(false)
       }
@@ -351,7 +351,7 @@ export default function ContentManagement() {
             </div>
             <select
               value={selectedType}
-              onChange={(e) => setSelectedType(e.target.value as any)}
+              onChange={(e) => setSelectedType(e.target.value as 'all' | 'movie' | 'series' | 'episode')}
               className="border border-gray-300 rounded-md px-3 py-2"
             >
               <option value="all">جميع الأنواع</option>
@@ -360,7 +360,7 @@ export default function ContentManagement() {
             </select>
             <select
               value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value as any)}
+              onChange={(e) => setSelectedStatus(e.target.value as 'all' | 'published' | 'draft' | 'archived')}
               className="border border-gray-300 rounded-md px-3 py-2"
             >
               <option value="all">جميع الحالات</option>
@@ -370,7 +370,7 @@ export default function ContentManagement() {
             </select>
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
+              onChange={(e) => setSortBy(e.target.value as 'created' | 'updated' | 'title' | 'rating')}
               className="border border-gray-300 rounded-md px-3 py-2"
             >
               <option value="date">تاريخ التحديث</option>

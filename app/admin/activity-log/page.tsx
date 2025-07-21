@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -19,7 +19,7 @@ import {
   CheckCircleIcon,
   XMarkIcon,
   MagnifyingGlassIcon,
-  FunnelIcon,
+
   ArrowPathIcon,
   CloudArrowDownIcon
 } from '@heroicons/react/24/outline'
@@ -35,7 +35,7 @@ interface ActivityLog {
   resourceId: string
   resourceName: string
   description: string
-  details: any
+  details: Record<string, unknown>
   ipAddress: string
   userAgent: string
   status: 'success' | 'failed' | 'warning'
@@ -264,7 +264,7 @@ export default function ActivityLogPage() {
       setActivities(mockActivities)
       setFilteredActivities(mockActivities)
     } catch (error) {
-      // console.error('خطأ في جلب سجل الأنشطة:', error)
+      // // console.error('خطأ في جلب سجل الأنشطة:', error)
     } finally {
       setLoading(false)
     }

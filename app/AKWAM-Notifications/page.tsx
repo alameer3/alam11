@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Bell, Settings, Check, X, Eye, EyeOff, Star, Heart, Download, Share2, MessageSquare, UserPlus, Video, AlertCircle, Info, Clock, Trash2, Filter, Search, MoreVertical } from 'lucide-react';
+import { Bell, Settings, Check, Heart, Download, MessageSquare, UserPlus, Video, Info } from 'lucide-react';
 
 interface Notification {
   id: string;
@@ -12,16 +12,11 @@ interface Notification {
   isRead: boolean;
   isImportant: boolean;
   actionUrl?: string;
-  icon: any;
+  icon: React.ComponentType;
   color: string;
 }
 
-export default function NotificationsPage() {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [activeTab, setActiveTab] = useState('all');
-
-  const mockNotifications: Notification[] = [
+const mockNotifications: Notification[] = [
     {
       id: '1',
       type: 'favorite',
@@ -112,6 +107,11 @@ export default function NotificationsPage() {
         return mockNotifications;
     }
   };
+
+export default function NotificationsPage() {
+  const [notifications, setNotifications] = useState<Notification[]>(mockNotifications);
+  const [unreadCount, setUnreadCount] = useState(mockNotifications.filter(n => !n.isRead).length);
+  const [activeTab, setActiveTab] = useState('all');
 
   const markAsRead = (notificationId: string) => {
     setNotifications(prev => 

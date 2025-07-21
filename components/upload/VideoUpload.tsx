@@ -156,7 +156,7 @@ export default function VideoUpload() {
   }, [simulateUpload]);
 
   const handleVideoAction = (videoId: string, action: 'edit' | 'delete' | 'publish' | 'preview') => {
-    // console.log(`Video ${videoId} action: ${action}`);
+    // // console.log(`Video ${videoId} action: ${action}`);
   };
 
   const formatFileSize = (bytes: number) => {

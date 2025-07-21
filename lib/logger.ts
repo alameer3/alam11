@@ -111,17 +111,17 @@ class Logger {
 
     switch (entry.level) {
       case LogLevel.DEBUG:
-        // console.debug(logMessage);
+        // // console.debug(logMessage);
         break;
       case LogLevel.INFO:
-        // console.info(logMessage);
+        // // console.info(logMessage);
         break;
       case LogLevel.WARN:
-        // console.warn(logMessage);
+        // // console.warn(logMessage);
         break;
       case LogLevel.ERROR:
       case LogLevel.FATAL:
-        // console.error(logMessage);
+        // // console.error(logMessage);
         break;
     }
   }
@@ -144,7 +144,7 @@ class Logger {
 
       this.retryCount = 0; // إعادة تعيين عداد المحاولات
     } catch (error) {
-      // console.error('Failed to send logs to remote:', error);
+      // // console.error('Failed to send logs to remote:', error);
       
       if (this.retryCount < this.config.maxRetries) {
         this.retryCount++;

@@ -189,22 +189,22 @@ export default function RecommendationSystem() {
 
   const handleLike = (itemId: string) => {
     // Handle like action
-    // console.log(`Liked item: ${itemId}`);
+    // // console.log(`Liked item: ${itemId}`);
   };
 
   const handleDislike = (itemId: string) => {
     // Handle dislike action
-    // console.log(`Disliked item: ${itemId}`);
+    // // console.log(`Disliked item: ${itemId}`);
   };
 
   const handleWatch = (itemId: string) => {
     // Handle watch action
-    // console.log(`Watching item: ${itemId}`);
+    // // console.log(`Watching item: ${itemId}`);
   };
 
   const handleBookmark = (itemId: string) => {
     // Handle bookmark action
-    // console.log(`Bookmarked item: ${itemId}`);
+    // // console.log(`Bookmarked item: ${itemId}`);
   };
 
   const getFilteredRecommendations = () => {

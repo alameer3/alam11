@@ -181,7 +181,7 @@ export default function AudioStreaming() {
 
   const skipTrack = (direction: 'next' | 'prev') => {
     // Simulate track switching
-    // console.log(`Skipping ${direction} track`);
+    // // console.log(`Skipping ${direction} track`);
   };
 
   const toggleShuffle = () => {

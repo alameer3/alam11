@@ -101,10 +101,10 @@ export default function SiteSettingsPage() {
     }
   }
 
-  const updateFormData = (path: string, value: any) => {
+  const updateFormData = (path: string, value: string | number | boolean) => {
     const keys = path.split('.')
     const newData = { ...formData }
-    let current: any = newData
+    let current: Record<string, unknown> = newData
     
     for (let i = 0; i < keys.length - 1; i++) {
       current = current[keys[i]]

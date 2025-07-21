@@ -181,7 +181,7 @@ export default function AdvancedCommentSystem({
       await new Promise(resolve => setTimeout(resolve, 500));
       setComments(mockComments);
     } catch (error) {
-      // console.error('Error loading comments:', error);
+      // // console.error('Error loading comments:', error);
     }
   }, []);
 
@@ -227,7 +227,7 @@ export default function AdvancedCommentSystem({
       setNewRating(0);
       
     } catch (error) {
-      // console.error('Error submitting comment:', error);
+      // // console.error('Error submitting comment:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -246,7 +246,7 @@ export default function AdvancedCommentSystem({
       alert(`تم إرسال تقييمك: ${newRating}/5 نجوم`);
       
     } catch (error) {
-      // console.error('Error submitting rating:', error);
+      // // console.error('Error submitting rating:', error);
     }
   }, [newRating, onRatingSubmit]);
 

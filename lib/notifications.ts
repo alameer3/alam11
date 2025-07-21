@@ -194,8 +194,8 @@ export class NotificationService {
 
   // إرسال تنبيه فوري
   private async sendImmediateAlert(notification: Notification) {
-    // console.error(`🚨 تنبيه عاجل: ${notification.title}`)
-    // console.error(`📋 الرسالة: ${notification.message}`)
+    // // console.error(`🚨 تنبيه عاجل: ${notification.title}`)
+    // // console.error(`📋 الرسالة: ${notification.message}`)
     
     // يمكن إضافة إرسال إيميل أو رسالة SMS هنا
     // await this.sendEmail(notification)
@@ -220,7 +220,7 @@ export class NotificationService {
       const prisma = new PrismaClient()
       
       // TODO: إضافة notification إلى Prisma schema
-      // console.log('Notification Saved:', {
+      // // console.log('Notification Saved:', {
       //   title: notification.title,
       //   type: notification.type,
       //   priority: notification.priority
@@ -228,7 +228,7 @@ export class NotificationService {
       
       await prisma.$disconnect()
     } catch (error) {
-      // console.error('فشل في حفظ الإشعار:', error)
+      // // console.error('فشل في حفظ الإشعار:', error)
     }
   }
 
@@ -239,11 +239,11 @@ export class NotificationService {
       const prisma = new PrismaClient()
       
       // TODO: تحديث notification في Prisma schema
-      // console.log('Notification Updated:', id, data)
+      // // console.log('Notification Updated:', id, data)
       
       await prisma.$disconnect()
     } catch (error) {
-      // console.error('فشل في تحديث الإشعار:', error)
+      // // console.error('فشل في تحديث الإشعار:', error)
     }
   }
 
@@ -254,11 +254,11 @@ export class NotificationService {
       const prisma = new PrismaClient()
       
       // TODO: تحديث جميع الnotifications في Prisma schema
-      // console.log('All Notifications Updated:', data)
+      // // console.log('All Notifications Updated:', data)
       
       await prisma.$disconnect()
     } catch (error) {
-      // console.error('فشل في تحديث الإشعارات:', error)
+      // // console.error('فشل في تحديث الإشعارات:', error)
     }
   }
 
@@ -269,11 +269,11 @@ export class NotificationService {
       const prisma = new PrismaClient()
       
       // TODO: حذف notification من Prisma schema
-      // console.log('Notification Deleted:', id)
+      // // console.log('Notification Deleted:', id)
       
       await prisma.$disconnect()
     } catch (error) {
-      // console.error('فشل في حذف الإشعار:', error)
+      // // console.error('فشل في حذف الإشعار:', error)
     }
   }
 
@@ -284,13 +284,13 @@ export class NotificationService {
       const prisma = new PrismaClient()
       
       // TODO: تحميل notifications من Prisma schema
-      // console.log('Loading notifications from database...')
+      // // console.log('Loading notifications from database...')
       // في الوقت الحالي، الإشعارات محفوظة في الذاكرة فقط
       
       this.notifySubscribers()
       await prisma.$disconnect()
     } catch (error) {
-      // console.error('فشل في تحميل الإشعارات:', error)
+      // // console.error('فشل في تحميل الإشعارات:', error)
     }
   }
 }

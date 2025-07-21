@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
       message: 'النظام يعمل بشكل طبيعي'
     })
   } catch (error) {
-    // console.error('خطأ في فحص الحالة:', error)
+    // // console.error('خطأ في فحص الحالة:', error)
     
     return NextResponse.json({
       success: false,
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     const { message, severity = 'medium' } = await request.json()
 
     // تشغيل فحص فوري - TODO: تفعيل المراقبة
-    // console.log('Manual check requested:', { message, severity })
+    // // console.log('Manual check requested:', { message, severity })
 
     return NextResponse.json({
       status: 'success',

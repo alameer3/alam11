@@ -10,7 +10,7 @@ export async function GET() {
     
     return NextResponse.json(sections)
   } catch (error) {
-    // console.error('Error fetching sections:', error)
+    // // console.error('Error fetching sections:', error)
     return NextResponse.json(
       { error: 'Failed to fetch sections' },
       { status: 500 }

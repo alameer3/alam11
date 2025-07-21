@@ -32,7 +32,7 @@ export async function GET(
     
     return NextResponse.json(userWithoutPassword)
   } catch (error) {
-    // console.error('Error fetching user:', error)
+    // // console.error('Error fetching user:', error)
     return NextResponse.json(
       { error: 'فشل في جلب المستخدم' },
       { status: 500 }
@@ -95,7 +95,7 @@ export async function PUT(
     
     return NextResponse.json(userWithoutPassword)
   } catch (error) {
-    // console.error('Error updating user:', error)
+    // // console.error('Error updating user:', error)
     return NextResponse.json(
       { error: 'فشل في تحديث المستخدم' },
       { status: 500 }
@@ -165,7 +165,7 @@ export async function PATCH(
     
     return NextResponse.json(userWithoutPassword)
   } catch (error) {
-    // console.error('Error updating user:', error)
+    // // console.error('Error updating user:', error)
     return NextResponse.json(
       { error: 'فشل في تحديث المستخدم' },
       { status: 500 }
@@ -220,7 +220,7 @@ export async function DELETE(
       id: userId 
     })
   } catch (error) {
-    // console.error('Error deleting user:', error)
+    // // console.error('Error deleting user:', error)
     return NextResponse.json(
       { error: 'فشل في حذف المستخدم' },
       { status: 500 }

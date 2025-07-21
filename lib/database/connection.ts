@@ -54,12 +54,12 @@ class DatabaseConnection {
       this.isInitialized = true
       
       if (this.config.ADVANCED.verboseLogging) {
-        // console.log('✅ تم الاتصال بقاعدة البيانات بنجاح')
+        // // console.log('✅ تم الاتصال بقاعدة البيانات بنجاح')
       }
 
       return this.db
     } catch (error) {
-      // console.error('❌ خطأ في الاتصال بقاعدة البيانات:', error)
+      // // console.error('❌ خطأ في الاتصال بقاعدة البيانات:', error)
       throw error
     }
   }
@@ -77,7 +77,7 @@ class DatabaseConnection {
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true })
         if (this.config.ADVANCED.verboseLogging) {
-          // console.log(`📁 تم إنشاء المجلد: ${dir}`)
+          // // console.log(`📁 تم إنشاء المجلد: ${dir}`)
         }
       }
     }
@@ -111,10 +111,10 @@ class DatabaseConnection {
       this.db.pragma('mmap_size = 268435456') // 256MB
 
       if (this.config.ADVANCED.verboseLogging) {
-        // console.log('⚡ تم تطبيق إعدادات الأداء')
+        // // console.log('⚡ تم تطبيق إعدادات الأداء')
       }
     } catch (error) {
-      // console.error('❌ خطأ في تطبيق إعدادات الأداء:', error)
+      // // console.error('❌ خطأ في تطبيق إعدادات الأداء:', error)
     }
   }
 
@@ -130,13 +130,13 @@ class DatabaseConnection {
         this.db.exec(schema)
         
         if (this.config.ADVANCED.verboseLogging) {
-          // console.log('📊 تم إنشاء الجداول من ملف Schema')
+          // // console.log('📊 تم إنشاء الجداول من ملف Schema')
         }
       } else {
-        // console.warn('⚠️ ملف Schema غير موجود:', SCHEMA_PATH)
+        // // console.warn('⚠️ ملف Schema غير موجود:', SCHEMA_PATH)
       }
     } catch (error) {
-      // console.error('❌ خطأ في إنشاء الجداول:', error)
+      // // console.error('❌ خطأ في إنشاء الجداول:', error)
       throw error
     }
   }
@@ -166,7 +166,7 @@ class DatabaseConnection {
           this.db.exec(seedData)
           
           if (this.config.ADVANCED.verboseLogging) {
-            // console.log('🌱 تم إضافة البيانات التجريبية')
+            // // console.log('🌱 تم إضافة البيانات التجريبية')
           }
         } else {
           // إضافة بيانات أساسية إذا لم يوجد ملف seed
@@ -174,7 +174,7 @@ class DatabaseConnection {
         }
       }
     } catch (error) {
-      // console.error('❌ خطأ في إضافة البيانات التجريبية:', error)
+      // // console.error('❌ خطأ في إضافة البيانات التجريبية:', error)
     }
   }
 
@@ -191,10 +191,10 @@ class DatabaseConnection {
       insertSiteSettings.run('𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗')
 
       if (this.config.ADVANCED.verboseLogging) {
-        // console.log('🔧 تم إضافة الإعدادات الأساسية')
+        // // console.log('🔧 تم إضافة الإعدادات الأساسية')
       }
     } catch (error) {
-      // console.error('❌ خطأ في إضافة البيانات الأساسية:', error)
+      // // console.error('❌ خطأ في إضافة البيانات الأساسية:', error)
     }
   }
 
@@ -233,12 +233,12 @@ class DatabaseConnection {
       // تتبع الاستعلامات البطيئة
       const duration = new Date("2025-07-21T14:00:00Z").getTime() - startTime
       if (duration > this.config.ADVANCED.slowQueryThreshold) {
-        // console.warn(`🐌 استعلام بطيء (${duration}ms):`, sql.substring(0, 100))
+        // // console.warn(`🐌 استعلام بطيء (${duration}ms):`, sql.substring(0, 100))
       }
 
       return result
     } catch (error) {
-      // console.error('❌ خطأ في تنفيذ الاستعلام:', error)
+      // // console.error('❌ خطأ في تنفيذ الاستعلام:', error)
       throw error
     }
   }
@@ -270,7 +270,7 @@ class DatabaseConnection {
 
       return result
     } catch (error) {
-      // console.error('❌ خطأ في تنفيذ الاستعلام:', error)
+      // // console.error('❌ خطأ في تنفيذ الاستعلام:', error)
       throw error
     }
   }
@@ -308,12 +308,12 @@ class DatabaseConnection {
       await this.cleanOldBackups()
 
       if (this.config.ADVANCED.verboseLogging) {
-        // console.log('💾 تم إنشاء نسخة احتياطية:', backupPath)
+        // // console.log('💾 تم إنشاء نسخة احتياطية:', backupPath)
       }
 
       return backupPath
     } catch (error) {
-      // console.error('❌ خطأ في إنشاء النسخة الاحتياطية:', error)
+      // // console.error('❌ خطأ في إنشاء النسخة الاحتياطية:', error)
       throw error
     }
   }
@@ -340,11 +340,11 @@ class DatabaseConnection {
       for (const file of filesToDelete) {
         fs.unlinkSync(file.path)
         if (this.config.ADVANCED.verboseLogging) {
-          // console.log('🗑️ تم حذف نسخة احتياطية قديمة:', file.name)
+          // // console.log('🗑️ تم حذف نسخة احتياطية قديمة:', file.name)
         }
       }
     } catch (error) {
-      // console.error('❌ خطأ في حذف النسخ الاحتياطية القديمة:', error)
+      // // console.error('❌ خطأ في حذف النسخ الاحتياطية القديمة:', error)
     }
   }
 
@@ -359,7 +359,7 @@ class DatabaseConnection {
       this.queryCache.clear()
       
       if (this.config.ADVANCED.verboseLogging) {
-        // console.log('🔌 تم إغلاق اتصال قاعدة البيانات')
+        // // console.log('🔌 تم إغلاق اتصال قاعدة البيانات')
       }
     }
   }
@@ -389,7 +389,7 @@ class DatabaseConnection {
         }
       }
     } catch (error) {
-      // console.error('❌ خطأ في الحصول على معلومات قاعدة البيانات:', error)
+      // // console.error('❌ خطأ في الحصول على معلومات قاعدة البيانات:', error)
       return { connected: false, error: error instanceof Error ? error.message : 'خطأ غير معروف' }
     }
   }

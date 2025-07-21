@@ -167,17 +167,17 @@ export default function MusicPage() {
 
   const toggleLike = (id: string) => {
     // Handle like toggle
-    // console.log('Toggle like for:', id);
+    // // console.log('Toggle like for:', id);
   };
 
   const toggleDownload = (id: string) => {
     // Handle download toggle
-    // console.log('Toggle download for:', id);
+    // // console.log('Toggle download for:', id);
   };
 
   const shareItem = (id: string) => {
     // Handle share
-    // console.log('Share item:', id);
+    // // console.log('Share item:', id);
   };
 
   const getTypeIcon = (type: string) => {

@@ -171,7 +171,7 @@ export async function GET(request: NextRequest) {
       }
     })
   } catch (error) {
-    // console.error('Error fetching servers:', error)
+    // // console.error('Error fetching servers:', error)
     return NextResponse.json(
       { error: 'Failed to fetch servers' },
       { status: 500 }
@@ -213,7 +213,7 @@ export async function POST(request: NextRequest) {
       server: newServer 
     }, { status: 201 })
   } catch (error) {
-    // console.error('Error creating server:', error)
+    // // console.error('Error creating server:', error)
     return NextResponse.json(
       { error: 'Failed to create server' },
       { status: 500 }
