@@ -69,17 +69,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl">
-
+      <body>
         {/* Site overlay for menu */}
         <span className="site-overlay" />
-
         {/* Global header and menu */}
         <MainHeader />
         <MainMenu />
-
         {/* Page content */}
         {children}
-
       </body>
     </html>
   )
