@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import { useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'

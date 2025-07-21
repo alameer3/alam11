@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { useState } from 'react';
 import { CreditCard, Check, X, Calendar, Download, Users, Star, Crown, Zap, Shield, Clock, AlertCircle } from 'lucide-react';
 
