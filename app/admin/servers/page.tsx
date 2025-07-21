@@ -82,7 +82,7 @@ export default function ServersManagementPage() {
         {
           id: 1,
           name: 'خادم البث الرئيسي',
-          hostname: 'stream-main.akwam.com',
+          hostname: 'stream-main.𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗.com',
           ip_address: '192.168.1.10',
           port: 8080,
           type: 'streaming',
@@ -102,7 +102,7 @@ export default function ServersManagementPage() {
         {
           id: 2,
           name: 'خادم التخزين الاحتياطي',
-          hostname: 'storage-backup.akwam.com',
+          hostname: 'storage-backup.𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗.com',
           ip_address: '192.168.1.20',
           port: 21,
           type: 'storage',
@@ -122,7 +122,7 @@ export default function ServersManagementPage() {
         {
           id: 3,
           name: 'خادم CDN الأوروبي',
-          hostname: 'cdn-eu.akwam.com',
+          hostname: 'cdn-eu.𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗.com',
           ip_address: '185.123.45.67',
           port: 443,
           type: 'cdn',
@@ -142,7 +142,7 @@ export default function ServersManagementPage() {
         {
           id: 4,
           name: 'قاعدة البيانات الرئيسية',
-          hostname: 'db-primary.akwam.com',
+          hostname: 'db-primary.𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗.com',
           ip_address: '192.168.1.30',
           port: 3306,
           type: 'database',
@@ -162,7 +162,7 @@ export default function ServersManagementPage() {
         {
           id: 5,
           name: 'خادم التخزين المؤقت',
-          hostname: 'cache-redis.akwam.com',
+          hostname: 'cache-redis.𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗.com',
           ip_address: '192.168.1.40',
           port: 6379,
           type: 'cache',
@@ -646,7 +646,7 @@ export default function ServersManagementPage() {
                       name="hostname"
                       value={formData.hostname}
                       onChange={handleInputChange}
-                      placeholder="stream.akwam.com"
+                      placeholder="stream.𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗.com"
                       className="bg-gray-700 border-gray-600 text-white"
                       required
                     />

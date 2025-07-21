@@ -1,10 +1,10 @@
 'use client'
 
-import { MovieDetailsHeader } from '@/components/akwam/MovieDetailsHeader'
-import { WatchServers } from '@/components/akwam/WatchServers'
-import { DownloadLinks } from '@/components/akwam/DownloadLinks'
-import { CastSlider } from '@/components/akwam/CastSlider'
-import { GallerySlider } from '@/components/akwam/GallerySlider'
+import { MovieDetailsHeader } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/MovieDetailsHeader'
+import { WatchServers } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/WatchServers'
+import { DownloadLinks } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/DownloadLinks'
+import { CastSlider } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/CastSlider'
+import { GallerySlider } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/GallerySlider'
 import Head from 'next/head'
 
 // temporary dataset
@@ -28,7 +28,7 @@ export default function MoviePage({ params }: { params: { slug: string } }) {
   return (
     <div className="bg-home min-h-screen">
       <Head>
-        <title>{movie.title} | اكوام</title>
+        <title>{movie.title} | 𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗</title>
         <meta property="og:title" content={movie.title} />
         <meta property="og:image" content={movie.poster} />
         <meta property="og:description" content={movie.description} />

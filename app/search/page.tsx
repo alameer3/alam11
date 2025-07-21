@@ -3,7 +3,7 @@
 import { useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { EntryMiniCard } from '@/components/akwam/EntryMiniCard'
+import { EntryMiniCard } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/EntryMiniCard'
 import { Film, Monitor, Tv, Music, Mic, BookOpen, Video } from 'lucide-react'
 
 interface SearchResult {

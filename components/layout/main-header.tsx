@@ -49,7 +49,7 @@ export function MainHeader() {
                 <img
                   src="/logo.svg"
                   className="img-fluid"
-                  alt="اكوام"
+                  alt="𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗"
                   style={{ height: '40px' }}
                 />
               </Link>

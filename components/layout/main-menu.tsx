@@ -34,7 +34,7 @@ export function MainMenu() {
       title: 'الموقع الرئيسي'
     },
     {
-      href: 'https://www.facebook.com/akwamnet',
+      href: 'https://www.facebook.com/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗net',
       icon: '📘',
       title: 'فيسبوك'
     },
@@ -49,12 +49,12 @@ export function MainMenu() {
       title: 'التطبيق'
     },
     {
-      href: 'https://www.youtube.com/c/AKWAMnetwork',
+      href: 'https://www.youtube.com/c/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗network',
       icon: '📺',
       title: 'يوتيوب'
     },
     {
-      href: '/AKWAM-Notifications',
+      href: '/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗-Notifications',
       icon: '🔔',
       title: 'الإشعارات'
     },

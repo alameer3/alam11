@@ -288,7 +288,7 @@ export class ContentManager {
     }
     
     const backupString = JSON.stringify(backup, null, 2)
-    const filename = `akwam-backup-${Date.now()}.json`
+    const filename = `𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗-backup-${Date.now()}.json`
     
     // حفظ النسخة الاحتياطية
     await this.saveBackupFile(filename, backupString)

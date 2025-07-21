@@ -470,7 +470,7 @@ export default function SupportSystem() {
                     </div>
                     <div>
                       <h4 className="font-medium text-gray-900 dark:text-white">البريد الإلكتروني</h4>
-                      <p className="text-gray-600 dark:text-gray-400">support@akwam.com</p>
+                      <p className="text-gray-600 dark:text-gray-400">support@𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗.com</p>
                     </div>
                   </div>
                   

@@ -1,11 +1,11 @@
 'use client'
 
-import { SeriesDetailsHeader } from '@/components/akwam/SeriesDetailsHeader'
-import { SeasonsTabs } from '@/components/akwam/SeasonsTabs'
-import { WatchServers } from '@/components/akwam/WatchServers'
-import { DownloadLinks } from '@/components/akwam/DownloadLinks'
-import { CastSlider } from '@/components/akwam/CastSlider'
-import { GallerySlider } from '@/components/akwam/GallerySlider'
+import { SeriesDetailsHeader } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/SeriesDetailsHeader'
+import { SeasonsTabs } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/SeasonsTabs'
+import { WatchServers } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/WatchServers'
+import { DownloadLinks } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/DownloadLinks'
+import { CastSlider } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/CastSlider'
+import { GallerySlider } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/GallerySlider'
 import Head from 'next/head'
 
 // dummy data
@@ -46,7 +46,7 @@ export default function SeriesPage({ params }: { params: { slug: string } }) {
   return (
     <div className="bg-home min-h-screen">
       <Head>
-        <title>{series.title} | اكوام</title>
+        <title>{series.title} | 𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗</title>
         <meta property="og:title" content={series.title} />
         <meta property="og:image" content={series.poster} />
         <meta property="og:description" content={series.description} />

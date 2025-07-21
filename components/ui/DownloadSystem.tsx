@@ -64,7 +64,7 @@ export default function DownloadSystem() {
   const [downloadSettings, setDownloadSettings] = useState({
     maxConcurrent: 3,
     defaultQuality: '720p' as DownloadItem['quality'],
-    downloadPath: '/Downloads/AKWAM',
+    downloadPath: '/Downloads/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗',
     autoDownload: false
   });
 

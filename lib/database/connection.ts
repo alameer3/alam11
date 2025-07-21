@@ -190,7 +190,7 @@ class DatabaseConnection {
       const insertSiteSettings = this.db.prepare(`
         INSERT OR IGNORE INTO site_settings (site_name) VALUES (?)
       `)
-      insertSiteSettings.run('اكوام')
+      insertSiteSettings.run('𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗')
 
       if (this.config.ADVANCED.verboseLogging) {
         console.log('🔧 تم إضافة الإعدادات الأساسية')

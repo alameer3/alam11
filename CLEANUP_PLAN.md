@@ -6,37 +6,37 @@
 
 #### 1. ملفات HTML غير مستخدمة (31 ملف)
 ```
-akwam_watch_page.html
-akwam_mix_main.html
-akwam_movie_detail.html
-akwam_recent_complete.html
-akwam_series_2024.html
-akwam_movies_2025.html
-akwam_mix_2025.html
-akwam_series.html
-akwam_search_results.html
-akwam_shows_main.html
-akwam_movies.html
-akwam_mix.html
-akwam_series_main.html
-akwam_series_watch.html
-akwam_movies_main.html
-akwam_mix_section.html
-akwam_shows.html
-akwam_shows_section.html
-akwam_episode_correct.html
-akwam_episode_watch.html
-akwam_anime_episode.html
-akwam_arabic_series.html
-akwam_contact_page.html
-akwam_homepage.html
-akwam_login_page.html
-akwam_main_complete.html
-akwam_ramadan_movies.html
-akwam_recent.html
-akwam_series_2025.html
-akwam_series_detailed.html
-akwam_shows_2025.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_watch_page.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_mix_main.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_movie_detail.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_recent_complete.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_series_2024.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_movies_2025.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_mix_2025.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_series.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_search_results.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_shows_main.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_movies.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_mix.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_series_main.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_series_watch.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_movies_main.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_mix_section.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_shows.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_shows_section.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_episode_correct.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_episode_watch.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_anime_episode.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_arabic_series.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_contact_page.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_homepage.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_login_page.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_main_complete.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_ramadan_movies.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_recent.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_series_2025.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_series_detailed.html
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_shows_2025.html
 ```
 
 #### 2. مجلدات مستخرجة غير مستخدمة
@@ -52,8 +52,8 @@ ak_sv_site.zip
 
 #### 4. ملفات MD مكررة (11 ملف)
 ```
-AKWAM_ADMIN_SYSTEM.md
-AKWAM_COMPLETE_GUIDE.md
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_ADMIN_SYSTEM.md
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_COMPLETE_GUIDE.md
 COMPLETE_CUSTOMIZATION_GUIDE.md
 COMPLETE_PROJECT_SUMMARY.md
 DATABASE_STATUS_REPORT.md
@@ -154,7 +154,7 @@ rm ak_sv_site.zip
 ### 4. ملفات MD المكررة
 ```bash
 # الاحتفاظ بـ README.md فقط وحذف الباقي
-rm AKWAM_*.md
+rm 𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_*.md
 rm COMPLETE_*.md
 rm DATABASE_*.md
 rm FINAL_*.md
@@ -172,7 +172,7 @@ rm tailwind.config.js
 ## 📁 هيكل المشروع النهائي المقترح
 
 ```
-akwam-clone/
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗-clone/
 ├── 📁 app/                    # صفحات Next.js
 │   ├── 📁 admin/             # لوحة الإدارة
 │   ├── 📁 auth/              # المصادقة
@@ -237,7 +237,7 @@ rm -rf extracted_files/
 rm ak_sv_site.zip
 
 # 4. حذف ملفات MD المكررة
-rm AKWAM_*.md
+rm 𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_*.md
 rm COMPLETE_*.md
 rm DATABASE_*.md
 rm FINAL_*.md

@@ -128,7 +128,7 @@ export default function SignInPage() {
               <div className="text-center text-sm text-gray-400">
                 حساب الإدارة التجريبي:
                 <br />
-                <span className="text-blue-400">admin@akwam.com</span>
+                <span className="text-blue-400">admin@𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗.com</span>
                 <br />
                 <span className="text-blue-400">admin123456</span>
               </div>

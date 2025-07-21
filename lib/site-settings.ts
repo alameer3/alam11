@@ -3,7 +3,7 @@ import { z } from 'zod'
 // نماذج الإعدادات
 export const SiteConfigSchema = z.object({
   // المعلومات الأساسية
-  siteName: z.string().default('اكوام'),
+  siteName: z.string().default('𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗'),
   siteDescription: z.string().default('شمس المواقع، الموقع العربي الاول لتحميل و مشاهدة الافلام'),
   siteKeywords: z.string().default('أفلام,مسلسلات,حلقات,مصارعة,برامج,العاب'),
   siteUrl: z.string().default('https://ak.sv'),
@@ -11,7 +11,7 @@ export const SiteConfigSchema = z.object({
   // الشعار والهوية
   logoUrl: z.string().default('/images/logo-white.svg'),
   faviconUrl: z.string().default('/favicon.ico'),
-  logoText: z.string().default('اكوام'),
+  logoText: z.string().default('𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗'),
   
   // الألوان
   primaryColor: z.string().default('#26baee'),
@@ -64,9 +64,9 @@ export const SiteConfigSchema = z.object({
     order: z.number().default(0)
   })).default([
     { id: 'home', name: 'الموقع الرئيسي', icon: '🏠', url: 'https://akw.to', enabled: true, order: 1 },
-    { id: 'facebook', name: 'فيسبوك', icon: '📘', url: 'https://www.facebook.com/akwamnet', enabled: true, order: 2 },
-    { id: 'youtube', name: 'يوتيوب', icon: '📺', url: 'https://www.youtube.com/c/AKWAMnetwork', enabled: true, order: 3 },
-    { id: 'telegram', name: 'تيليجرام', icon: '📱', url: 'https://t.me/akwam', enabled: true, order: 4 }
+    { id: 'facebook', name: 'فيسبوك', icon: '📘', url: 'https://www.facebook.com/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗net', enabled: true, order: 2 },
+    { id: 'youtube', name: 'يوتيوب', icon: '📺', url: 'https://www.youtube.com/c/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗network', enabled: true, order: 3 },
+    { id: 'telegram', name: 'تيليجرام', icon: '📱', url: 'https://t.me/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗', enabled: true, order: 4 }
   ]),
   
   // روابط Footer
@@ -77,7 +77,7 @@ export const SiteConfigSchema = z.object({
     enabled: z.boolean().default(true),
     order: z.number().default(0)
   })).default([
-    { id: 'home', name: 'اكوام', url: '/', enabled: true, order: 1 },
+    { id: 'home', name: '𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗', url: '/', enabled: true, order: 1 },
     { id: 'old', name: 'الموقع القديم', url: '/old', enabled: true, order: 2 },
     { id: 'dmca', name: 'DMCA', url: '/dmca', enabled: true, order: 3 },
     { id: 'contact', name: 'اتصل بنا', url: '/contactus', enabled: true, order: 4 }
@@ -141,7 +141,7 @@ export const SiteConfigSchema = z.object({
   
   // نصوص مخصصة
   customTexts: z.object({
-    copyrightText: z.string().default('جميع الحقوق محفوظة لـ شبكة اكوام © 2025'),
+    copyrightText: z.string().default('جميع الحقوق محفوظة لـ شبكة 𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗 © 2025'),
     maintenanceMessage: z.string().default('الموقع تحت الصيانة، يرجى المحاولة لاحقاً'),
     noResultsMessage: z.string().default('لا توجد نتائج لهذا البحث'),
     loadingMessage: z.string().default('جاري التحميل...')
