@@ -1,7 +1,6 @@
 import { ReactNode } from 'react';
 import { redirect } from 'next/navigation';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { auth } from '@/lib/auth';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
 
@@ -10,9 +9,9 @@ interface AdminLayoutProps {
 }
 
 export default async function AdminLayout({ children }: AdminLayoutProps) {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   
-  if (!session?.user || session.user.role !== 'ADMIN') {
+  if (!session?.user || (session.user as any).role !== 'ADMIN') {
     redirect('/');
   }
 
