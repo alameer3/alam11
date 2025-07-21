@@ -7,21 +7,16 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  CreditCard, 
   DollarSign, 
-  Calendar,
   Download,
   Copy,
-  Trash2,
   Plus,
   Edit,
-  Eye,
   CheckCircle,
   XCircle,
   Gift,
   Receipt,
-  Users,
-  TrendingUp
+  Users
 } from 'lucide-react';
 
 interface Subscription {
