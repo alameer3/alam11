@@ -1,5 +1,5 @@
-import { HeroSlider } from '@/components/akwam/HeroSlider'
-import { WidgetSection } from '@/components/akwam/WidgetSection'
+import { HeroSlider } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/HeroSlider'
+import { WidgetSection } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/WidgetSection'
 
 // Dummy data
 const heroSlides = [

@@ -145,7 +145,7 @@ const Header: React.FC = () => {
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <Play className="w-6 h-6 text-white" />
               </div>
-              <span className="text-2xl font-bold text-white">AKWAM</span>
+              <span className="text-2xl font-bold text-white">𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗</span>
             </Link>
 
             {/* التنقل الرئيسي - سطح المكتب */}
@@ -300,7 +300,7 @@ const Header: React.FC = () => {
           <div className="fixed right-0 rtl:left-0 rtl:right-auto top-0 h-full w-80 bg-gray-900 border-l rtl:border-r rtl:border-l-0 border-gray-800 overflow-y-auto">
             <div className="p-6">
               <div className="flex items-center justify-between mb-8">
-                <span className="text-2xl font-bold text-white">AKWAM</span>
+                <span className="text-2xl font-bold text-white">𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗</span>
                 <Button
                   variant="ghost"
                   size="icon"

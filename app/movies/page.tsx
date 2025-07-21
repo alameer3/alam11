@@ -3,10 +3,10 @@
 import { useState, useEffect } from 'react'
 import { Film } from 'lucide-react'
 
-import { ArchiveHeader } from '@/components/akwam/ArchiveHeader'
-import { FilterBar } from '@/components/akwam/FilterBar'
-import { EntryCard } from '@/components/akwam/EntryCard'
-import { Pagination } from '@/components/akwam/Pagination'
+import { ArchiveHeader } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/ArchiveHeader'
+import { FilterBar } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/FilterBar'
+import { EntryCard } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/EntryCard'
+import { Pagination } from '@/components/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗/Pagination'
 
 // بيانات تجريبية للأفلام
 const moviesData = [

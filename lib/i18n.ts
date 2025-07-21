@@ -348,7 +348,7 @@ const ar = async () => ({
 const en = async () => ({
   // Home page
   home: {
-    title: 'Akwam Clone - Advanced Streaming Platform',
+    title: '𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗 Clone - Advanced Streaming Platform',
     description: 'Watch the latest movies, series and anime in high quality',
     hero: {
       title: 'Best streaming platform in the Arab world',

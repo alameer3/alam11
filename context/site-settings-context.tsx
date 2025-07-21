@@ -53,10 +53,10 @@ export function SiteSettingsProvider({ children }: { children: ReactNode }) {
       // استخدام إعدادات افتراضية في حالة الخطأ
       setSettings({
         id: 1,
-        site_name: 'اكوام',
+        site_name: '𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗',
         site_logo: '/images/logo.png',
         site_description: 'موقع التحميل والمشاهدة العربي الأول',
-        site_keywords: 'أفلام, مسلسلات, اكوام, مشاهدة',
+        site_keywords: 'أفلام, مسلسلات, 𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗, مشاهدة',
         social_facebook: '',
         social_twitter: '',
         social_instagram: '',

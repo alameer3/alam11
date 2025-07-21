@@ -75,8 +75,8 @@ export default function SiteSettings() {
     general: {
       siteName: 'أكوام',
       siteDescription: 'منصة مشاهدة الأفلام والمسلسلات العربية والأجنبية',
-      siteUrl: 'https://akwam.com',
-      adminEmail: 'admin@akwam.com',
+      siteUrl: 'https://𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗.com',
+      adminEmail: 'admin@𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗.com',
       timezone: 'Asia/Riyadh',
       language: 'ar',
       maintenanceMode: false

@@ -47,8 +47,8 @@
 ### 1. الإعداد السريع (موصى به)
 ```bash
 # استنساخ المشروع
-git clone https://github.com/your-username/akwam-clone.git
-cd akwam-clone
+git clone https://github.com/your-username/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗-clone.git
+cd 𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗-clone
 
 # تشغيل الإعداد التلقائي
 node scripts/setup.js
@@ -84,7 +84,7 @@ NEXTAUTH_SECRET="your-secret-key"
 NEXTAUTH_URL="http://localhost:3000"
 
 # إعدادات الإدارة
-ADMIN_EMAIL="admin@akwam.com"
+ADMIN_EMAIL="admin@𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗.com"
 ADMIN_PASSWORD="admin123456"
 
 # رفع الملفات
@@ -95,7 +95,7 @@ MAX_FILE_SIZE="100000000"
 ## 🗂️ هيكل المشروع
 
 ```
-akwam-clone/
+𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗-clone/
 ├── app/                    # صفحات Next.js App Router
 │   ├── admin/             # لوحة الإدارة
 │   ├── auth/              # صفحات المصادقة
@@ -148,7 +148,7 @@ npm run lint
 ## 🔑 بيانات الاختبار
 
 ### حساب الإدارة
-- **البريد الإلكتروني**: `admin@akwam.com`
+- **البريد الإلكتروني**: `admin@𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗.com`
 - **كلمة المرور**: `admin123456`
 
 ### حسابات المستخدمين
@@ -196,9 +196,9 @@ npm run lint
 
 ## 📞 التواصل
 
-- **الموقع**: [akwam-clone.vercel.app](https://akwam-clone.vercel.app)
-- **البريد الإلكتروني**: contact@akwam-clone.com
-- **تويتر**: [@akwam_clone](https://twitter.com/akwam_clone)
+- **الموقع**: [𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗-clone.vercel.app](https://𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗-clone.vercel.app)
+- **البريد الإلكتروني**: contact@𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗-clone.com
+- **تويتر**: [@𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_clone](https://twitter.com/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗_clone)
 
 ---
 

@@ -27,7 +27,7 @@ export const authOptions: NextAuthConfig = {
         }
 
         // للاختبار فقط - استخدام كلمة مرور ثابتة
-        if (credentials.email === 'admin@akwam.com' && credentials.password === 'admin123456') {
+        if (credentials.email === 'admin@𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗.com' && credentials.password === 'admin123456') {
           return {
             id: user.id,
             email: user.email,

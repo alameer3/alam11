@@ -18,9 +18,9 @@ export function MainFooter() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* About */}
           <div>
-            <h3 className="text-white text-lg font-bold mb-4">عن اكوام</h3>
+            <h3 className="text-white text-lg font-bold mb-4">عن 𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗</h3>
             <p className="text-sm leading-relaxed">
-              اكوام هو موقع عربي يوفّر أحدث الأفلام والمسلسلات والبرامج بدقة عالية مع إمكانية
+              𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗 هو موقع عربي يوفّر أحدث الأفلام والمسلسلات والبرامج بدقة عالية مع إمكانية
               المشاهدة المباشرة أو التحميل السريع.
             </p>
           </div>
@@ -43,13 +43,13 @@ export function MainFooter() {
           <div>
             <h3 className="text-white text-lg font-bold mb-4">تواصل معنا</h3>
             <div className="flex space-x-4 rtl:space-x-reverse text-xl">
-              <a href="https://www.facebook.com/akwamnet" target="_blank" rel="noopener noreferrer" title="Facebook" className="hover:text-white">
+              <a href="https://www.facebook.com/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗net" target="_blank" rel="noopener noreferrer" title="Facebook" className="hover:text-white">
                 <Facebook className="w-5 h-5" />
               </a>
-              <a href="https://www.youtube.com/c/AKWAMnetwork" target="_blank" rel="noopener noreferrer" title="YouTube" className="hover:text-white">
+              <a href="https://www.youtube.com/c/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗network" target="_blank" rel="noopener noreferrer" title="YouTube" className="hover:text-white">
                 <Youtube className="w-5 h-5" />
               </a>
-              <a href="/AKWAM-Notifications" title="الإشعارات" className="hover:text-white">
+              <a href="/𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗-Notifications" title="الإشعارات" className="hover:text-white">
                 <Bell className="w-5 h-5" />
               </a>
             </div>
@@ -57,7 +57,7 @@ export function MainFooter() {
         </div>
 
         <div className="mt-10 text-center text-xs text-gray-500">
-          جميع الحقوق محفوظة © {new Date().getFullYear()} اكوام
+          جميع الحقوق محفوظة © {new Date().getFullYear()} 𝐘𝐄𝐌𝐄𝐍_𝐅𝐋𝐈𝐗
         </div>
       </div>
     </footer>
