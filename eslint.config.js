@@ -1,18 +1,20 @@
-// ESLint configuration for Next.js + TypeScript
+// ESLint simple config for TypeScript + React
 import js from '@eslint/js';
-import next from 'eslint-config-next';
+import tseslint from 'typescript-eslint';
 
 export default [
   js(),
-  ...next,
+  tseslint.config({
+    files: ['**/*.ts', '**/*.tsx'],
+    rules: {
+      // يمكنك تخصيص القواعد هنا
+    },
+  }),
   {
     ignores: [
       '**/node_modules/**',
       '**/.next/**',
       '**/out/**',
     ],
-    rules: {
-      // يمكنك تخصيص القواعد هنا
-    },
   },
 ];
