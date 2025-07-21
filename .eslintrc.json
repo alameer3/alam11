@@ -23,7 +23,7 @@
     "@typescript-eslint"
   ],
   "rules": {
-    // يمكنك تخصيص القواعد هنا
+    "react/react-in-jsx-scope": "off"
   },
   "settings": {
     "react": {

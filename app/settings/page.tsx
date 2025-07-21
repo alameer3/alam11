@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { useState } from 'react';
 import { Settings, User, Shield, Bell, Play, Monitor, Globe, Palette, Download, Eye, Lock, Smartphone, Tv, Volume2, Wifi, WifiOff } from 'lucide-react';
 
@@ -530,91 +531,4 @@ export default function SettingsPage() {
               onClick={() => handleSettingChange('autoDeleteDownloads', !settings.autoDeleteDownloads)}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                 settings.autoDeleteDownloads ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
-              }`}
-            >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  settings.autoDeleteDownloads ? 'translate-x-6' : 'translate-x-1'
-                }`}
-              />
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'account':
-        return renderAccountSettings();
-      case 'privacy':
-        return renderPrivacySettings();
-      case 'notifications':
-        return renderNotificationSettings();
-      case 'playback':
-        return renderPlaybackSettings();
-      case 'quality':
-        return renderQualitySettings();
-      case 'downloads':
-        return renderDownloadSettings();
-      default:
-        return renderAccountSettings();
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-6xl mx-auto p-6">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
-              <Settings className="w-6 h-6 text-gray-600 dark:text-gray-400" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                Settings
-              </h1>
-              <p className="text-gray-600 dark:text-gray-400">
-                Customize your streaming experience
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar */}
-          <div className="lg:col-span-1">
-            <nav className="space-y-2">
-              {settingSections.map((section) => (
-                <button
-                  key={section.id}
-                  onClick={() => setActiveTab(section.id)}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                    activeTab === section.id
-                      ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
-                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
-                  }`}
-                >
-                  <section.icon className="w-5 h-5" />
-                  <div>
-                    <div className="font-medium">{section.title}</div>
-                    <div className="text-xs opacity-75">{section.description}</div>
-                  </div>
-                </button>
-              ))}
-            </nav>
-          </div>
-
-          {/* Main Content */}
-          <div className="lg:col-span-3">
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-              {renderTabContent()}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+              }`
