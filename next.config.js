@@ -7,6 +7,7 @@ const nextConfig = {
     '5cc4d22a-55ad-4d5d-b507-80b8f577d9f9-00-2m36py6tdhyek.picard.replit.dev',
     '0a1c379f-a054-46cb-b26c-f3bcffddc7e8-00-7cknkf4kcwxr.riker.replit.dev',
     '84b5897d-cea3-4107-8da8-86f2867efea4-00-5s1mhyv5r695.picard.replit.dev',
+    '66345200-455f-4b1f-8c21-7472d2b130e7-00-4uzesknfsrq6.kirk.replit.dev',
     '127.0.0.1',
     'localhost'
   ],
