@@ -4,6 +4,12 @@
 This is a comprehensive streaming platform called "YEMEN FLIX" built with Next.js, featuring movies and series streaming capabilities with user authentication, ratings, comments, and administrative features.
 
 ## Recent Changes  
+- **July 22, 2025 (AKWAM Data Integration)**: استكشاف وتحليل مجلد ak.sv الكامل
+  - اكتشاف 9000+ فيلم مع بيانات حقيقية (عناوين، تقييمات، أوصاف)
+  - اكتشاف 500+ حلقة مسلسل مع بيانات أصلية
+  - إنشاء محلل متقدم (parse-akwam-content.js) لاستخراج البيانات الحقيقية
+  - أمثلة من البيانات المكتشفة: "Bloodline Killer" (5.9/10, 50K تقييم), "حرب الجبالي" (42 حلقة)
+  - استخراج الخطوط العربية الأصلية والصور (STC fonts, home-bg.webp, logo-white.svg)
 - **July 22, 2025 (Full System Activation)**: تفعيل جميع المزايا والأنظمة في المشروع
 - تم إنشاء جميع API endpoints (movies, series, search, stats)
 - تم إنشاء صفحة تسجيل الدخول (/auth/signin) 
