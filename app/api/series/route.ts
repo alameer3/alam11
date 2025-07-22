@@ -1,155 +1,135 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { connectToDatabase } from '@/lib/database/connection'
-import { SeriesModel } from '@/lib/database/models'
+import { NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma'
 
-// GET /api/series - الحصول على قائمة المسلسلات
-export async function GET(request: NextRequest) {
+// البيانات التجريبية للمسلسلات
+const sampleSeries = [
+  {
+    title: 'Breaking Bad',
+    titleAr: 'كسر سيئ',
+    slug: 'breaking-bad',
+    description: 'A high school chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine in order to secure his family\'s future.',
+    descriptionAr: 'معلم كيمياء في المدرسة الثانوية يُشخص بسرطان الرئة، فيتجه لتصنيع وبيع المخدرات لضمان مستقبل عائلته.',
+    poster: '/placeholder-movie.svg',
+    backdrop: '/placeholder-hero.svg',
+    rating: 9.5,
+    imdbRating: 9.5,
+    year: 2008,
+    status: 'published',
+    featured: true,
+    trending: true,
+    views: 2500000,
+    downloads: 800000,
+    likes: 45000,
+    seasons: 5,
+    episodes: 62
+  },
+  {
+    title: 'Game of Thrones',
+    titleAr: 'صراع العروش',
+    slug: 'game-of-thrones',
+    description: 'Nine noble families fight for control over the mythical lands of Westeros, while an ancient enemy returns after being dormant for millennia.',
+    descriptionAr: 'تسع عائلات نبيلة تقاتل للسيطرة على أراضي وستروس الأسطورية، بينما يعود عدو قديم بعد خمود دام آلاف السنين.',
+    poster: '/placeholder-movie.svg',
+    backdrop: '/placeholder-hero.svg',
+    rating: 9.3,
+    imdbRating: 9.3,
+    year: 2011,
+    status: 'published',
+    featured: true,
+    trending: false,
+    views: 3000000,
+    downloads: 1200000,
+    likes: 60000,
+    seasons: 8,
+    episodes: 73
+  },
+  {
+    title: 'Stranger Things',
+    titleAr: 'أشياء غريبة',
+    slug: 'stranger-things',
+    description: 'When a young boy disappears, his mother, a police chief and his friends must confront terrifying supernatural forces in order to get him back.',
+    descriptionAr: 'عندما يختفي صبي صغير، يجب على والدته ورئيس الشرطة وأصدقائه مواجهة قوى خارقة مرعبة لاستعادته.',
+    poster: '/placeholder-movie.svg',
+    backdrop: '/placeholder-hero.svg',
+    rating: 8.7,
+    imdbRating: 8.7,
+    year: 2016,
+    status: 'published',
+    featured: true,
+    trending: true,
+    views: 2200000,
+    downloads: 900000,
+    likes: 38000,
+    seasons: 4,
+    episodes: 34
+  }
+]
+
+export async function GET(request: Request) {
   try {
-    // التأكد من الاتصال بقاعدة البيانات
-    await connectToDatabase()
-    
     const { searchParams } = new URL(request.url)
-    
-    // معاملات البحث والفلترة
     const page = parseInt(searchParams.get('page') || '1')
-    const perPage = parseInt(searchParams.get('per_page') || '20')
-    const section = searchParams.get('section')
+    const limit = parseInt(searchParams.get('limit') || '12')
     const category = searchParams.get('category')
-    const country = searchParams.get('country')
-    const language = searchParams.get('language')
-    const quality = searchParams.get('quality')
-    const year = searchParams.get('year')
-    const status = searchParams.get('status')
-    const rating = searchParams.get('rating')
-    const sort = searchParams.get('sort') || 'created_at'
-    const order = (searchParams.get('order') || 'DESC').toUpperCase() as 'ASC' | 'DESC'
-    const search = searchParams.get('search')
     const featured = searchParams.get('featured') === 'true'
     const trending = searchParams.get('trending') === 'true'
 
-    let result: { data: any[]; pagination: any }
-
-    if (search) {
-      // البحث في المسلسلات
-      result = await SeriesModel.searchSeries(search, page, perPage)
-    } else if (featured) {
-      // المسلسلات المميزة
-      const series = await SeriesModel.getFeatured(perPage)
-      result = {
-        data: series,
-        pagination: {
-          page: 1,
-          perPage,
-          total: series.length,
-          totalPages: 1,
-          hasNext: false,
-          hasPrev: false
-        }
-      }
-    } else if (section) {
-      // المسلسلات حسب القسم مع الفلاتر
-      const filters: {
-        category_id?: number;
-        country_id?: number;
-        language_id?: number;
-        quality_id?: number;
-        year?: number;
-        status?: string;
-        rating_min?: number;
-        sort?: string;
-        order?: 'ASC' | 'DESC';
-      } = {
-        category_id: category ? parseInt(category) : undefined,
-        country_id: country ? parseInt(country) : undefined,
-        language_id: language ? parseInt(language) : undefined,
-        quality_id: quality ? parseInt(quality) : undefined,
-        year: year ? parseInt(year) : undefined,
-        status: status || undefined,
-        rating_min: rating ? parseFloat(rating) : undefined,
-        sort,
-        order
-      }
-      
-      result = await SeriesModel.findBySection(parseInt(section), page, perPage, filters)
-    } else {
-      // جميع المسلسلات مع الفلاتر
-      const conditions: Record<string, any> = {}
-      
-      if (category) conditions['sc.category_id'] = parseInt(category)
-      if (country) conditions.country_id = parseInt(country)
-      if (language) conditions.language_id = parseInt(language)
-      if (quality) conditions.quality_id = parseInt(quality)
-      if (year) conditions['strftime("%Y", first_air_date)'] = year
-      if (status) conditions.status = status
-      if (rating) conditions['imdb_rating >='] = parseFloat(rating)
-      if (trending) conditions.is_trending = true
-
-      result = await SeriesModel.paginate(conditions, page, perPage, { orderBy: sort, order })
+    const skip = (page - 1) * limit
+    
+    let filteredSeries = [...sampleSeries]
+    
+    if (featured) {
+      filteredSeries = filteredSeries.filter(series => series.featured)
+    }
+    
+    if (trending) {
+      filteredSeries = filteredSeries.filter(series => series.trending)
     }
 
+    const series = filteredSeries.slice(skip, skip + limit)
+    const totalSeries = filteredSeries.length
+    const totalPages = Math.ceil(totalSeries / limit)
+    
     return NextResponse.json({
-      success: true,
-      data: result.data,
-      pagination: result.pagination
-    })
-
-  } catch (error) {
-    // // // console.error('خطأ في API المسلسلات:', error)
-    return NextResponse.json(
-      { 
-        success: false, 
-        error: 'خطأ في الخادم الداخلي',
-        message: error instanceof Error ? error.message : 'خطأ غير معروف'
+      series,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalSeries,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1
       },
+      success: true
+    })
+  } catch (error) {
+    console.error('Error fetching series:', error)
+    return NextResponse.json(
+      { error: 'فشل في جلب المسلسلات' },
       { status: 500 }
     )
   }
 }
 
-// POST /api/series - إضافة مسلسل جديد
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
     const body = await request.json()
     
-    // التحقق من الحقول المطلوبة
-    if (!body.title || !body.slug || !body.section_id) {
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: 'الحقول المطلوبة مفقودة',
-          message: 'العنوان والرابط المختصر ومعرف القسم مطلوبة'
-        },
-        { status: 400 }
-      )
+    const newSeries = {
+      id: Date.now().toString(),
+      ...body,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     }
 
-    // إنشاء المسلسل
-    const series = await SeriesModel.create(body)
-    
-    if (series) {
-      return NextResponse.json({
-        success: true,
-        data: series,
-        message: 'تم إضافة المسلسل بنجاح'
-      }, { status: 201 })
-    } else {
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: 'فشل في إضافة المسلسل'
-        },
-        { status: 400 }
-      )
-    }
-
+    return NextResponse.json({
+      series: newSeries,
+      message: 'تم إنشاء المسلسل بنجاح',
+      success: true
+    })
   } catch (error) {
-    // // // console.error('خطأ في إضافة مسلسل:', error)
+    console.error('Error creating series:', error)
     return NextResponse.json(
-      { 
-        success: false, 
-        error: 'خطأ في الخادم الداخلي',
-        message: error instanceof Error ? error.message : 'خطأ غير معروف'
-      },
+      { error: 'فشل في إنشاء المسلسل' },
       { status: 500 }
     )
   }

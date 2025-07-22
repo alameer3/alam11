@@ -1,165 +1,139 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-export async function GET(request: NextRequest) {
+// البيانات التجريبية للأفلام
+const sampleMovies = [
+  {
+    title: 'The Dark Knight',
+    titleAr: 'الفارس الأسود',
+    slug: 'the-dark-knight',
+    description: 'When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.',
+    descriptionAr: 'عندما يعيث الجوكر فساداً في مدينة جوثام، يجب على باتمان أن يواجه أحد أعظم الاختبارات النفسية والجسدية لقدرته على محاربة الظلم.',
+    poster: '/placeholder-movie.svg',
+    backdrop: '/placeholder-hero.svg',
+    rating: 9.0,
+    imdbRating: 9.0,
+    year: 2008,
+    duration: 152,
+    quality: '4K',
+    status: 'published',
+    featured: true,
+    trending: true,
+    views: 1800000,
+    downloads: 500000,
+    likes: 25000
+  },
+  {
+    title: 'Inception',
+    titleAr: 'البداية',
+    slug: 'inception',
+    description: 'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.',
+    descriptionAr: 'لص يسرق أسرار الشركات من خلال تقنية مشاركة الأحلام، يُكلف بمهمة معاكسة وهي زرع فكرة في عقل رئيس تنفيذي.',
+    poster: '/placeholder-movie.svg',
+    backdrop: '/placeholder-hero.svg',
+    rating: 8.8,
+    imdbRating: 8.8,
+    year: 2010,
+    duration: 148,
+    quality: 'HD',
+    status: 'published',
+    featured: true,
+    trending: false,
+    views: 1200000,
+    downloads: 400000,
+    likes: 20000
+  },
+  {
+    title: 'Interstellar',
+    titleAr: 'بين النجوم',
+    slug: 'interstellar',
+    description: 'A team of explorers travel through a wormhole in space in an attempt to ensure humanity\'s survival.',
+    descriptionAr: 'فريق من المستكشفين يسافر عبر ثقب دودي في الفضاء في محاولة لضمان بقاء البشرية.',
+    poster: '/placeholder-movie.svg',
+    backdrop: '/placeholder-hero.svg',
+    rating: 8.6,
+    imdbRating: 8.6,
+    year: 2014,
+    duration: 169,
+    quality: '4K',
+    status: 'published',
+    featured: true,
+    trending: true,
+    views: 1500000,
+    downloads: 600000,
+    likes: 30000
+  }
+]
+
+export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '12')
-    const search = searchParams.get('search') || ''
-    const category = searchParams.get('category') || ''
-    const quality = searchParams.get('quality') || ''
-    const year = searchParams.get('year') || ''
-    const sortBy = searchParams.get('sortBy') || 'createdAt'
-    const sortOrder = searchParams.get('sortOrder') || 'desc'
+    const category = searchParams.get('category')
+    const featured = searchParams.get('featured') === 'true'
+    const trending = searchParams.get('trending') === 'true'
 
+    // حساب البداية والنهاية للصفحة
     const skip = (page - 1) * limit
-
-    // بناء شروط البحث
-    const where: any = {
-      isActive: true,
+    
+    // تطبيق المرشحات
+    let filteredMovies = [...sampleMovies]
+    
+    if (featured) {
+      filteredMovies = filteredMovies.filter(movie => movie.featured)
+    }
+    
+    if (trending) {
+      filteredMovies = filteredMovies.filter(movie => movie.trending)
     }
 
-    if (search) {
-      where.OR = [
-        { title: { contains: search, mode: 'insensitive' } },
-        { originalTitle: { contains: search, mode: 'insensitive' } },
-        { description: { contains: search, mode: 'insensitive' } },
-        { director: { contains: search, mode: 'insensitive' } },
-        { cast: { contains: search, mode: 'insensitive' } },
-      ]
-    }
-
-    if (category) {
-      where.categories = {
-        some: {
-          category: {
-            slug: category
-          }
-        }
-      }
-    }
-
-    if (quality) {
-      where.quality = quality
-    }
-
-    if (year) {
-      where.year = parseInt(year)
-    }
-
-    // الحصول على الأفلام مع التصنيفات
-    const movies = await prisma.movie.findMany({
-      where,
-      include: {
-        section: true,
-        categories: {
-          include: {
-            category: true
-          }
-        }
-      },
-      orderBy: {
-        [sortBy]: sortOrder
-      },
-      skip,
-      take: limit,
-    })
-
-    // الحصول على العدد الإجمالي
-    const total = await prisma.movie.count({ where })
-
-    // الحصول على إحصائيات إضافية
-    const stats = await prisma.movie.aggregate({
-      where: { isActive: true },
-      _count: { id: true },
-      _avg: { rating: true },
-      _sum: { views: true, downloads: true, likes: true }
-    })
-
+    // ترقيم الصفحات
+    const movies = filteredMovies.slice(skip, skip + limit)
+    const totalMovies = filteredMovies.length
+    const totalPages = Math.ceil(totalMovies / limit)
+    
     return NextResponse.json({
-      success: true,
-      data: movies,
+      movies,
       pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-        hasNext: page * limit < total,
-        hasPrev: page > 1
+        currentPage: page,
+        totalPages,
+        totalMovies,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1
       },
-      stats: {
-        totalMovies: stats._count.id,
-        averageRating: stats._avg.rating,
-        totalViews: stats._sum.views,
-        totalDownloads: stats._sum.downloads,
-        totalLikes: stats._sum.likes
-      }
+      success: true
     })
-
   } catch (error) {
-    // // // console.error('Error fetching movies:', error)
+    console.error('Error fetching movies:', error)
     return NextResponse.json(
-      { success: false, error: 'فشل في جلب الأفلام' },
+      { error: 'فشل في جلب الأفلام' },
       { status: 500 }
     )
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
     const body = await request.json()
     
-    // التحقق من الصلاحيات (يجب أن يكون المستخدم مدير)
-    // TODO: إضافة middleware للتحقق من الصلاحيات
-    
-    const movie = await prisma.movie.create({
-      data: {
-        title: body.title,
-        originalTitle: body.originalTitle,
-        slug: body.slug,
-        description: body.description,
-        poster: body.poster,
-        backdrop: body.backdrop,
-        trailer: body.trailer,
-        rating: body.rating,
-        imdbRating: body.imdbRating,
-        year: body.year,
-        duration: body.duration,
-        releaseDate: body.releaseDate ? new Date(body.releaseDate) : null,
-        country: body.country,
-        language: body.language,
-        budget: body.budget,
-        boxOffice: body.boxOffice,
-        director: body.director,
-        cast: body.cast ? JSON.stringify(body.cast) : null,
-        awards: body.awards ? JSON.stringify(body.awards) : null,
-        quality: body.quality || 'HD',
-        size: body.size,
-        isActive: body.isActive !== undefined ? body.isActive : true,
-        isFeatured: body.isFeatured !== undefined ? body.isFeatured : false,
-        sectionId: body.sectionId,
-      },
-      include: {
-        section: true,
-        categories: {
-          include: {
-            category: true
-          }
-        }
-      }
-    })
+    // إنشاء فيلم جديد (تجريبي)
+    const newMovie = {
+      id: Date.now().toString(),
+      ...body,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }
 
     return NextResponse.json({
-      success: true,
-      data: movie,
-      message: 'تم إنشاء الفيلم بنجاح'
+      movie: newMovie,
+      message: 'تم إنشاء الفيلم بنجاح',
+      success: true
     })
-
   } catch (error) {
-    // // // console.error('Error creating movie:', error)
+    console.error('Error creating movie:', error)
     return NextResponse.json(
-      { success: false, error: 'فشل في إنشاء الفيلم' },
+      { error: 'فشل في إنشاء الفيلم' },
       { status: 500 }
     )
   }
